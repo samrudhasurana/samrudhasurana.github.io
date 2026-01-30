@@ -26,7 +26,6 @@
     <main class="main-container">
         <header class="page-header">
             <h1>Research</h1>
-            <p class="page-subtitle">Academic publications, working papers, and popular writings</p>
         </header>
 
         <section class="research-section">
@@ -40,7 +39,13 @@
                 <p class="pub-authors">with Ankita Dinkar</p>
                 <p class="pub-venue">Mercatus Research | Mercatus Center at George Mason University</p>
                 <p class="pub-date">December 2024</p>
-                <a href="https://the1991project.com/sites/default/files/2024-12/5023-Dinkar-Surana-Electricity-Challenges-MR-v1a_compressed.pdf" target="_blank" class="pdf-link">PDF</a>
+                <div class="pub-actions">
+                    <a href="https://the1991project.com/sites/default/files/2024-12/5023-Dinkar-Surana-Electricity-Challenges-MR-v1a_compressed.pdf" target="_blank" class="pdf-link">PDF</a>
+                    <button class="abstract-toggle" onclick="toggleAbstract('abstract1')">Show Abstract</button>
+                </div>
+                <div id="abstract1" class="abstract-content" style="display: none;">
+                    <p>India's manufacturing sector faces persistent electricity challenges that impede growth and competitiveness. This paper examines the structural issues in India's electricity supply and proposes market-based solutions to resolve supply constraints, improve reliability, and reduce costs for manufacturers. We analyze policy reforms that could enhance the business environment and support India's manufacturing ambitions.</p>
+                </div>
             </div>
         </section>
 
@@ -66,6 +71,12 @@
                 </h3>
                 <p class="pub-authors">with Vinayakan Sajeev-Beena</p>
                 <p class="pub-note">Also, a <a href="https://azimpremjiuniversity.edu.in/indian-economists/b-r-shenoy" target="_blank">profile on B.R. Shenoy</a> for Azim Premji University's Profiles on Indian Economists project.</p>
+                <div class="pub-actions">
+                    <button class="abstract-toggle" onclick="toggleAbstract('abstract2')">Show Abstract</button>
+                </div>
+                <div id="abstract2" class="abstract-content" style="display: none;">
+                    <p>B.R. Shenoy was one of India's most prominent economists and a lone dissenting voice against Nehruvian central planning in the 1950s and 1960s. This paper examines Shenoy's Austrian economic critique of India's planned economy, analyzing his theoretical contributions and policy recommendations. We explore how his insights align with modern Austrian economics and assess the relevance of his warnings for contemporary development policy.</p>
+                </div>
             </div>
         </section>
 
@@ -156,7 +167,41 @@
     </main>
 
     <footer class="footer">
-        <p>&copy; 2025 Samrudha Surana. All rights reserved.</p>
+        <div class="footer-content">
+            <div class="footer-contact">
+                <h3>Contact</h3>
+                <p class="footer-email">ssurana [at] gmu [dot] edu</p>
+                <div class="footer-social">
+                    <a href="https://www.linkedin.com/in/samrudha-surana/" target="_blank" aria-label="LinkedIn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                            <rect x="2" y="9" width="4" height="12"></rect>
+                            <circle cx="4" cy="4" r="2"></circle>
+                        </svg>
+                    </a>
+                    <a href="https://x.com/samrudha_surana" target="_blank" aria-label="Twitter/X">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <p class="footer-copyright">&copy; 2025 Samrudha Surana. All rights reserved.</p>
+        </div>
     </footer>
+
+    <script>
+    function toggleAbstract(id) {
+        const abstract = document.getElementById(id);
+        const button = event.target;
+        if (abstract.style.display === 'none') {
+            abstract.style.display = 'block';
+            button.textContent = 'Hide Abstract';
+        } else {
+            abstract.style.display = 'none';
+            button.textContent = 'Show Abstract';
+        }
+    }
+    </script>
 </body>
 </html>

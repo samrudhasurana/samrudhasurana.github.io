@@ -118,6 +118,17 @@ To make changes:
 2. Upload to GitHub (drag and drop or use Git)
 3. Changes will appear within 1-2 minutes
 
+### Updating the Research Page (No Code Needed)
+
+The research page is driven by `research-data.json`. To add or edit items:
+
+1. Open `research-data.json`.
+2. Find the section you want to update (`policyPapers`, `bookReviews`, `workingPapers`, `worksInProgress`, or `popularArticles`).
+3. Add a new JSON object or edit an existing one.
+4. Save and push the file—`research.html` will update automatically.
+
+Tip: If you prefer a spreadsheet workflow, you can keep a Google Sheet and export it to JSON, then replace the contents of `research-data.json` with the exported file.
+
 ## File Structure
 
 ```

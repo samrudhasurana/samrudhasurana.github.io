@@ -12,12 +12,9 @@
   ],
   "bookReviews": [
     {
-      "title": "Review of Maria Bach, <em>Relocating Development Economics: The First Generation of Modern Indian Economists</em>",
-      "venue": "Cambridge, United Kingdom: Cambridge University Press, 2024",
-      "venueLink": {
-        "text": "The Review of Austrian Economics",
-        "url": "https://link.springer.com/article/10.1007/s11138-025-00691-5"
-      },
+      "title": "Review of Maria Bach, <em>Relocating Development Economics: The First Generation of Modern Indian Economists</em> (Cambridge, United Kingdom: Cambridge University Press, 2024)",
+      "venue": "The Review of Austrian Economics",
+      "url": "https://link.springer.com/article/10.1007/s11138-025-00691-5",
       "date": "June 2025"
     }
   ],

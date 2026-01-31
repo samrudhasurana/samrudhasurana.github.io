@@ -98,9 +98,10 @@
                 data.bookReviews.forEach(review => {
                     html += `
                         <div class="publication-card">
-                            <h3 class="pub-title">${review.title}</h3>
+                            <h3 class="pub-title">
+                                ${review.url ? `<a href="${review.url}" target="_blank">${review.title}</a>` : review.title}
+                            </h3>
                             ${review.venue ? `<p class="pub-venue">${review.venue}</p>` : ''}
-                            ${review.venueLink ? `<p class="pub-venue">For <a href="${review.venueLink.url}" target="_blank">${review.venueLink.text}</a></p>` : ''}
                             ${review.date ? `<p class="pub-date">${review.date}</p>` : ''}
                         </div>
                     `;

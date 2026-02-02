@@ -1,4 +1,3 @@
-# Samrudha Surana - Personal Academic Website
 
 A modern, professional academic website built with HTML, CSS, and hosted on GitHub Pages.
 

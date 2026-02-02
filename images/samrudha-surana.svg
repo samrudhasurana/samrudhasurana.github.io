@@ -1,0 +1,10 @@
+<svg width="640" height="800" viewBox="0 0 640 800" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Samrudha Surana portrait placeholder</title>
+  <desc id="desc">A warm-toned placeholder portrait with initials.</desc>
+  <rect width="640" height="800" fill="#f3eee7"/>
+  <rect x="40" y="40" width="560" height="720" rx="24" fill="#fdfbf7" stroke="#d9cfc3" stroke-width="4"/>
+  <circle cx="320" cy="300" r="140" fill="#e1d4c4"/>
+  <rect x="150" y="460" width="340" height="200" rx="100" fill="#e9ddcf"/>
+  <text x="320" y="330" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="72" fill="#7b6a5b">SS</text>
+  <text x="320" y="600" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="28" fill="#7b6a5b">Replace with your photo</text>
+</svg>

@@ -677,6 +677,7 @@
     let generatedEntry = null;
     let fileSha = null;
     let editMode = false;
+    let editOriginalTitle = null;
     let deleteTarget = null;
 
     // Password Protection
@@ -843,8 +844,9 @@
         // Switch to add tab
         switchTab('add');
 
-        // Set edit mode
+        // Set edit mode - store original title for matching in GitHub content
         editMode = true;
+        editOriginalTitle = entry.title;
         document.getElementById('edit-type').value = type;
         document.getElementById('edit-index').value = index;
         document.getElementById('edit-mode-banner').classList.remove('hidden');
@@ -880,6 +882,7 @@
 
     function cancelEdit() {
         editMode = false;
+        editOriginalTitle = null;
         document.getElementById('edit-type').value = '';
         document.getElementById('edit-index').value = '';
         document.getElementById('edit-mode-banner').classList.add('hidden');
@@ -892,7 +895,8 @@
         const entry = researchData[type][index];
         if (!entry) return;
 
-        deleteTarget = { type, index };
+        // Store the title for matching in fresh GitHub content
+        deleteTarget = { type, title: entry.title };
         document.getElementById('confirm-message').textContent =
             `Are you sure you want to delete "${entry.title.replace(/<[^>]*>/g, '').substring(0, 50)}..."?`;
         document.getElementById('confirm-overlay').classList.remove('hidden');
@@ -913,8 +917,7 @@
             return;
         }
 
-        const { type, index } = deleteTarget;
-        const entry = researchData[type][index];
+        const { type, title } = deleteTarget;
 
         try {
             // Fetch current file from GitHub
@@ -935,9 +938,15 @@
             const fileData = await fileResponse.json();
             fileSha = fileData.sha;
 
-            // Parse and update content
+            // Parse and update content - find entry by title
             const currentContent = JSON.parse(atob(fileData.content));
-            currentContent[type].splice(index, 1);
+            const entryIndex = currentContent[type]?.findIndex(e => e.title === title);
+
+            if (entryIndex === -1 || entryIndex === undefined) {
+                throw new Error('Could not find the entry. It may have already been deleted. Please refresh the page.');
+            }
+
+            currentContent[type].splice(entryIndex, 1);
 
             // Commit updated file
             const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(currentContent, null, 2))));
@@ -952,7 +961,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        message: `Delete research entry: ${entry.title.substring(0, 50)}`,
+                        message: `Delete research entry: ${title.substring(0, 50)}`,
                         content: updatedContent,
                         sha: fileSha,
                         branch: GITHUB_BRANCH
@@ -1119,17 +1128,23 @@
             const { type, entry } = buildEntry();
 
             if (editMode) {
-                // Update existing entry
+                // Update existing entry - find by original title to handle GitHub changes
                 const editType = document.getElementById('edit-type').value;
-                const editIndex = parseInt(document.getElementById('edit-index').value);
+
+                // Find the entry by its original title in the fresh GitHub content
+                const entryIndex = currentContent[editType]?.findIndex(e => e.title === editOriginalTitle);
+
+                if (entryIndex === -1 || entryIndex === undefined) {
+                    throw new Error('Could not find the original entry. It may have been modified or deleted. Please refresh the page and try again.');
+                }
 
                 // If type changed, remove from old category and add to new
                 if (editType !== type) {
-                    currentContent[editType].splice(editIndex, 1);
+                    currentContent[editType].splice(entryIndex, 1);
                     if (!currentContent[type]) currentContent[type] = [];
                     currentContent[type].unshift(entry);
                 } else {
-                    currentContent[type][editIndex] = entry;
+                    currentContent[type][entryIndex] = entry;
                 }
             } else {
                 // Add new entry

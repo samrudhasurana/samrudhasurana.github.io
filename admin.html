@@ -487,6 +487,51 @@
             background: var(--bg-cream);
             color: var(--text-dark);
         }
+
+        /* Presentation cards */
+        .presentations-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .presentations-header label {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 1rem;
+        }
+
+        .presentation-card {
+            background: var(--bg-cream);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .presentation-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .presentation-card-header strong {
+            color: var(--text-dark);
+        }
+
+        .presentation-card .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .session-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
     </style>
 </head>
 <body data-theme="light" class="font-palatino">
@@ -615,6 +660,14 @@
                     <label for="note-link-url" style="margin-top: 0.5rem;">Note Link URL</label>
                     <input type="url" id="note-link-url" placeholder="https://...">
                     <small>If your note contains a link, specify the text and URL</small>
+                </div>
+
+                <div id="presentations-section" class="hidden">
+                    <div class="presentations-header">
+                        <label>Presentations</label>
+                        <button type="button" class="btn btn-secondary btn-small" onclick="addPresentation()">+ Add Presentation</button>
+                    </div>
+                    <div id="presentations-container"></div>
                 </div>
 
                 <div id="form-message"></div>
@@ -818,7 +871,7 @@
                             ? (entry.name || '')
                             : (entry.title || '').replace(/<[^>]*>/g, '');
                         const displayMeta = isConference
-                            ? `${entry.role ? entry.role + ' | ' : ''}${entry.location || ''}${entry.date ? ' | ' + entry.date : ''}`
+                            ? `${entry.location || ''}${entry.dates ? ' | ' + entry.dates : ''}${entry.presentations ? ' | ' + entry.presentations.length + ' presentation(s)' : ''}`
                             : `${entry.authors ? entry.authors + ' | ' : ''}${entry.venue || ''}${entry.date ? ' | ' + entry.date : ''}`;
                         return `
                             <div class="entry-card">
@@ -867,9 +920,15 @@
 
         if (type === 'conferences') {
             document.getElementById('title').value = entry.name || '';
-            document.getElementById('authors').value = entry.role || '';
             document.getElementById('venue').value = entry.location || '';
-            document.getElementById('date').value = entry.date || '';
+            document.getElementById('date').value = entry.dates || '';
+            document.getElementById('presentations-container').innerHTML = '';
+            const presentations = entry.presentations || [];
+            if (presentations.length > 0) {
+                presentations.forEach(p => addPresentation(p));
+            } else {
+                addPresentation();
+            }
         } else {
             document.getElementById('title').value = entry.title || '';
             document.getElementById('authors').value = entry.authors || '';
@@ -1016,11 +1075,14 @@
         document.getElementById('authors').placeholder = 'e.g., with John Smith';
         document.querySelector('label[for="venue"]').textContent = 'Venue/Publication';
         document.getElementById('venue').placeholder = 'e.g., Mercatus Research';
+        document.querySelector('label[for="date"]').textContent = 'Date';
+        document.getElementById('date').placeholder = 'e.g., December 2024';
 
         document.getElementById('pdf-group').classList.add('hidden');
         document.getElementById('abstract-group').classList.add('hidden');
         document.getElementById('note-group').classList.add('hidden');
         document.getElementById('note-link-group').classList.add('hidden');
+        document.getElementById('presentations-section').classList.add('hidden');
         document.getElementById('authors-group').classList.remove('hidden');
         document.getElementById('venue-group').classList.remove('hidden');
         document.getElementById('date-group').classList.remove('hidden');
@@ -1051,13 +1113,70 @@
             case 'conferences':
                 document.querySelector('label[for="title"]').textContent = 'Conference Name *';
                 document.getElementById('title').placeholder = 'e.g., Southern Economic Association Annual Meetings';
-                document.querySelector('label[for="authors"]').textContent = 'Role';
-                document.getElementById('authors').placeholder = 'e.g., Presenter';
                 document.querySelector('label[for="venue"]').textContent = 'Location';
                 document.getElementById('venue').placeholder = 'e.g., Washington, D.C.';
+                document.querySelector('label[for="date"]').textContent = 'Conference Dates';
+                document.getElementById('date').placeholder = 'e.g., November 21–24, 2025';
+                document.getElementById('authors-group').classList.add('hidden');
                 document.getElementById('url-group').classList.add('hidden');
+                document.getElementById('presentations-section').classList.remove('hidden');
+                if (document.getElementById('presentations-container').children.length === 0) {
+                    addPresentation();
+                }
                 break;
         }
+    }
+
+    // Presentation management (for conferences)
+    function escapeHtml(str) {
+        return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function addPresentation(data = {}) {
+        const container = document.getElementById('presentations-container');
+        const card = document.createElement('div');
+        card.className = 'presentation-card';
+        card.innerHTML = `
+            <div class="presentation-card-header">
+                <strong>Presentation</strong>
+                <button type="button" class="btn btn-danger btn-small" onclick="removePresentation(this)">Remove</button>
+            </div>
+            <div class="form-group">
+                <label>Paper Title</label>
+                <input type="text" class="pres-title" placeholder="Title of the paper being presented" value="${escapeHtml(data.title)}">
+            </div>
+            <div class="form-group">
+                <label>Co-authors (optional)</label>
+                <input type="text" class="pres-coauthors" placeholder="e.g., with John Smith" value="${escapeHtml(data.coauthors)}">
+            </div>
+            <div class="form-group">
+                <label>Session Name</label>
+                <input type="text" class="pres-session" placeholder="e.g., Session on Economic Growth" value="${escapeHtml(data.session)}">
+            </div>
+            <div class="session-row">
+                <div class="form-group">
+                    <label>Session Date</label>
+                    <input type="text" class="pres-session-date" placeholder="e.g., November 22, 2025" value="${escapeHtml(data.sessionDate)}">
+                </div>
+                <div class="form-group">
+                    <label>Session Time</label>
+                    <input type="text" class="pres-session-time" placeholder="e.g., 2:00 PM" value="${escapeHtml(data.sessionTime)}">
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+        updatePresentationNumbers();
+    }
+
+    function removePresentation(btn) {
+        btn.closest('.presentation-card').remove();
+        updatePresentationNumbers();
+    }
+
+    function updatePresentationNumbers() {
+        document.querySelectorAll('.presentation-card').forEach((card, i) => {
+            card.querySelector('.presentation-card-header strong').textContent = `Presentation ${i + 1}`;
+        });
     }
 
     // Build entry object from form
@@ -1067,12 +1186,26 @@
 
         if (type === 'conferences') {
             entry.name = document.getElementById('title').value;
-            const role = document.getElementById('authors').value;
-            if (role) entry.role = role;
             const location = document.getElementById('venue').value;
             if (location) entry.location = location;
-            const date = document.getElementById('date').value;
-            if (date) entry.date = date;
+            const dates = document.getElementById('date').value;
+            if (dates) entry.dates = dates;
+            const presentations = [];
+            document.querySelectorAll('.presentation-card').forEach(card => {
+                const pres = {};
+                const ptitle = card.querySelector('.pres-title').value.trim();
+                if (ptitle) pres.title = ptitle;
+                const coauthors = card.querySelector('.pres-coauthors').value.trim();
+                if (coauthors) pres.coauthors = coauthors;
+                const session = card.querySelector('.pres-session').value.trim();
+                if (session) pres.session = session;
+                const sessionDate = card.querySelector('.pres-session-date').value.trim();
+                if (sessionDate) pres.sessionDate = sessionDate;
+                const sessionTime = card.querySelector('.pres-session-time').value.trim();
+                if (sessionTime) pres.sessionTime = sessionTime;
+                if (Object.keys(pres).length > 0) presentations.push(pres);
+            });
+            if (presentations.length > 0) entry.presentations = presentations;
             return { type, entry };
         }
 
@@ -1317,6 +1450,7 @@
 
     function resetForm() {
         document.getElementById('research-form').reset();
+        document.getElementById('presentations-container').innerHTML = '';
         document.getElementById('output-section').classList.add('hidden');
         document.getElementById('form-message').style.display = 'none';
         updateFormFields();

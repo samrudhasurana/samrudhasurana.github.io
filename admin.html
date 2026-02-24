@@ -562,6 +562,7 @@
                         <option value="workingPapers">Working Paper</option>
                         <option value="worksInProgress">Work in Progress</option>
                         <option value="popularArticles">Popular Article</option>
+                        <option value="conferences">Conference</option>
                     </select>
                 </div>
 
@@ -649,6 +650,7 @@
                     <option value="workingPapers">Working Papers</option>
                     <option value="worksInProgress">Works in Progress</option>
                     <option value="popularArticles">Popular Articles</option>
+                    <option value="conferences">Conferences</option>
                 </select>
             </div>
 
@@ -670,7 +672,8 @@
         bookReviews: 'Book Reviews',
         workingPapers: 'Working Papers',
         worksInProgress: 'Works in Progress',
-        popularArticles: 'Popular Articles'
+        popularArticles: 'Popular Articles',
+        conferences: 'Conferences'
     };
 
     let researchData = null;
@@ -806,25 +809,30 @@
             const entries = researchData[category] || [];
             if (entries.length === 0) return;
 
+            const isConference = category === 'conferences';
             html += `
                 <div class="entries-section">
                     <h3>${CATEGORY_LABELS[category]} <span class="count">(${entries.length})</span></h3>
-                    ${entries.map((entry, index) => `
-                        <div class="entry-card">
-                            <div class="entry-info">
-                                <div class="entry-title">${entry.title.replace(/<[^>]*>/g, '')}</div>
-                                <div class="entry-meta">
-                                    ${entry.authors ? entry.authors + ' | ' : ''}
-                                    ${entry.venue || ''}
-                                    ${entry.date ? ' | ' + entry.date : ''}
+                    ${entries.map((entry, index) => {
+                        const displayTitle = isConference
+                            ? (entry.name || '')
+                            : (entry.title || '').replace(/<[^>]*>/g, '');
+                        const displayMeta = isConference
+                            ? `${entry.role ? entry.role + ' | ' : ''}${entry.location || ''}${entry.date ? ' | ' + entry.date : ''}`
+                            : `${entry.authors ? entry.authors + ' | ' : ''}${entry.venue || ''}${entry.date ? ' | ' + entry.date : ''}`;
+                        return `
+                            <div class="entry-card">
+                                <div class="entry-info">
+                                    <div class="entry-title">${displayTitle}</div>
+                                    <div class="entry-meta">${displayMeta}</div>
+                                </div>
+                                <div class="entry-actions">
+                                    <button class="btn btn-warning btn-small" onclick="editEntry('${category}', ${index})">Edit</button>
+                                    <button class="btn btn-danger btn-small" onclick="promptDelete('${category}', ${index})">Delete</button>
                                 </div>
                             </div>
-                            <div class="entry-actions">
-                                <button class="btn btn-warning btn-small" onclick="editEntry('${category}', ${index})">Edit</button>
-                                <button class="btn btn-danger btn-small" onclick="promptDelete('${category}', ${index})">Delete</button>
-                            </div>
-                        </div>
-                    `).join('')}
+                        `;
+                    }).join('')}
                 </div>
             `;
         });
@@ -844,35 +852,42 @@
         // Switch to add tab
         switchTab('add');
 
-        // Set edit mode - store original title for matching in GitHub content
+        // Set edit mode - store original title/name for matching in GitHub content
         editMode = true;
-        editOriginalTitle = entry.title;
+        editOriginalTitle = entry.title || entry.name;
         document.getElementById('edit-type').value = type;
         document.getElementById('edit-index').value = index;
         document.getElementById('edit-mode-banner').classList.remove('hidden');
-        document.getElementById('edit-title').textContent = entry.title.replace(/<[^>]*>/g, '').substring(0, 50) + '...';
+        document.getElementById('edit-title').textContent = (entry.title || entry.name || '').replace(/<[^>]*>/g, '').substring(0, 50) + '...';
         document.getElementById('publish-btn').textContent = 'Update Entry';
 
         // Populate form
         document.getElementById('entry-type').value = type;
         updateFormFields();
 
-        document.getElementById('title').value = entry.title || '';
-        document.getElementById('authors').value = entry.authors || '';
-        document.getElementById('venue').value = entry.venue || '';
-        document.getElementById('date').value = entry.date || '';
-        document.getElementById('url').value = entry.url || '';
-        document.getElementById('pdfUrl').value = entry.pdfUrl || '';
-        document.getElementById('abstract').value = entry.abstract || '';
+        if (type === 'conferences') {
+            document.getElementById('title').value = entry.name || '';
+            document.getElementById('authors').value = entry.role || '';
+            document.getElementById('venue').value = entry.location || '';
+            document.getElementById('date').value = entry.date || '';
+        } else {
+            document.getElementById('title').value = entry.title || '';
+            document.getElementById('authors').value = entry.authors || '';
+            document.getElementById('venue').value = entry.venue || '';
+            document.getElementById('date').value = entry.date || '';
+            document.getElementById('url').value = entry.url || '';
+            document.getElementById('pdfUrl').value = entry.pdfUrl || '';
+            document.getElementById('abstract').value = entry.abstract || '';
 
-        // Handle note field
-        if (entry.note) {
-            if (typeof entry.note === 'object') {
-                document.getElementById('note').value = entry.note.text || '';
-                document.getElementById('note-link-text').value = entry.note.link?.text || '';
-                document.getElementById('note-link-url').value = entry.note.link?.url || '';
-            } else {
-                document.getElementById('note').value = entry.note;
+            // Handle note field
+            if (entry.note) {
+                if (typeof entry.note === 'object') {
+                    document.getElementById('note').value = entry.note.text || '';
+                    document.getElementById('note-link-text').value = entry.note.link?.text || '';
+                    document.getElementById('note-link-url').value = entry.note.link?.url || '';
+                } else {
+                    document.getElementById('note').value = entry.note;
+                }
             }
         }
 
@@ -895,10 +910,11 @@
         const entry = researchData[type][index];
         if (!entry) return;
 
-        // Store the title for matching in fresh GitHub content
-        deleteTarget = { type, title: entry.title };
+        // Store the title/name for matching in fresh GitHub content
+        const deleteKey = type === 'conferences' ? entry.name : entry.title;
+        deleteTarget = { type, title: deleteKey };
         document.getElementById('confirm-message').textContent =
-            `Are you sure you want to delete "${entry.title.replace(/<[^>]*>/g, '').substring(0, 50)}..."?`;
+            `Are you sure you want to delete "${(deleteKey || '').replace(/<[^>]*>/g, '').substring(0, 50)}..."?`;
         document.getElementById('confirm-overlay').classList.remove('hidden');
     }
 
@@ -938,9 +954,11 @@
             const fileData = await fileResponse.json();
             fileSha = fileData.sha;
 
-            // Parse and update content - find entry by title
+            // Parse and update content - find entry by title/name
             const currentContent = JSON.parse(atob(fileData.content));
-            const entryIndex = currentContent[type]?.findIndex(e => e.title === title);
+            const entryIndex = type === 'conferences'
+                ? currentContent[type]?.findIndex(e => e.name === title)
+                : currentContent[type]?.findIndex(e => e.title === title);
 
             if (entryIndex === -1 || entryIndex === undefined) {
                 throw new Error('Could not find the entry. It may have already been deleted. Please refresh the page.');
@@ -991,10 +1009,19 @@
     function updateFormFields() {
         const type = document.getElementById('entry-type').value;
 
+        // Reset labels to defaults
+        document.querySelector('label[for="title"]').textContent = 'Title *';
+        document.getElementById('title').placeholder = 'Enter the title';
+        document.querySelector('label[for="authors"]').textContent = 'Authors';
+        document.getElementById('authors').placeholder = 'e.g., with John Smith';
+        document.querySelector('label[for="venue"]').textContent = 'Venue/Publication';
+        document.getElementById('venue').placeholder = 'e.g., Mercatus Research';
+
         document.getElementById('pdf-group').classList.add('hidden');
         document.getElementById('abstract-group').classList.add('hidden');
         document.getElementById('note-group').classList.add('hidden');
         document.getElementById('note-link-group').classList.add('hidden');
+        document.getElementById('authors-group').classList.remove('hidden');
         document.getElementById('venue-group').classList.remove('hidden');
         document.getElementById('date-group').classList.remove('hidden');
         document.getElementById('url-group').classList.remove('hidden');
@@ -1021,6 +1048,15 @@
                 break;
             case 'popularArticles':
                 break;
+            case 'conferences':
+                document.querySelector('label[for="title"]').textContent = 'Conference Name *';
+                document.getElementById('title').placeholder = 'e.g., Southern Economic Association Annual Meetings';
+                document.querySelector('label[for="authors"]').textContent = 'Role';
+                document.getElementById('authors').placeholder = 'e.g., Presenter';
+                document.querySelector('label[for="venue"]').textContent = 'Location';
+                document.getElementById('venue').placeholder = 'e.g., Washington, D.C.';
+                document.getElementById('url-group').classList.add('hidden');
+                break;
         }
     }
 
@@ -1028,6 +1064,17 @@
     function buildEntry() {
         const type = document.getElementById('entry-type').value;
         const entry = {};
+
+        if (type === 'conferences') {
+            entry.name = document.getElementById('title').value;
+            const role = document.getElementById('authors').value;
+            if (role) entry.role = role;
+            const location = document.getElementById('venue').value;
+            if (location) entry.location = location;
+            const date = document.getElementById('date').value;
+            if (date) entry.date = date;
+            return { type, entry };
+        }
 
         entry.title = document.getElementById('title').value;
 
@@ -1131,8 +1178,10 @@
                 // Update existing entry - find by original title to handle GitHub changes
                 const editType = document.getElementById('edit-type').value;
 
-                // Find the entry by its original title in the fresh GitHub content
-                const entryIndex = currentContent[editType]?.findIndex(e => e.title === editOriginalTitle);
+                // Find the entry by its original title/name in the fresh GitHub content
+                const entryIndex = editType === 'conferences'
+                    ? currentContent[editType]?.findIndex(e => e.name === editOriginalTitle)
+                    : currentContent[editType]?.findIndex(e => e.title === editOriginalTitle);
 
                 if (entryIndex === -1 || entryIndex === undefined) {
                     throw new Error('Could not find the original entry. It may have been modified or deleted. Please refresh the page and try again.');
@@ -1167,7 +1216,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        message: `${editMode ? 'Update' : 'Add'} research entry: ${entry.title.substring(0, 50)}`,
+                        message: `${editMode ? 'Update' : 'Add'} research entry: ${(entry.title || entry.name || '').substring(0, 50)}`,
                         content: updatedContent,
                         sha: fileSha,
                         branch: GITHUB_BRANCH
@@ -1182,7 +1231,7 @@
 
             // Success!
             showFormMessage(
-                `Successfully ${editMode ? 'updated' : 'published'} "${entry.title}"! The changes will be live shortly.`,
+                `Successfully ${editMode ? 'updated' : 'published'} "${entry.title || entry.name}"! The changes will be live shortly.`,
                 'success'
             );
 

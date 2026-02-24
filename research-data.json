@@ -54,6 +54,26 @@
       "note": "for <em>The Cambridge Companion to Localism</em> (eds. Tyler S. Moore and Zack German)"
     }
   ],
+  "conferences": [
+    {
+      "name": "Southern Economic Association Annual Meetings",
+      "location": "Washington, D.C.",
+      "date": "November 2025",
+      "role": "Presenter"
+    },
+    {
+      "name": "Markets & Society Workshop",
+      "location": "Fairfax, VA",
+      "date": "Spring 2025",
+      "role": "Presenter"
+    },
+    {
+      "name": "Association for Private Enterprise Education Annual Conference",
+      "location": "Las Vegas, NV",
+      "date": "April 2025",
+      "role": "Presenter"
+    }
+  ],
   "popularArticles": [
     {
       "title": "Markets in everything: using Coasean bargains to resolve culture conflicts",

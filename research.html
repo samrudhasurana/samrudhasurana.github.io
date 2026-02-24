@@ -242,6 +242,37 @@
                 html += '</div></section>';
             }
             
+            // Conferences
+            if (data.conferences && data.conferences.length > 0) {
+                html += `
+                    <section class="research-section">
+                        <button class="conferences-toggle" onclick="toggleConferences()" aria-expanded="false" aria-controls="conferences-panel">
+                            <h2 class="section-title conferences-title">Conferences</h2>
+                            <svg class="conferences-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div id="conferences-panel" class="conferences-panel" hidden>
+                            <div class="conferences-list">
+                `;
+                data.conferences.forEach(conf => {
+                    html += `
+                        <div class="conference-item">
+                            <div class="conference-main">
+                                <span class="conference-name">${conf.name}</span>
+                                ${conf.role ? `<span class="conference-role">${conf.role}</span>` : ''}
+                            </div>
+                            <div class="conference-meta">
+                                ${conf.location ? `<span class="conference-location">${conf.location}</span>` : ''}
+                                ${conf.location && conf.date ? `<span class="conference-sep">&middot;</span>` : ''}
+                                ${conf.date ? `<span class="conference-date">${conf.date}</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div></div></section>';
+            }
+
             // Popular Articles
             if (data.popularArticles && data.popularArticles.length > 0) {
                 html += '<section class="research-section"><h2 class="section-title">Popular Articles</h2><div class="articles-grid">';
@@ -266,6 +297,21 @@
             document.getElementById('research-content').innerHTML = '<p>Error loading research data. Please try again later.</p>';
         });
     
+    function toggleConferences() {
+        const panel = document.getElementById('conferences-panel');
+        const button = document.querySelector('.conferences-toggle');
+        const isHidden = panel.hasAttribute('hidden');
+        if (isHidden) {
+            panel.removeAttribute('hidden');
+            button.setAttribute('aria-expanded', 'true');
+            button.classList.add('is-open');
+        } else {
+            panel.setAttribute('hidden', '');
+            button.setAttribute('aria-expanded', 'false');
+            button.classList.remove('is-open');
+        }
+    }
+
     function toggleAbstract(id) {
         const abstract = document.getElementById(id);
         const button = event.target;

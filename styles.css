@@ -1,4 +1,6 @@
 :root {
+    --samosa-cursor: url('images/samosa-cursor.svg') 6 6;
+
     --primary-color: #8B4513;
     --primary-dark: #5D2F0D;
     --accent-color: #D4A574;
@@ -139,7 +141,16 @@
     box-sizing: border-box;
 }
 
+button,
+a,
+select,
+label,
+[role="button"] {
+    cursor: var(--samosa-cursor), pointer;
+}
+
 body {
+    cursor: var(--samosa-cursor), auto;
     font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
     font-size: 1.125rem;
     color: var(--text-dark);

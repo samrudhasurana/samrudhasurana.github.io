@@ -633,6 +633,11 @@
                     <input type="text" id="date" placeholder="e.g., December 2024">
                 </div>
 
+                <div class="form-group hidden" id="role-group">
+                    <label for="role">Role (optional)</label>
+                    <input type="text" id="role" placeholder="e.g., Presenter, Discussant, Chair">
+                </div>
+
                 <div class="form-group" id="url-group">
                     <label for="url">URL</label>
                     <input type="url" id="url" placeholder="https://...">
@@ -871,7 +876,7 @@
                             ? (entry.name || '')
                             : (entry.title || '').replace(/<[^>]*>/g, '');
                         const displayMeta = isConference
-                            ? `${entry.location || ''}${entry.dates ? ' | ' + entry.dates : ''}${entry.presentations ? ' | ' + entry.presentations.length + ' presentation(s)' : ''}`
+                            ? `${entry.location || ''}${(entry.date || entry.dates) ? ' | ' + (entry.date || entry.dates) : ''}${entry.presentations ? ' | ' + entry.presentations.length + ' presentation(s)' : ''}`
                             : `${entry.authors ? entry.authors + ' | ' : ''}${entry.venue || ''}${entry.date ? ' | ' + entry.date : ''}`;
                         return `
                             <div class="entry-card">
@@ -921,7 +926,8 @@
         if (type === 'conferences') {
             document.getElementById('title').value = entry.name || '';
             document.getElementById('venue').value = entry.location || '';
-            document.getElementById('date').value = entry.dates || '';
+            document.getElementById('date').value = entry.date || entry.dates || '';
+            document.getElementById('role').value = entry.role || '';
             document.getElementById('presentations-container').innerHTML = '';
             const presentations = entry.presentations || [];
             if (presentations.length > 0) {
@@ -1083,6 +1089,7 @@
         document.getElementById('note-group').classList.add('hidden');
         document.getElementById('note-link-group').classList.add('hidden');
         document.getElementById('presentations-section').classList.add('hidden');
+        document.getElementById('role-group').classList.add('hidden');
         document.getElementById('authors-group').classList.remove('hidden');
         document.getElementById('venue-group').classList.remove('hidden');
         document.getElementById('date-group').classList.remove('hidden');
@@ -1119,6 +1126,7 @@
                 document.getElementById('date').placeholder = 'e.g., November 21–24, 2025';
                 document.getElementById('authors-group').classList.add('hidden');
                 document.getElementById('url-group').classList.add('hidden');
+                document.getElementById('role-group').classList.remove('hidden');
                 document.getElementById('presentations-section').classList.remove('hidden');
                 if (document.getElementById('presentations-container').children.length === 0) {
                     addPresentation();
@@ -1188,8 +1196,10 @@
             entry.name = document.getElementById('title').value;
             const location = document.getElementById('venue').value;
             if (location) entry.location = location;
-            const dates = document.getElementById('date').value;
-            if (dates) entry.dates = dates;
+            const date = document.getElementById('date').value;
+            if (date) entry.date = date;
+            const role = document.getElementById('role').value;
+            if (role) entry.role = role;
             const presentations = [];
             document.querySelectorAll('.presentation-card').forEach(card => {
                 const pres = {};

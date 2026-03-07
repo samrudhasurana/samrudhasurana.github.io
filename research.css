@@ -242,57 +242,119 @@
     border-top: 1px solid var(--border-color);
 }
 
-/* Conferences Panel */
-.conferences-toggle {
+/* Conferences Section Header */
+.section-header-row {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: space-between;
-    width: 100%;
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    text-align: left;
-    font-family: inherit;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
     margin-bottom: 1.25rem;
 }
 
-.conferences-toggle:hover .conferences-title {
-    color: var(--primary-color);
-}
-
-.conferences-title {
-    margin-bottom: 0;
+.section-header-row .section-title {
     border-bottom: none;
     padding-bottom: 0;
-    transition: color 0.3s ease;
+    margin-bottom: 0;
 }
 
-.conferences-toggle + * {
-    border-top: 1px solid var(--border-color);
-}
-
-/* Re-apply the border-bottom on the title row for the toggle */
-.conferences-toggle {
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.5rem;
-}
-
-.conferences-chevron {
-    width: 1.2rem;
-    height: 1.2rem;
-    flex-shrink: 0;
-    color: var(--text-light);
-    transition: transform 0.25s ease, color 0.3s ease;
-}
-
-.conferences-toggle.is-open .conferences-chevron {
-    transform: rotate(180deg);
+.conferences-open-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: none;
+    border: none;
     color: var(--primary-color);
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
 }
 
-.conferences-panel {
-    padding-top: 0.75rem;
+.conferences-open-btn:hover {
+    color: var(--primary-dark);
+}
+
+/* Conferences Side Panel */
+.side-panel-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.side-panel-overlay.is-open {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.side-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 420px;
+    max-width: 100vw;
+    height: 100%;
+    background: var(--bg-cream);
+    z-index: 201;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -4px 0 24px var(--shadow-medium);
+}
+
+.side-panel.is-open {
+    transform: translateX(0);
+}
+
+.side-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    background: var(--bg-cream);
+    z-index: 1;
+}
+
+.side-panel-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+
+.side-panel-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--text-light);
+    padding: 0.25rem 0.5rem;
+    transition: color 0.2s ease;
+}
+
+.side-panel-close:hover {
+    color: var(--text-dark);
+}
+
+.side-panel-body {
+    padding: 1.25rem 1.5rem;
+    flex: 1;
+}
+
+@media (max-width: 480px) {
+    .side-panel {
+        width: 100vw;
+    }
 }
 
 .conferences-list {

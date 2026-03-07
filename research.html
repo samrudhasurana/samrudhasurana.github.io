@@ -93,6 +93,18 @@
         </div>
     </footer>
 
+    <!-- Conferences Side Panel -->
+    <div id="conferences-overlay" class="side-panel-overlay" onclick="closeConferencesPanel()"></div>
+    <aside id="conferences-side-panel" class="side-panel" role="dialog" aria-modal="true" aria-label="Conferences">
+        <div class="side-panel-header">
+            <span class="side-panel-title">Conferences</span>
+            <button class="side-panel-close" onclick="closeConferencesPanel()" aria-label="Close">&times;</button>
+        </div>
+        <div class="side-panel-body">
+            <div class="conferences-list" id="conferences-panel-list"></div>
+        </div>
+    </aside>
+
     <script>
     function changeFont(font) {
         document.body.classList.remove('font-palatino', 'font-computer-modern', 'font-noto-sans');
@@ -246,31 +258,37 @@
             if (data.conferences && data.conferences.length > 0) {
                 html += `
                     <section class="research-section">
-                        <button class="conferences-toggle" onclick="toggleConferences()" aria-expanded="false" aria-controls="conferences-panel">
-                            <h2 class="section-title conferences-title">Conferences</h2>
-                            <svg class="conferences-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
-                        </button>
-                        <div id="conferences-panel" class="conferences-panel" hidden>
-                            <div class="conferences-list">
-                `;
-                data.conferences.forEach(conf => {
-                    html += `
-                        <div class="conference-item">
-                            <div class="conference-main">
-                                <span class="conference-name">${conf.name}</span>
-                                ${conf.role ? `<span class="conference-role">${conf.role}</span>` : ''}
-                            </div>
-                            <div class="conference-meta">
-                                ${conf.location ? `<span class="conference-location">${conf.location}</span>` : ''}
-                                ${conf.location && conf.date ? `<span class="conference-sep">&middot;</span>` : ''}
-                                ${conf.date ? `<span class="conference-date">${conf.date}</span>` : ''}
-                            </div>
+                        <div class="section-header-row">
+                            <h2 class="section-title">Conferences</h2>
+                            <button class="conferences-open-btn" onclick="openConferencesPanel()">
+                                View all (${data.conferences.length})
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </button>
                         </div>
-                    `;
-                });
-                html += '</div></div></section>';
+                    </section>
+                `;
+                // Populate the side panel list
+                const panelList = document.getElementById('conferences-panel-list');
+                if (panelList) {
+                    let panelHtml = '';
+                    data.conferences.forEach(conf => {
+                        const confDate = conf.date || conf.dates || '';
+                        panelHtml += `
+                            <div class="conference-item">
+                                <div class="conference-main">
+                                    <span class="conference-name">${conf.name}</span>
+                                    ${conf.role ? `<span class="conference-role">${conf.role}</span>` : ''}
+                                </div>
+                                <div class="conference-meta">
+                                    ${conf.location ? `<span class="conference-location">${conf.location}</span>` : ''}
+                                    ${conf.location && confDate ? `<span class="conference-sep">&middot;</span>` : ''}
+                                    ${confDate ? `<span class="conference-date">${confDate}</span>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    panelList.innerHTML = panelHtml;
+                }
             }
 
             // Popular Articles
@@ -297,20 +315,21 @@
             document.getElementById('research-content').innerHTML = '<p>Error loading research data. Please try again later.</p>';
         });
     
-    function toggleConferences() {
-        const panel = document.getElementById('conferences-panel');
-        const button = document.querySelector('.conferences-toggle');
-        const isHidden = panel.hasAttribute('hidden');
-        if (isHidden) {
-            panel.removeAttribute('hidden');
-            button.setAttribute('aria-expanded', 'true');
-            button.classList.add('is-open');
-        } else {
-            panel.setAttribute('hidden', '');
-            button.setAttribute('aria-expanded', 'false');
-            button.classList.remove('is-open');
-        }
+    function openConferencesPanel() {
+        document.getElementById('conferences-side-panel').classList.add('is-open');
+        document.getElementById('conferences-overlay').classList.add('is-open');
+        document.body.style.overflow = 'hidden';
     }
+
+    function closeConferencesPanel() {
+        document.getElementById('conferences-side-panel').classList.remove('is-open');
+        document.getElementById('conferences-overlay').classList.remove('is-open');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeConferencesPanel();
+    });
 
     function toggleAbstract(id) {
         const abstract = document.getElementById(id);

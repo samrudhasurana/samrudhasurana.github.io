@@ -93,6 +93,11 @@
         </div>
     </footer>
 
+    <!-- Conferences Floating Tab -->
+    <button id="conferences-float-btn" class="conferences-float-btn" onclick="openConferencesPanel()" aria-label="Where I'll Be — open conferences panel" hidden>
+        Where I'll Be
+    </button>
+
     <!-- Conferences Side Panel -->
     <div id="conferences-overlay" class="side-panel-overlay" onclick="closeConferencesPanel()"></div>
     <aside id="conferences-side-panel" class="side-panel" role="dialog" aria-modal="true" aria-label="Conferences">
@@ -258,15 +263,11 @@
             if (data.conferences && data.conferences.length > 0) {
                 html += `
                     <section class="research-section">
-                        <div class="section-header-row">
-                            <h2 class="section-title">Conferences</h2>
-                            <button class="conferences-open-btn" onclick="openConferencesPanel()">
-                                View all (${data.conferences.length})
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                            </button>
-                        </div>
+                        <h2 class="section-title">Conferences</h2>
                     </section>
                 `;
+                // Show the floating tab now that we know there are conferences
+                document.getElementById('conferences-float-btn').hidden = false;
                 // Populate the side panel list
                 const panelList = document.getElementById('conferences-panel-list');
                 if (panelList) {

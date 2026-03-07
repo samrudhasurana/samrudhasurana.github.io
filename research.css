@@ -355,10 +355,64 @@
     }
 }
 
+/* Panel section headings (Upcoming / Previously at) */
+.panel-section-heading {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-light);
+    margin: 1.5rem 0 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.panel-section-heading:first-child {
+    margin-top: 0;
+}
+
 .conferences-list {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+}
+
+/* Presentation details within a conference panel card */
+.conf-presentations {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.conf-pres-item {
+    font-size: 0.875rem;
+}
+
+.conf-pres-title {
+    color: var(--text-dark);
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.conf-pres-coauthors {
+    color: var(--text-medium);
+    font-weight: 400;
+}
+
+.conf-pres-session {
+    color: var(--text-medium);
+    margin-top: 0.2rem;
+    font-style: italic;
+    font-size: 0.82rem;
+}
+
+.conf-pres-time {
+    color: var(--text-light);
+    font-size: 0.78rem;
+    margin-top: 0.1rem;
 }
 
 .conference-item {

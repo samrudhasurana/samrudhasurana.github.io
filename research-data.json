@@ -59,6 +59,7 @@
       "name": "Public Choice Society Meetings",
       "location": "San Antonio, TX",
       "date": "March 12-14, 2026",
+      "endDate": "2026-03-14",
       "presentations": [
         {
           "title": "Jain Religious Auctions",
@@ -80,18 +81,21 @@
       "name": "Southern Economic Association Annual Meetings",
       "location": "Washington, D.C.",
       "date": "November 2025",
+      "endDate": "2025-11-30",
       "role": "Presenter"
     },
     {
       "name": "Markets & Society Workshop",
       "location": "Fairfax, VA",
       "date": "Spring 2025",
+      "endDate": "2025-05-31",
       "role": "Presenter"
     },
     {
       "name": "Association for Private Enterprise Education Annual Conference",
       "location": "Las Vegas, NV",
       "date": "April 2025",
+      "endDate": "2025-04-30",
       "role": "Presenter"
     }
   ],

@@ -633,6 +633,12 @@
                     <input type="text" id="date" placeholder="e.g., December 2024">
                 </div>
 
+                <div class="form-group hidden" id="end-date-group">
+                    <label for="end-date">End Date *</label>
+                    <input type="date" id="end-date">
+                    <small>Last day of the conference — determines "upcoming" vs "previously at" automatically</small>
+                </div>
+
                 <div class="form-group hidden" id="role-group">
                     <label for="role">Role (optional)</label>
                     <input type="text" id="role" placeholder="e.g., Presenter, Discussant, Chair">
@@ -927,6 +933,7 @@
             document.getElementById('title').value = entry.name || '';
             document.getElementById('venue').value = entry.location || '';
             document.getElementById('date').value = entry.date || entry.dates || '';
+            document.getElementById('end-date').value = entry.endDate || '';
             document.getElementById('role').value = entry.role || '';
             document.getElementById('presentations-container').innerHTML = '';
             const presentations = entry.presentations || [];
@@ -1090,6 +1097,7 @@
         document.getElementById('note-link-group').classList.add('hidden');
         document.getElementById('presentations-section').classList.add('hidden');
         document.getElementById('role-group').classList.add('hidden');
+        document.getElementById('end-date-group').classList.add('hidden');
         document.getElementById('authors-group').classList.remove('hidden');
         document.getElementById('venue-group').classList.remove('hidden');
         document.getElementById('date-group').classList.remove('hidden');
@@ -1126,6 +1134,7 @@
                 document.getElementById('date').placeholder = 'e.g., November 21–24, 2025';
                 document.getElementById('authors-group').classList.add('hidden');
                 document.getElementById('url-group').classList.add('hidden');
+                document.getElementById('end-date-group').classList.remove('hidden');
                 document.getElementById('role-group').classList.remove('hidden');
                 document.getElementById('presentations-section').classList.remove('hidden');
                 if (document.getElementById('presentations-container').children.length === 0) {
@@ -1198,6 +1207,8 @@
             if (location) entry.location = location;
             const date = document.getElementById('date').value;
             if (date) entry.date = date;
+            const endDate = document.getElementById('end-date').value;
+            if (endDate) entry.endDate = endDate;
             const role = document.getElementById('role').value;
             if (role) entry.role = role;
             const presentations = [];

@@ -1,5 +1,5 @@
 :root {
-    --samosa-cursor: url('images/samosa-cursor.svg') 6 6;
+    --samosa-cursor: url('images/samosa-cursor.svg') 5 5;
 
     --primary-color: #8B4513;
     --primary-dark: #5D2F0D;
@@ -139,6 +139,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    cursor: var(--samosa-cursor), auto !important;
 }
 
 button,

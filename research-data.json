@@ -56,6 +56,22 @@
   ],
   "conferences": [
     {
+      "name": "ASREC Conference",
+      "location": "Orange County, CA",
+      "date": "March 20-21, 2026",
+      "endDate": "2026-03-21",
+      "role": "Presenter",
+      "presentations": [
+        {
+          "title": "Ghee Boli: Religious Auctions and Reputation Building Among Jain Merchants",
+          "coauthors": "with Peter Leeson",
+          "session": "7B : Religion and Affiliation",
+          "sessionDate": "March 21, 2026",
+          "sessionTime": "2:00 pm -- 3:30 pm"
+        }
+      ]
+    },
+    {
       "name": "Public Choice Society Meetings",
       "location": "San Antonio, TX",
       "date": "March 12-14, 2026",

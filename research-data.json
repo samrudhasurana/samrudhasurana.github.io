@@ -117,11 +117,20 @@
       "role": "Presenter"
     },
     {
-      "name": "Markets & Society Workshop",
+      "name": "Markets & Society Conference",
       "location": "Fairfax, VA",
-      "date": "Spring 2025",
-      "endDate": "2025-05-31",
-      "role": "Presenter"
+      "date": "October 17-20, 2025",
+      "endDate": "2025-10-20",
+      "role": "Presenter",
+      "presentations": [
+        {
+          "title": "Social Identity Formation in Markets and Politics",
+          "coauthors": "with Christopher J. Coyne",
+          "session": "Culture, Identity, and Peacemaking",
+          "sessionDate": "October 20, 2025",
+          "sessionTime": "9:00 am -- 10:30 am"
+        }
+      ]
     },
     {
       "name": "Association for Private Enterprise Education Annual Conference",

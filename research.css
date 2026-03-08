@@ -255,7 +255,7 @@
     padding: 1.25rem 0.65rem;
     writing-mode: vertical-rl;
     font-family: inherit;
-    font-size: 0.8rem;
+    font-size: 0.95rem;
     font-weight: 600;
     letter-spacing: 0.06em;
     border-radius: 6px 0 0 6px;
@@ -270,7 +270,7 @@
 
 @media (max-width: 768px) {
     .conferences-float-btn {
-        font-size: 0.7rem;
+        font-size: 0.85rem;
         padding: 1rem 0.55rem;
     }
 }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Samrudha Surana - Economist & Researcher</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="research.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=STIX+Two+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -165,6 +166,99 @@
         document.body.setAttribute('data-theme', savedTheme);
         updateThemeIcon(savedTheme);
     });
+    </script>
+
+    <!-- Conferences Floating Tab -->
+    <button id="conferences-float-btn" class="conferences-float-btn" onclick="openConferencesPanel()" aria-label="Conferences I'll be at — open panel" hidden>
+        Conferences I'll be at
+    </button>
+
+    <!-- Conferences Side Panel -->
+    <div id="conferences-overlay" class="side-panel-overlay" onclick="closeConferencesPanel()"></div>
+    <aside id="conferences-side-panel" class="side-panel" role="dialog" aria-modal="true" aria-label="Conferences">
+        <div class="side-panel-header">
+            <span class="side-panel-title">Conferences</span>
+            <button class="side-panel-close" onclick="closeConferencesPanel()" aria-label="Close">&times;</button>
+        </div>
+        <div class="side-panel-body">
+            <div class="conferences-list" id="conferences-panel-list"></div>
+        </div>
+    </aside>
+
+    <script>
+    function openConferencesPanel() {
+        document.getElementById('conferences-side-panel').classList.add('is-open');
+        document.getElementById('conferences-overlay').classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeConferencesPanel() {
+        document.getElementById('conferences-side-panel').classList.remove('is-open');
+        document.getElementById('conferences-overlay').classList.remove('is-open');
+        document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeConferencesPanel();
+    });
+
+    fetch('research-data.json')
+        .then(r => r.json())
+        .then(data => {
+            if (!data.conferences || data.conferences.length === 0) return;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const upcoming = data.conferences
+                .filter(c => c.endDate && new Date(c.endDate) >= today)
+                .sort((a, b) => new Date(a.endDate) - new Date(b.endDate));
+            const past = data.conferences
+                .filter(c => !c.endDate || new Date(c.endDate) < today)
+                .sort((a, b) => new Date(b.endDate || 0) - new Date(a.endDate || 0));
+
+            function buildConfCard(conf) {
+                const confDate = conf.date || conf.dates || '';
+                let html = `
+                    <div class="conference-item">
+                        <div class="conference-main">
+                            <span class="conference-name">${conf.name}</span>
+                            ${conf.role ? `<span class="conference-role">${conf.role}</span>` : ''}
+                        </div>
+                        <div class="conference-meta">
+                            ${conf.location ? `<span class="conference-location">${conf.location}</span>` : ''}
+                            ${conf.location && confDate ? `<span class="conference-sep">&middot;</span>` : ''}
+                            ${confDate ? `<span class="conference-date">${confDate}</span>` : ''}
+                        </div>
+                `;
+                if (conf.presentations && conf.presentations.length > 0) {
+                    html += `<div class="conf-presentations">`;
+                    conf.presentations.forEach(p => {
+                        html += `
+                            <div class="conf-pres-item">
+                                <div class="conf-pres-title">${p.title || ''}${p.coauthors ? `<span class="conf-pres-coauthors"> ${p.coauthors}</span>` : ''}</div>
+                                ${p.session ? `<div class="conf-pres-session">${p.session}</div>` : ''}
+                                ${(p.sessionDate || p.sessionTime) ? `<div class="conf-pres-time">${[p.sessionDate, p.sessionTime].filter(Boolean).join(', ')}</div>` : ''}
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                }
+                html += `</div>`;
+                return html;
+            }
+
+            const panelList = document.getElementById('conferences-panel-list');
+            let panelHtml = '';
+            if (upcoming.length > 0) {
+                panelHtml += `<h3 class="panel-section-heading">Upcoming</h3><div class="conferences-list">`;
+                upcoming.forEach(c => { panelHtml += buildConfCard(c); });
+                panelHtml += `</div>`;
+            }
+            if (past.length > 0) {
+                panelHtml += `<h3 class="panel-section-heading">Previously at</h3><div class="conferences-list">`;
+                past.forEach(c => { panelHtml += buildConfCard(c); });
+                panelHtml += `</div>`;
+            }
+            panelList.innerHTML = panelHtml;
+            document.getElementById('conferences-float-btn').hidden = false;
+        });
     </script>
 </body>
 </html>

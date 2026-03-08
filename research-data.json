@@ -56,6 +56,22 @@
   ],
   "conferences": [
     {
+      "name": "APEE 50th Annual Meeting",
+      "location": "Las Vegas, NV",
+      "date": "April 5-7, 2026",
+      "endDate": "2026-04-07",
+      "role": "Presenter",
+      "presentations": [
+        {
+          "title": "Social Identity Formation in Markets and Politics",
+          "coauthors": "with Christopher J. Coyne",
+          "session": "[1.E.03] Advances in Virginia Political Economy",
+          "sessionDate": "April 6, 2026",
+          "sessionTime": "3:50 pm - 5:05 pm"
+        }
+      ]
+    },
+    {
       "name": "ASREC Conference",
       "location": "Orange County, CA",
       "date": "March 20-21, 2026",

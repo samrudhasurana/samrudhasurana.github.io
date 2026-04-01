@@ -462,6 +462,27 @@
     color: var(--border-color);
 }
 
+/* Show previous button in conferences panel */
+.btn-show-previous {
+    display: block;
+    width: 100%;
+    margin-top: 0.75rem;
+    padding: 0.6rem 1rem;
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-medium);
+    font-family: inherit;
+    font-size: 0.875rem;
+    text-align: center;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-show-previous:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     .page-header h1 {

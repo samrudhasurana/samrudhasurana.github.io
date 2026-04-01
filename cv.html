@@ -14,14 +14,6 @@
 <body data-theme="light" data-color="sage" class="font-palatino">
     <div class="controls-bar">
         <div class="control-group">
-            <label for="font-select">Font:</label>
-            <select id="font-select" class="font-select" onchange="changeFont(this.value)">
-                <option value="palatino">Palatino</option>
-                <option value="computer-modern">Computer Modern</option>
-                <option value="noto-sans">Noto Sans</option>
-            </select>
-        </div>
-        <div class="control-group">
             <button class="theme-toggle" onclick="toggleTheme()">
                 <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="5"></circle>
@@ -56,7 +48,7 @@
     <main class="main-container cv-container">
         <header class="page-header">
             <h1>Curriculum Vitae</h1>
-            <p class="page-subtitle">Last updated: December 2025</p>
+            <p class="page-subtitle">Last updated: April 2026</p>
         </header>
 
         <div class="cv-content">
@@ -99,12 +91,6 @@
         </div>
     </footer>
     <script>
-    function changeFont(font) {
-        document.body.classList.remove('font-palatino', 'font-computer-modern', 'font-noto-sans');
-        document.body.classList.add('font-' + font);
-        localStorage.setItem('preferredFont', font);
-    }
-
     function toggleTheme() {
         const body = document.body;
         const currentTheme = body.getAttribute('data-theme');
@@ -131,12 +117,7 @@
 
     // Load saved preferences
     document.addEventListener('DOMContentLoaded', function() {
-        const savedFont = localStorage.getItem('preferredFont') || 'palatino';
         const savedTheme = localStorage.getItem('preferredTheme') || 'light';
-
-        changeFont(savedFont);
-        document.getElementById('font-select').value = savedFont;
-
         document.body.setAttribute('data-theme', savedTheme);
         updateThemeIcon(savedTheme);
     });

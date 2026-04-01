@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <link rel="icon" type="image/svg+xml" href="images/samosa-cursor.svg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Samrudha Surana - Economist & Researcher</title>
+    <title>Samrudha Surana</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="research.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=STIX+Two+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body data-theme="light" data-color="brown" class="font-palatino">
+<body data-theme="light" data-color="sage" class="font-palatino">
     <div class="controls-bar">
         <div class="control-group">
             <label for="font-select">Font:</label>
@@ -19,13 +19,6 @@
                 <option value="palatino">Palatino</option>
                 <option value="computer-modern">Computer Modern</option>
                 <option value="noto-sans">Noto Sans</option>
-            </select>
-        </div>
-        <div class="control-group">
-            <label for="color-select">Color:</label>
-            <select id="color-select" class="color-select" onchange="changeColor(this.value)">
-                <option value="brown">Warm Brown</option>
-                <option value="sage">Sage Green</option>
             </select>
         </div>
         <div class="control-group">
@@ -80,7 +73,6 @@
                     </p>
                     <div class="hero-links">
                         <a href="https://econexchange.substack.com/" target="_blank">Substack</a>
-                        <a href="https://merch.samosanomics.com/" target="_blank">T-Shirt Shop</a>
                         <a href="research.html">Research</a>
                     </div>
                 </div>
@@ -123,11 +115,6 @@
         localStorage.setItem('preferredFont', font);
     }
 
-    function changeColor(color) {
-        document.body.setAttribute('data-color', color);
-        localStorage.setItem('preferredColor', color);
-    }
-
     function toggleTheme() {
         const body = document.body;
         const currentTheme = body.getAttribute('data-theme');
@@ -156,13 +143,9 @@
     document.addEventListener('DOMContentLoaded', function() {
         const savedFont = localStorage.getItem('preferredFont') || 'palatino';
         const savedTheme = localStorage.getItem('preferredTheme') || 'light';
-        const savedColor = localStorage.getItem('preferredColor') || 'brown';
 
         changeFont(savedFont);
         document.getElementById('font-select').value = savedFont;
-
-        changeColor(savedColor);
-        document.getElementById('color-select').value = savedColor;
 
         document.body.setAttribute('data-theme', savedTheme);
         updateThemeIcon(savedTheme);

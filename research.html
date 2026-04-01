@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=STIX+Two+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body data-theme="light" data-color="brown" class="font-palatino">
+<body data-theme="light" data-color="sage" class="font-palatino">
     <div class="controls-bar">
         <div class="control-group">
             <label for="font-select">Font:</label>
@@ -19,13 +19,6 @@
                 <option value="palatino">Palatino</option>
                 <option value="computer-modern">Computer Modern</option>
                 <option value="noto-sans">Noto Sans</option>
-            </select>
-        </div>
-        <div class="control-group">
-            <label for="color-select">Color:</label>
-            <select id="color-select" class="color-select" onchange="changeColor(this.value)">
-                <option value="brown">Warm Brown</option>
-                <option value="sage">Sage Green</option>
             </select>
         </div>
         <div class="control-group">
@@ -118,11 +111,6 @@
         localStorage.setItem('preferredFont', font);
     }
 
-    function changeColor(color) {
-        document.body.setAttribute('data-color', color);
-        localStorage.setItem('preferredColor', color);
-    }
-
     function toggleTheme() {
         const body = document.body;
         const currentTheme = body.getAttribute('data-theme');
@@ -151,17 +139,24 @@
     document.addEventListener('DOMContentLoaded', function() {
         const savedFont = localStorage.getItem('preferredFont') || 'palatino';
         const savedTheme = localStorage.getItem('preferredTheme') || 'light';
-        const savedColor = localStorage.getItem('preferredColor') || 'brown';
 
         changeFont(savedFont);
         document.getElementById('font-select').value = savedFont;
 
-        changeColor(savedColor);
-        document.getElementById('color-select').value = savedColor;
-
         document.body.setAttribute('data-theme', savedTheme);
         updateThemeIcon(savedTheme);
     });
+
+    function formatDate(dateStr) {
+        if (!dateStr) return '';
+        // Handle YYYY-MM format
+        const parts = dateStr.split('-');
+        if (parts.length === 2) {
+            const date = new Date(parts[0], parseInt(parts[1]) - 1, 1);
+            return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        }
+        return dateStr;
+    }
 
     // Load research data from JSON file
     fetch('research-data.json')
@@ -181,7 +176,7 @@
                             </h3>
                             ${paper.authors ? `<p class="pub-authors">${paper.authors}</p>` : ''}
                             ${paper.venue ? `<p class="pub-venue">${paper.venue}</p>` : ''}
-                            ${paper.date ? `<p class="pub-date">${paper.date}</p>` : ''}
+                            ${paper.date ? `<p class="pub-date">${formatDate(paper.date)}</p>` : ''}
                             <div class="pub-actions">
                                 ${paper.pdfUrl ? `<a href="${paper.pdfUrl}" target="_blank" class="pdf-link">PDF</a>` : ''}
                                 ${paper.abstract ? `<button class="abstract-toggle" onclick="toggleAbstract('policy-abstract-${index}')">Show Abstract</button>` : ''}
@@ -207,7 +202,7 @@
                                 ${review.url ? `<a href="${review.url}" target="_blank">${review.title}</a>` : review.title}
                             </h3>
                             ${review.venue ? `<p class="pub-venue">${review.venue}</p>` : ''}
-                            ${review.date ? `<p class="pub-date">${review.date}</p>` : ''}
+                            ${review.date ? `<p class="pub-date">${formatDate(review.date)}</p>` : ''}
                         </div>
                     `;
                 });
@@ -333,7 +328,7 @@
                             <h3>${article.title}</h3>
                             <p class="article-meta">
                                 ${article.authors ? article.authors + ' | ' : ''}
-                                ${article.venue}${article.date ? ' | ' + article.date : ''}
+                                ${article.venue}${article.date ? ' | ' + formatDate(article.date) : ''}
                             </p>
                         </a>
                     `;

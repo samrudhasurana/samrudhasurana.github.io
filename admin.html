@@ -631,7 +631,8 @@
 
                 <div class="form-group" id="date-group">
                     <label for="date">Date</label>
-                    <input type="text" id="date" placeholder="e.g., December 2024">
+                    <input type="month" id="date">
+                    <small>Select the month and year of publication</small>
                 </div>
 
                 <div class="form-group hidden" id="end-date-group">
@@ -1090,7 +1091,7 @@
         document.querySelector('label[for="venue"]').textContent = 'Venue/Publication';
         document.getElementById('venue').placeholder = 'e.g., Mercatus Research';
         document.querySelector('label[for="date"]').textContent = 'Date';
-        document.getElementById('date').placeholder = 'e.g., December 2024';
+        document.getElementById('date').placeholder = '';
 
         document.getElementById('pdf-group').classList.add('hidden');
         document.getElementById('abstract-group').classList.add('hidden');
@@ -1103,6 +1104,9 @@
         document.getElementById('venue-group').classList.remove('hidden');
         document.getElementById('date-group').classList.remove('hidden');
         document.getElementById('url-group').classList.remove('hidden');
+        // Default date input to month picker for publications
+        document.getElementById('date').type = 'month';
+        document.getElementById('date').placeholder = '';
 
         switch(type) {
             case 'policyPapers':
@@ -1131,8 +1135,9 @@
                 document.getElementById('title').placeholder = 'e.g., Southern Economic Association Annual Meetings';
                 document.querySelector('label[for="venue"]').textContent = 'Location';
                 document.getElementById('venue').placeholder = 'e.g., Washington, D.C.';
-                document.querySelector('label[for="date"]').textContent = 'Conference Dates';
+                document.querySelector('label[for="date"]').textContent = 'Conference Dates (display text)';
                 document.getElementById('date').placeholder = 'e.g., November 21–24, 2025';
+                document.getElementById('date').type = 'text';
                 document.getElementById('authors-group').classList.add('hidden');
                 document.getElementById('url-group').classList.add('hidden');
                 document.getElementById('end-date-group').classList.remove('hidden');

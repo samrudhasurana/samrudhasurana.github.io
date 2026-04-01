@@ -14,14 +14,6 @@
 <body data-theme="light" data-color="sage" class="font-palatino">
     <div class="controls-bar">
         <div class="control-group">
-            <label for="font-select">Font:</label>
-            <select id="font-select" class="font-select" onchange="changeFont(this.value)">
-                <option value="palatino">Palatino</option>
-                <option value="computer-modern">Computer Modern</option>
-                <option value="noto-sans">Noto Sans</option>
-            </select>
-        </div>
-        <div class="control-group">
             <button class="theme-toggle" onclick="toggleTheme()">
                 <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="5"></circle>
@@ -105,12 +97,6 @@
     </aside>
 
     <script>
-    function changeFont(font) {
-        document.body.classList.remove('font-palatino', 'font-computer-modern', 'font-noto-sans');
-        document.body.classList.add('font-' + font);
-        localStorage.setItem('preferredFont', font);
-    }
-
     function toggleTheme() {
         const body = document.body;
         const currentTheme = body.getAttribute('data-theme');
@@ -137,12 +123,7 @@
 
     // Load saved preferences
     document.addEventListener('DOMContentLoaded', function() {
-        const savedFont = localStorage.getItem('preferredFont') || 'palatino';
         const savedTheme = localStorage.getItem('preferredTheme') || 'light';
-
-        changeFont(savedFont);
-        document.getElementById('font-select').value = savedFont;
-
         document.body.setAttribute('data-theme', savedTheme);
         updateThemeIcon(savedTheme);
     });
@@ -311,9 +292,16 @@
                         panelHtml += `</div>`;
                     }
                     if (past.length > 0) {
+                        const PAST_LIMIT = 3;
                         panelHtml += `<h3 class="panel-section-heading">Previously at</h3><div class="conferences-list">`;
-                        past.forEach(c => { panelHtml += buildConfCard(c); });
+                        past.slice(0, PAST_LIMIT).forEach(c => { panelHtml += buildConfCard(c); });
                         panelHtml += `</div>`;
+                        if (past.length > PAST_LIMIT) {
+                            panelHtml += `<div id="past-overflow" style="display:none;"><div class="conferences-list">`;
+                            past.slice(PAST_LIMIT).forEach(c => { panelHtml += buildConfCard(c); });
+                            panelHtml += `</div></div>`;
+                            panelHtml += `<button class="btn-show-previous" onclick="document.getElementById('past-overflow').style.display='block';this.style.display='none';">Show previous</button>`;
+                        }
                     }
                     panelList.innerHTML = panelHtml;
                 }

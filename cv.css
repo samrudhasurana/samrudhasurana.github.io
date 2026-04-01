@@ -4,6 +4,10 @@
     max-width: 800px;
 }
 
+.cv-container .page-header h1 {
+    color: var(--primary-dark);
+}
+
 .cv-content {
     animation: fadeInUp 0.6s ease-out;
     padding: 2rem 0 4rem;

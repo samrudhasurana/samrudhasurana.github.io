@@ -281,6 +281,7 @@
 
   /* Detail card */
   .day-detail {
+    grid-column: 1 / -1;
     margin-top: 22px;
     background: var(--cream);
     border-left: 6px solid var(--ink);
@@ -890,7 +891,15 @@ function renderMap() {
     features: INDIA_GEO.features.filter(f => !EXCLUDE_FROM_FIT.has(f.properties.name))
   };
 
-  const proj = d3.geoMercator().fitSize([W, H], mainlandGeo);
+  // Zoom into the trip corridor (Rajasthan → Delhi → Dehradun)
+  const tripBbox = {
+    type: "Feature",
+    geometry: {
+      type: "Polygon",
+      coordinates: [[[67.5, 23], [81, 23], [81, 33], [67.5, 33], [67.5, 23]]]
+    }
+  };
+  const proj = d3.geoMercator().fitExtent([[24, 24], [W - 24, H - 24]], tripBbox);
   const pathGen = d3.geoPath().projection(proj);
 
   const svg = d3.select(frame)
@@ -1099,7 +1108,29 @@ function shortCity(name) {
   return name.slice(0, 7);
 }
 
-function previewPos(pos) { renderDayDetail(pos || selectedPos); }
+function positionDetailAfterRow(pos) {
+  if (!pos) return;
+  const detail = document.getElementById("day-detail");
+  const cell = document.querySelector(`.cal-cell[data-pos="${pos}"]`);
+  if (!cell) return;
+  const grid = cell.closest(".cal-grid");
+  if (!grid) return;
+  const allCells = Array.from(grid.children).filter(c => !c.classList.contains('dow'));
+  const cellIdx = allCells.indexOf(cell);
+  if (cellIdx < 0) return;
+  const rowIndex = Math.floor(cellIdx / 7);
+  const lastCellIdx = Math.min((rowIndex + 1) * 7 - 1, allCells.length - 1);
+  const lastCellInRow = allCells[lastCellIdx];
+  if (lastCellInRow.nextElementSibling !== detail) {
+    lastCellInRow.insertAdjacentElement('afterend', detail);
+  }
+}
+
+function previewPos(pos) {
+  const effectivePos = pos || selectedPos;
+  renderDayDetail(effectivePos);
+  positionDetailAfterRow(effectivePos);
+}
 
 function selectPos(pos) {
   selectedPos = pos;
@@ -1108,6 +1139,7 @@ function selectPos(pos) {
   });
   renderDayDetail(pos);
   renderTimeline();
+  positionDetailAfterRow(pos);
 }
 
 function renderDayDetail(pos) {

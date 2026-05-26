@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>India · June 2026 — Archival Research Trip</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@500;600;700;800&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+  :root {
+    --sand:     #f5e6cf;
+    --cream:    #fbf3e1;
+    --paper:    #fdf8ec;
+    --ink:      #2b1d12;
+    --indigo:   #1f3a68;
+    --indigo-2: #2c4f87;
+    --terra:    #c0492b;
+    --marigold: #e8a02a;
+
+    --c-jodhpur:   #3680b8;
+    --c-bikaner:   #9c5a1a;
+    --c-jaisalmer: #e8a02a;
+    --c-jaipur:    #d3577f;
+    --c-delhi:     #1f3a68;
+    --c-dehradun:  #3f6a3e;
+    --c-hyderabad: #6b4a2a;
+
+    --serif: 'Bodoni Moda', Georgia, serif;
+    --sans:  'Work Sans', system-ui, sans-serif;
+    --mono:  'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  html { scroll-behavior: smooth; scroll-padding-top: 12px; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--sand);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  /* Hero header */
+  .hero {
+    background: var(--indigo);
+    color: var(--sand);
+    padding: 48px 36px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: 0;
+    height: 22px;
+    background-image:
+      radial-gradient(circle at 8px 11px, var(--terra) 3px, transparent 3.5px);
+    background-repeat: repeat-x;
+    background-size: 17px 22px;
+    opacity: 0.95;
+  }
+  .hero .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 8px;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(40px, 7vw, 64px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin: 0 0 6px;
+  }
+  .hero .lede {
+    font-size: clamp(15px, 2.2vw, 18px);
+    opacity: 0.9;
+    font-style: italic;
+    max-width: 540px;
+  }
+
+  /* Section frame */
+  .section {
+    padding: 40px 36px;
+  }
+  .section-lede {
+    margin: -6px 0 18px;
+    font-size: 15px;
+    color: var(--ink);
+    opacity: 0.78;
+    font-style: italic;
+    max-width: 560px;
+  }
+  .section-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--indigo);
+    opacity: 0.75;
+    margin-bottom: 8px;
+  }
+  .section h2 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(28px, 4.2vw, 38px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0 0 18px;
+    color: var(--ink);
+  }
+
+  /* India map (D3 rendered) */
+  .map-wrap {
+    background: var(--cream);
+    border: 1.5px solid var(--indigo);
+    padding: 16px;
+    position: relative;
+  }
+  .map-frame {
+    width: 100%;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+  .map-frame svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .map-legend {
+    display: flex; flex-wrap: wrap; gap: 8px 14px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(31,58,104,0.3);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--indigo);
+  }
+  .map-legend .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .map-legend .swatch {
+    width: 11px; height: 11px; border-radius: 50%;
+    border: 1.5px solid #fff;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
+  }
+
+  /* Calendar */
+  .cal-month {
+    margin-bottom: 22px;
+  }
+  .cal-month:last-of-type { margin-bottom: 0; }
+  .cal-month-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed rgba(31,58,104,0.3);
+  }
+  .cal-month-head .name {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .cal-month-head .yr {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--indigo);
+    opacity: 0.7;
+  }
+  .cal-month-head .tag {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    color: var(--indigo);
+  }
+  .cal-month-head .tag.planned { background: rgba(31,58,104,0.08); }
+  .cal-month-head .tag.tbd { background: rgba(31,58,104,0.05); border: 1px dashed rgba(31,58,104,0.4); }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+  }
+  .cal-grid .dow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--indigo);
+    opacity: 0.7;
+    padding: 0 0 4px 4px;
+  }
+  .cal-grid .dow.weekend {
+    color: var(--terra);
+    opacity: 0.95;
+  }
+  .cal-cell {
+    aspect-ratio: 1 / 1.05;
+    padding: 7px 8px;
+    border-radius: 2px;
+    background: transparent;
+    border: 1px dashed rgba(31,58,104,0.2);
+    color: var(--indigo);
+    display: flex; flex-direction: column; justify-content: space-between;
+    cursor: pointer;
+    transition: transform 120ms ease, box-shadow 120ms ease, outline-color 120ms ease;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    position: relative;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cal-cell.has-stop {
+    color: #fff;
+    border-color: transparent;
+  }
+  .cal-cell.empty {
+    cursor: default;
+  }
+  .cal-cell.placeholder {
+    visibility: hidden;
+  }
+  .cal-cell:hover.has-stop {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  }
+  .cal-cell.selected {
+    outline-color: var(--ink);
+    transform: translateY(-2px);
+  }
+  .cal-cell .num {
+    font-family: var(--serif);
+    font-size: clamp(18px, 3.2vw, 24px);
+    font-weight: 700;
+    line-height: 1;
+  }
+  .cal-cell.empty .num { opacity: 0.4; }
+  .cal-cell .city {
+    font-family: var(--mono);
+    font-size: clamp(7.5px, 1.3vw, 9px);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    line-height: 1.2;
+    opacity: 0.95;
+  }
+  .cal-cell.empty .city {
+    color: var(--indigo);
+    opacity: 0.4;
+  }
+  .cal-cell.weekend .num { font-style: italic; }
+  .cal-cell.weekend.empty,
+  .cal-cell.weekend.tbd {
+    background-color: rgba(232,160,42,0.08);
+  }
+  .cal-cell.weekend.empty {
+    border-color: rgba(232,160,42,0.35);
+  }
+  .cal-cell.weekend .city { letter-spacing: 1.5px; }
+
+  /* Detail card */
+  .day-detail {
+    margin-top: 22px;
+    background: var(--cream);
+    border-left: 6px solid var(--ink);
+    padding: 18px 22px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 18px;
+    align-items: center;
+    transition: border-color 200ms;
+    min-height: 100px;
+  }
+  .day-detail.placeholder {
+    background: transparent;
+    border-left-color: rgba(31,58,104,0.25);
+    border-left-style: dashed;
+    color: var(--indigo);
+    opacity: 0.6;
+  }
+  .day-detail .badge {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--sand);
+    display: grid; place-items: center;
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: inset 0 0 0 3px var(--cream), inset 0 0 0 4px currentColor;
+    flex-shrink: 0;
+  }
+  .day-detail .meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--indigo);
+    opacity: 0.75;
+  }
+  .day-detail .city-name {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.05;
+    margin-top: 4px;
+    color: var(--ink);
+  }
+  .day-detail .purpose {
+    font-size: 15px;
+    color: var(--ink);
+    opacity: 0.78;
+    margin-top: 4px;
+  }
+  .day-detail .note {
+    font-size: 13.5px;
+    color: var(--ink);
+    opacity: 0.8;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed currentColor;
+    line-height: 1.5;
+  }
+  .day-detail .kind {
+    align-self: flex-start;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+  }
+
+  .cal-cell.tbd {
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(31,58,104,0.06) 0 6px,
+      transparent 6px 12px
+    );
+    border: 1px dashed rgba(31,58,104,0.45);
+    color: var(--indigo);
+  }
+  .cal-cell.tbd .num { opacity: 0.75; }
+  .cal-cell.tbd .city { font-style: italic; opacity: 0.7; }
+  .cal-cell.tbd:hover { background: rgba(31,58,104,0.08); }
+
+  /* Timeline ribbon */
+  .timeline {
+    margin-top: 8px;
+  }
+  .timeline-bar {
+    display: flex;
+    height: 44px;
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid rgba(31,58,104,0.2);
+  }
+  .timeline-bar .seg {
+    color: #fff;
+    display: grid; place-items: center;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-right: 1px solid rgba(255,255,255,0.25);
+    transition: filter 120ms;
+    position: relative;
+  }
+  .timeline-bar .seg:last-child { border-right: none; }
+  .timeline-bar .seg:hover { filter: brightness(1.1); }
+  .timeline-bar .seg.tbd-seg {
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(31,58,104,0.55) 0 6px,
+      rgba(31,58,104,0.7) 6px 12px
+    );
+    color: var(--sand);
+    font-style: italic;
+  }
+  .timeline-bar .seg.selected::after {
+    content: "";
+    position: absolute; inset: 0;
+    box-shadow: inset 0 0 0 2px var(--ink);
+  }
+  .timeline-axis {
+    display: flex; justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 1px;
+    color: var(--indigo);
+    opacity: 0.6;
+    margin-top: 4px;
+  }
+
+  /* Stop list */
+  .stops {
+    display: flex; flex-direction: column;
+    gap: 12px;
+  }
+  .stop {
+    background: var(--cream);
+    border-left: 6px solid var(--ink);
+    padding: 16px 20px 16px 22px;
+    display: grid;
+    grid-template-columns: 96px 1fr auto;
+    gap: 22px;
+    align-items: flex-start;
+    cursor: pointer;
+    user-select: none;
+    transition: box-shadow 200ms;
+  }
+  .stop:hover { box-shadow: 0 6px 0 -4px rgba(43,29,18,0.15); }
+  .stop.open  { box-shadow: 0 8px 0 -4px currentColor; }
+
+  .stop .date-stamp {
+    text-align: left;
+    color: currentColor;
+    padding-top: 2px;
+    border-right: 1px dashed currentColor;
+    padding-right: 16px;
+    min-height: 56px;
+  }
+  .stop .date-stamp .mon {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+  .stop .date-stamp .day {
+    font-family: var(--serif);
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    margin-top: 2px;
+  }
+  .stop .date-stamp .duration {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--indigo);
+    opacity: 0.7;
+    margin-top: 6px;
+  }
+
+  .stop .stop-info {
+    color: var(--ink);
+  }
+  .stop .meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--indigo);
+    opacity: 0.8;
+  }
+  .stop .city-name {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.1;
+    margin-top: 2px;
+  }
+  .stop .purpose {
+    font-size: 14px;
+    color: var(--ink);
+    opacity: 0.75;
+    margin-top: 4px;
+  }
+  .stop .kind {
+    align-self: flex-start;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    padding-top: 2px;
+  }
+  .stop .note {
+    grid-column: 2 / -1;
+    font-size: 14px;
+    color: var(--ink);
+    opacity: 0.85;
+    line-height: 1.55;
+    padding-top: 10px;
+    margin-top: 4px;
+    border-top: 1px dashed currentColor;
+    display: none;
+  }
+  .stop.open .note { display: block; }
+
+  /* TBD card */
+  .tbd-card {
+    margin-top: 12px;
+    background: transparent;
+    border: 1.5px dashed rgba(31,58,104,0.4);
+    border-radius: 3px;
+    padding: 22px 22px;
+    display: grid;
+    grid-template-columns: 96px 1fr auto;
+    gap: 22px;
+    align-items: center;
+    color: var(--indigo);
+  }
+  .tbd-card .date-stamp { border-right: 1px dashed currentColor; padding-right: 16px; }
+  .tbd-card .date-stamp .mon, .tbd-card .date-stamp .day, .tbd-card .date-stamp .duration { color: var(--indigo); opacity: 0.7; }
+  .tbd-card .date-stamp .day { font-family: var(--serif); font-size: 26px; font-weight: 700; line-height: 1; }
+  .tbd-card .tbd-info { color: var(--indigo); }
+  .tbd-card .tbd-title { font-family: var(--serif); font-size: 22px; font-weight: 600; line-height: 1.1; }
+  .tbd-card .tbd-sub { font-size: 13.5px; opacity: 0.8; margin-top: 4px; }
+  .tbd-card .tbd-tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 1.5px; font-weight: 700; opacity: 0.7; }
+
+  /* Menu / Food section */
+  .menu-list {
+    list-style: none;
+    padding: 0; margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .menu-item {
+    background: var(--cream);
+    padding: 14px 18px 16px;
+    border-left: 4px solid var(--marigold);
+    position: relative;
+  }
+  .menu-item .dish-no {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--terra);
+    opacity: 0.8;
+  }
+  .menu-item .dish-name {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-top: 2px;
+  }
+  .menu-item .dish-place {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--indigo);
+    opacity: 0.75;
+    margin-top: 8px;
+  }
+  .menu-item .dish-note {
+    font-size: 13px;
+    color: var(--ink);
+    opacity: 0.75;
+    font-style: italic;
+    margin-top: 4px;
+    line-height: 1.45;
+  }
+  .menu-item.spicy { border-left-color: var(--terra); }
+  .menu-item.encore {
+    border-left-color: var(--terra);
+    background: repeating-linear-gradient(
+      135deg,
+      var(--cream) 0 10px,
+      rgba(232,160,42,0.18) 10px 20px
+    );
+  }
+  .menu-item.encore .dish-name::after {
+    content: " ×2";
+    font-family: var(--mono);
+    font-size: 14px;
+    vertical-align: 6px;
+    color: var(--terra);
+    margin-left: 4px;
+  }
+  .menu-footnote {
+    margin-top: 18px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--indigo);
+    opacity: 0.7;
+    text-align: right;
+  }
+
+  /* Floating right-side nav */
+  .page-nav {
+    position: fixed;
+    top: 50%;
+    right: 18px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    padding: 16px 14px;
+    background: rgba(251,243,225,0.85);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(31,58,104,0.18);
+    border-radius: 4px;
+    z-index: 80;
+    box-shadow: 0 4px 18px rgba(31,29,18,0.08);
+  }
+  .page-nav .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--indigo);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.55;
+    transition: opacity 180ms, color 180ms;
+    line-height: 1;
+  }
+  .page-nav .nav-item:hover { opacity: 1; }
+  .page-nav .nav-item.active {
+    opacity: 1;
+    color: var(--terra);
+    font-weight: 700;
+  }
+  .page-nav .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+    transition: transform 180ms;
+  }
+  .page-nav .nav-item:hover .dot,
+  .page-nav .nav-item.active .dot {
+    transform: scale(1.35);
+  }
+  @media (max-width: 1080px) {
+    .page-nav .lbl { display: none; }
+    .page-nav { padding: 12px 10px; gap: 11px; right: 10px; }
+  }
+  @media (max-width: 640px) {
+    .page-nav { display: none; }
+  }
+
+  /* Footer */
+  .foot {
+    padding: 28px 36px 48px;
+    border-top: 1px dashed rgba(31,58,104,0.3);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--indigo);
+    opacity: 0.75;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* Mobile */
+  @media (max-width: 640px) {
+    .section, .hero { padding-left: 22px; padding-right: 22px; }
+    .hero { padding-top: 36px; padding-bottom: 44px; }
+    .cal-grid { gap: 3px; }
+    .cal-cell { padding: 5px 6px; }
+    .cal-cell .num { font-size: 16px; }
+    .cal-cell .city { font-size: 7.5px; letter-spacing: 0.5px; }
+    .day-detail { grid-template-columns: auto 1fr; gap: 14px; padding: 14px 16px; }
+    .day-detail .kind { grid-column: 1 / -1; }
+    .day-detail .badge { width: 50px; height: 50px; font-size: 20px; }
+    .day-detail .city-name { font-size: 22px; }
+    .stop { grid-template-columns: 76px 1fr; padding: 12px 14px; gap: 14px; }
+    .stop .date-stamp { padding-right: 12px; }
+    .stop .date-stamp .day { font-size: 24px; }
+    .stop .kind { grid-column: 1 / -1; padding-left: 88px; padding-top: 4px; }
+    .stop .note { padding-left: 0; }
+    .tbd-card { grid-template-columns: 76px 1fr; gap: 14px; padding: 16px 14px; }
+    .timeline-bar { height: 38px; }
+    .map-wrap { padding: 12px; }
+    .menu-list { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<main class="page">
+
+  <!-- HERO -->
+  <header class="hero" id="top">
+    <div class="eyebrow">ARCHIVAL RESEARCH TRIP · 1 JUNE — 15 JULY 2026</div>
+    <h1>India,<br/>by archive.</h1>
+    <p class="lede">Six weeks across Rajasthan, Delhi, and the foothills — chasing manuscripts, museum collections, and (with luck) some cool air.</p>
+  </header>
+
+  <!-- MAP -->
+  <section class="section" id="map">
+    <div class="section-eyebrow">Fig. 01 — The Route</div>
+    <h2>On the map.</h2>
+    <div class="map-wrap">
+      <div class="map-frame" id="map-frame"></div>
+      <div class="map-legend" id="map-legend"></div>
+    </div>
+  </section>
+
+  <!-- CALENDAR -->
+  <section class="section" id="calendar" style="padding-top:0">
+    <div class="section-eyebrow">Fig. 02 — June and July 2026</div>
+    <h2>Day by day.</h2>
+    <p class="section-lede">Hover or tap a day to see what's happening. The first three weeks are pinned; the rest is open.</p>
+
+    <div class="cal-month">
+      <div class="cal-month-head">
+        <span class="name">June</span>
+        <span class="yr">2026</span>
+        <span class="tag planned">22 days planned</span>
+      </div>
+      <div class="cal-grid" id="cal-grid-jun"></div>
+    </div>
+
+    <div class="cal-month">
+      <div class="cal-month-head">
+        <span class="name">July</span>
+        <span class="yr">2026</span>
+        <span class="tag tbd">still to plan</span>
+      </div>
+      <div class="cal-grid" id="cal-grid-jul"></div>
+    </div>
+
+    <div class="day-detail placeholder" id="day-detail">
+      <div class="badge" style="color: var(--indigo)">—</div>
+      <div>
+        <div class="meta">Tap any colored day above</div>
+        <div class="city-name" style="font-size:22px">to see what's happening that day</div>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="section" id="timeline-section" style="padding-top:0">
+    <div class="section-eyebrow">Fig. 03 — Sequence</div>
+    <h2>The trip, end to end.</h2>
+    <div class="timeline">
+      <div class="timeline-bar" id="timeline-bar"></div>
+      <div class="timeline-axis">
+        <span>JUN 01</span>
+        <span>JUN 11</span>
+        <span>JUN 22</span>
+        <span style="opacity:0.45">JUL 01</span>
+        <span style="opacity:0.45">JUL 12</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STOPS -->
+  <section class="section" id="stops-section" style="padding-top:0">
+    <div class="section-eyebrow">Fig. 04 — Itinerary</div>
+    <h2>Every stop.</h2>
+    <div class="stops" id="stops"></div>
+  </section>
+
+  <!-- FOOD / MENU -->
+  <section class="section" id="food" style="padding-top:0">
+    <div class="section-eyebrow">Fig. 05 — The Menu</div>
+    <h2>And to eat.</h2>
+    <p class="section-lede">A rolling list of what I want to put in my face — in roughly the order I'll meet it on the road.</p>
+    <ul class="menu-list" id="menu"></ul>
+    <p class="menu-footnote">Subject to revision after every meal.</p>
+  </section>
+
+  <footer class="foot">
+    <span>India · June — July 2026</span>
+    <span>Click a day, stop, or dish to expand</span>
+  </footer>
+</main>
+
+<!-- Right-side scroll nav -->
+<nav class="page-nav" aria-label="Page sections">
+  <a class="nav-item" href="#top"              data-section="top"><span class="dot"></span><span class="lbl">Top</span></a>
+  <a class="nav-item" href="#map"              data-section="map"><span class="dot"></span><span class="lbl">Map</span></a>
+  <a class="nav-item" href="#calendar"         data-section="calendar"><span class="dot"></span><span class="lbl">Calendar</span></a>
+  <a class="nav-item" href="#timeline-section" data-section="timeline-section"><span class="dot"></span><span class="lbl">Timeline</span></a>
+  <a class="nav-item" href="#stops-section"    data-section="stops-section"><span class="dot"></span><span class="lbl">Itinerary</span></a>
+  <a class="nav-item" href="#food"             data-section="food"><span class="dot"></span><span class="lbl">Menu</span></a>
+</nav>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// Embedded India states GeoJSON (Natural Earth / india-in-data, simplified)
+// ─────────────────────────────────────────────────────────────
+const INDIA_GEO = {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"name":"Jammu & Kashmir"},"geometry":{"type":"MultiPolygon","coordinates":[[[[75.43024950241266,32.324740207694504],[75.3718689289898,32.336875597813915],[75.43734079532129,32.32569945619122],[75.43024950241266,32.324740207694504]]],[[[75.94230943449733,32.6439512124516],[75.50994556863316,32.27713050327014],[75.50550657167099,32.31049149938326],[75.130493,32.406085],[75.033297,32.492687],[74.681039,32.486481],[74.701361,32.835077],[74.383706,32.75787],[73.631765,33.086601],[73.447752,34.574234],[74.030352,34.877635],[74.10029336731547,35.14110266438292],[75.1613985190001,34.86196495300007],[75.433622,34.350095],[76.795977,33.254863],[75.824712,32.930309],[75.94230943449733,32.6439512124516]]],[[[76.65867980068938,33.16404914016255],[76.65854414199862,33.1639557959233],[76.64482464773357,33.16178946625478],[76.65867980068938,33.16404914016255]]]]}},{"type":"Feature","properties":{"name":"Gujarat"},"geometry":{"type":"MultiPolygon","coordinates":[[[[68.51152699277657,23.318470003987557],[68.52764099303744,23.337083003477858],[68.5356969931218,23.31652800346461],[68.51152699277657,23.318470003987557]]],[[[68.55208699262067,23.386529003011105],[68.53736099251586,23.40458200365657],[68.5587459930332,23.362639002987635],[68.55208699262067,23.386529003011105]]],[[[68.41208599267446,23.443471002884507],[68.46180799234503,23.453479003952907],[68.43485899334792,23.43319400380028],[68.41208599267446,23.443471002884507]]],[[[68.50290699276354,23.447920003005777],[68.52069099269522,23.436807004040077],[68.50430199234313,23.430972003854947],[68.50290699276354,23.447920003005777]]],[[[68.48069699287197,23.501252002777733],[68.47403799335876,23.480970002763456],[68.47347199333785,23.496251003281202],[68.48069699287197,23.501252002777733]]],[[[68.47957599243813,23.55486200277926],[68.46263999294138,23.53486000308675],[68.4570849921787,23.54208500352013],[68.47957599243813,23.55486200277926]]],[[[68.4854199930383,23.57513900256299],[68.44208599297423,23.5634720032304],[68.46402799219811,23.57569500392134],[68.46791799262132,23.591531003053376],[68.47846999269603,23.589860003336526],[68.48069699287197,23.590690003840677],[68.48208499212876,23.596809003632643],[68.4854199930383,23.57513900256299]]],[[[68.46736199216224,23.591531003053376],[68.45236299205851,23.595421003476588],[68.4584729923348,23.60041900373409],[68.46736199216224,23.591531003053376]]],[[[68.47846999269603,23.60625100378087],[68.46956599307617,23.61625000263558],[68.48458099211916,23.627919002959686],[68.49041799239649,23.6034710032842],[68.47846999269603,23.60625100378087]]],[[[68.43459299277248,23.6162500035349],[68.46652999246521,23.602078003796862],[68.44097199286324,23.6034710032842],[68.43459299277248,23.6162500035349]]],[[[68.35041699245028,23.800689004094295],[68.34680299306376,23.59819000346596],[68.18736299330754,23.610972002955634],[68.33790499282122,23.729580003814192],[68.35041699245028,23.800689004094295]]],[[[68.32180699239882,23.80318900336988],[68.25736199276179,23.715974003197744],[68.30790699261365,23.82374900271435],[68.32180699239882,23.80318900336988]]],[[[68.45513899327,23.81513900316253],[68.48763899194597,23.73708100348557],[68.43708099239393,23.743196003992466],[68.45513899327,23.81513900316253]]],[[[68.35846699315726,23.97500411155056],[68.35041699245028,23.908472003080533],[68.33763799219963,23.819305003723002],[68.30625199273533,23.825140003908132],[68.27430799271974,23.797362003553644],[68.23847299223485,23.680971003309196],[68.215972993359,23.836250002735483],[68.23457999347198,23.835970003313037],[68.25430399293498,23.858750003409966],[68.27902999283998,23.915970003512882],[68.34236099326529,23.92458100401018],[68.35846699315726,23.97500411155056]]],[[[68.39568999199957,23.87819600354277],[68.40013899212084,23.78958300275343],[68.36958299226131,23.809585003345262],[68.3259669926826,23.799030003132202],[68.39568999199957,23.87819600354277]]],[[[68.23346799345319,23.842359003865],[68.21569799326784,23.866529003310916],[68.25485999249469,23.873751002706683],[68.23346799345319,23.842359003865]]],[[[68.45207999249772,23.881810002929342],[68.3504169933496,23.891251003031414],[68.4493019920933,23.938472003380298],[68.45207999249772,23.881810002929342]]],[[[68.55847299213491,23.923195003047],[68.54486199218724,23.87180500289861],[68.49041799239649,23.867361003907263],[68.53375299250666,23.924031003827793],[68.52541399286156,23.940694003325632],[68.53541499270779,23.945973003051677],[68.54235899187404,23.933750003260116],[68.55708199273982,23.93180500349814],[68.55847299213491,23.923195003047]]],[[[68.50235799262731,23.906806003594227],[68.47180199276778,23.861531003053415],[68.43125099333872,23.853200003777204],[68.45375099221457,23.881806002744895],[68.46069299218789,23.933472003030545],[68.44374799227609,23.968287456500946],[68.50235799262731,23.906806003594227]]],[[[72.70318599453805,21.146249999837664],[72.6648639944778,21.148472999829153],[72.67652899371814,21.155700000354784],[72.70318599453805,21.146249999837664]]],[[[72.3520799936968,21.585694999624593],[72.36291499333231,21.600694000627698],[72.36513499408477,21.587917000469247],[72.3520799936968,21.585694999624593]]],[[[72.72180199416675,21.643192999957023],[72.74597199361267,21.658750999758865],[72.74597199361267,21.646800999966217],[72.72180199416675,21.643192999957023]]],[[[72.28263999394062,21.734582000159207],[72.27902899379308,21.718750999459132],[72.2743069936729,21.749582999455924],[72.28263999394062,21.734582000159207]]],[[[72.62625312318312,21.089860915748716],[72.83291816124421,21.673196792697865],[72.52402686424847,21.680139541806454],[72.54736518415598,22.149862290312512],[72.6131954140372,22.21703147941929],[72.74819373635188,22.173196792597935],[72.79985999564235,22.238752365029654],[72.86958503282307,22.22347068732239],[72.8993091534947,22.23208427426988],[72.91958426919871,22.269582748045423],[72.48763465371633,22.19735908575325],[72.39402961247669,22.38236045936776],[72.11541938179909,21.202085494549976],[71.05041693939029,20.73097038237728],[70.43875311946096,20.853212357464372],[68.93597602047703,22.312086108187373],[69.07985877226457,22.47903251883571],[69.06930731897762,22.395696642685948],[69.19125556109532,22.422082903503224],[69.22347449465224,22.257917406163415],[70.16291999076503,22.551530839476698],[70.24153327234268,22.70792198371265],[70.42347144445165,22.932638169815732],[70.47152900046308,23.012361527762323],[70.49347113908186,23.07514000091038],[69.71125220522515,22.738195421981175],[69.19735907725965,22.838472368904775],[68.58513831348245,23.221822741526353],[68.6606998365283,23.295694354810678],[68.48929785980846,23.63514137647337],[68.73486518098338,23.837915423957725],[68.52514075544156,23.759027484031208],[68.61958503052477,23.916250232262485],[68.53736304476877,23.947362903475266],[68.75336822576304,23.969615782142682],[68.82753937264397,24.316829269854964],[70.0164739705973,24.169912895263963],[70.57357694721838,24.421688958678544],[70.58198864625905,24.248466013995426],[70.8339203112734,24.228845987852083],[71.12182770628368,24.407451763488154],[70.98820833334798,24.547589122240254],[71.09782056326844,24.686576570052694],[72.04630600861549,24.70848244081202],[72.91955467161085,24.326524778995406],[73.09079742606042,24.494575790040756],[73.22805309347552,24.364180633229694],[73.07851349899886,24.18479756815327],[73.24853596696136,24.01055239287865],[73.36612895428789,24.111690120502715],[73.35704999606054,23.790846121251548],[73.65724860893619,23.621547650703576],[73.62890274606491,23.451099968888514],[74.10384874442406,23.292126690294594],[74.46055524273032,22.911123657930546],[74.37825094022878,22.636493886883443],[74.04070267069176,22.54039230516082],[74.27052664358979,22.39108541655878],[74.06791999141456,22.358545926853083],[74.14169342391244,21.95241290473183],[73.8049647308377,21.82213630464679],[73.78172335874609,21.623944467563206],[74.32913287668094,21.518161339574192],[73.58117419982949,21.167199935328824],[73.90025327686732,20.982157330496477],[73.94324881078404,20.74138944736518],[73.74102749022654,20.566724983870984],[73.45056584164035,20.713952152469915],[73.41802779624584,20.201441725855034],[73.20656615030765,20.12215606165296],[73.09135789165344,20.356264843647693],[72.72927533698726,20.13680666979201],[72.90260940280177,20.415240633348617],[72.82476178692696,20.949924264992887],[72.71597480279496,21.140695572842446],[72.68125342830314,21.15847206073704],[72.66514014570123,21.153474808715487],[72.62625312318312,21.089860915748716]],[[74.17617291404878,22.39620570752743],[74.15897117028334,22.41304016996793],[74.16720972285049,22.396194782563214],[74.17617291404878,22.39620570752743]]],[[[69.63652899241913,22.40653000105874],[69.62763999349096,22.459493052162657],[69.65652399268816,22.42514000131007],[69.63652899241913,22.40653000105874]]],[[[69.14848399254225,22.474029003036094],[69.09847299123561,22.461806002345156],[69.12569499203033,22.4756950025224],[69.14848399254225,22.474029003036094]]],[[[69.29347099219257,22.46042100232745],[69.3279179925214,22.463472002730782],[69.320419992089,22.450969002617455],[69.29347099219257,22.46042100232745]]],[[[69.35013499273578,22.504027002344344],[69.32485899264844,22.527361001908787],[69.36347299268454,22.513750001961057],[69.35013499273578,22.504027002344344]]],[[[69.94152699297638,22.518194000952406],[69.91874699287945,22.553195001648078],[69.94153699343758,22.52931000185515],[69.94152699297638,22.518194000952406]]],[[[69.95207999309724,22.551251001932258],[69.9381949931045,22.539584001700348],[69.94291799327084,22.550973001702744],[69.95207999309724,22.551251001932258]]],[[[70.0068129936248,22.553751002107106],[69.9665299930648,22.578473000928284],[70.02485699205658,22.586249001590204],[70.0068129936248,22.553751002107106]]],[[[70.45458099321831,22.9901400012601],[70.43430399343458,22.98236100225847],[70.45513999381569,22.995701001400164],[70.45458099321831,22.9901400012601]]],[[[70.42041699424897,23.026809001534218],[70.44847099384134,23.05208400157545],[70.41042299472548,22.998470002288798],[70.42041699424897,23.026809001534218]]],[[[70.46457799467879,23.056262001790003],[70.4823619937111,23.065419001385862],[70.46958299346045,23.05097200155666],[70.46457799467879,23.056262001790003]]],[[[68.61208299303576,23.2915280035146],[68.54041299296529,23.266530003656783],[68.55819699289697,23.3137520031525],[68.61208299303576,23.2915280035146]]],[[[68.5884709932418,23.31903000373171],[68.6151429920555,23.297641003029923],[68.5834729929843,23.31458400284953],[68.5884709932418,23.31903000373171]]],[[[68.5943079926198,23.338752003102513],[68.5706869924108,23.37375000365978],[68.6198569927061,23.330690003640825],[68.5943079926198,23.338752003102513]]]]}},{"type":"Feature","properties":{"name":"Tamil Nadu"},"geometry":{"type":"MultiPolygon","coordinates":[[[[78.93602811620468,9.180290661884612],[78.91738791671906,9.18639926101713],[78.93929670847638,9.18738397459083],[78.93602811620468,9.180290661884612]]],[[[79.08117101243232,9.191820623423098],[79.0710833629069,9.206161334178262],[79.088354245652,9.197853584175618],[79.08117101243232,9.191820623423098]]],[[[79.31681944006516,9.3249157680483],[79.41657459404234,9.183740552084885],[79.20555825820713,9.278012243670162],[79.31681944006516,9.3249157680483]]],[[[79.71082516375037,11.887714637320698],[79.87933697841885,10.29032079037222],[79.29900576340532,10.264467968721817],[78.89455162086068,9.478616304398997],[79.1842530383471,9.27797391816182],[78.39774707946418,9.099015953623393],[78.06335627657097,8.370071953957563],[77.31750753154739,8.121362837724803],[77.10005572719012,8.29135591674219],[77.28411997575631,8.545841639280297],[77.14926491364491,9.020235823524501],[77.41268704647007,9.505892350851354],[77.17093114655523,9.610245288789088],[77.29461727186964,10.216432588193413],[76.83216530558445,10.303299410439479],[76.9090861476077,10.779034587276442],[76.65771882606305,10.936627486569307],[76.73651146123501,11.214242433041875],[76.46176900603484,11.187402133301873],[76.5471790866456,11.358921487736495],[76.2331006511742,11.571091809339578],[76.51234036411654,11.705198967358513],[76.845490227592,11.591915342419156],[76.9089805231327,11.791213317740471],[77.42338498582848,11.77133739670353],[77.67594019128683,11.949215389678557],[77.77815508548883,12.118753689631149],[77.47303636173876,12.24463182789657],[77.83548561676787,12.868093473335193],[78.47135701701279,12.628113595965715],[78.71386947609551,13.066906137608214],[79.16497560713862,13.019080774857912],[79.4294289637757,13.33391683789182],[79.75710669901503,13.207746625006791],[80.00212545712418,13.53964147557366],[80.269692968156,13.563152697339149],[80.16381829457868,12.47823306310545],[79.71082516375037,11.887714637320698]],[[79.63668963901569,11.886735825098299],[79.60242143110423,11.856514753453155],[79.66425572761977,11.860290702753787],[79.63668963901569,11.886735825098299]],[[79.62007322799712,11.924433098508757],[79.6379448263927,11.977122118990621],[79.65429282845133,12.023789306931008],[79.62767192731764,12.030438591068162],[79.62007322799712,11.924433098508757]],[[79.66254856526416,11.968175424955973],[79.67572257383779,11.947927627058391],[79.68893557251869,11.971887635705855],[79.66254856526416,11.968175424955973]],[[79.67001971913481,11.814905209707717],[79.64878176136926,11.843607456818745],[79.64629870262308,11.816204128417837],[79.67001971913481,11.814905209707717]],[[79.6905437437988,11.802742897966425],[79.67600172699815,11.813712837277649],[79.67573944511935,11.801549173855335],[79.6905437437988,11.802742897966425]]],[[[79.7964923182659,11.889592491000712],[79.77058328449107,11.89403739650868],[79.78147355556018,11.901777713870445],[79.7964923182659,11.889592491000712]]]]}},{"type":"Feature","properties":{"name":"Andaman & Nicobar Island"},"geometry":{"type":"MultiPolygon","coordinates":[[[[92.56824630402377,10.576215297597969],[92.37811532066559,10.784733171998312],[92.51840403711668,10.897494223379738],[92.56824630402377,10.576215297597969]]],[[[92.7058574329742,11.263811365402262],[92.69552935689438,11.28476275689576],[92.70644749345712,11.288634062212225],[92.7058574329742,11.263811365402262]]],[[[92.6358135024912,11.517256221597393],[92.69084863295808,11.370816556039301],[92.58864947869057,11.355033705041478],[92.6358135024912,11.517256221597393]]],[[[92.56892494682887,11.527706542522992],[92.55271314979211,11.531207602349014],[92.56031690510116,11.538073901889106],[92.56892494682887,11.527706542522992]]],[[[92.62036536656848,11.5563855673401],[92.60685015161329,11.537465625638163],[92.61006009639641,11.558517504679173],[92.62036536656848,11.5563855673401]]],[[[92.59707380331344,11.542236202638662],[92.58935758058794,11.561643889853656],[92.59730416375623,11.562584666149462],[92.59707380331344,11.542236202638662]]],[[[92.27030193088945,11.58484267724782],[92.21303858616187,11.534805029028917],[92.20805123387743,11.58613046235098],[92.27030193088945,11.58484267724782]]],[[[92.61172243294396,11.588248158925467],[92.6008637100922,11.567337490532793],[92.60107930456633,11.58557133045258],[92.61172243294396,11.588248158925467]]],[[[92.55412731392448,11.56239339024279],[92.53438405907713,11.60235107004587],[92.56290299108025,11.592812771392346],[92.55412731392448,11.56239339024279]]],[[[92.71669822424371,11.945750889092324],[92.7119561746378,11.488603680915219],[92.51362352620481,11.84951023440982],[92.61076609298084,11.871208475091123],[92.69742646865666,12.239906732309919],[92.70548399309189,12.179883091231716],[92.7579074977329,12.177314164317295],[92.73567930095902,12.104365817528503],[92.73624577042602,12.083719454489255],[92.7769038062657,12.02443846366424],[92.71669822424371,11.945750889092324]]],[[[92.60093628628067,11.970754989950876],[92.59665583439931,11.92994863971802],[92.59477635024842,11.976999707770347],[92.60093628628067,11.970754989950876]]],[[[92.76274518034586,12.229382100403654],[92.72107119477988,12.19017803718674],[92.73146189335176,12.242318437945585],[92.73807061536667,12.230947741844886],[92.76274518034586,12.229382100403654]]],[[[92.74242136815167,12.254564191484292],[92.74006545016044,12.276446528784334],[92.74931681561861,12.288631304691023],[92.74242136815167,12.254564191484292]]],[[[92.69992760917188,12.275689566720189],[92.72351819340997,12.295969199718854],[92.70412035557001,12.245565491454329],[92.69992760917188,12.275689566720189]]],[[[92.68459620974733,12.53927410451638],[92.67705931993174,12.522811044094453],[92.66863388014951,12.535328563762278],[92.68459620974733,12.53927410451638]]],[[[92.7248260190056,12.755035114179236],[92.69963539425811,12.78603981638446],[92.71038736668368,12.829076015845487],[92.7248260190056,12.755035114179236]]],[[[92.71928391542042,12.836799760500583],[92.71893922146796,12.863004287218132],[92.72922695126283,12.864270042528517],[92.71928391542042,12.836799760500583]]],[[[92.68437765110775,12.987728213985918],[92.71438049596316,12.862666146625429],[92.66976194475802,12.788659184473829],[92.68437765110775,12.987728213985918]]],[[[92.71679370166805,13.09792986317268],[92.69989498896263,13.072799828449376],[92.69590698491947,13.089755979954589],[92.71679370166805,13.09792986317268]]],[[[92.79464721979343,9.239083354113575],[92.73326515636194,9.123192789715517],[92.72461363151393,9.219024266356882],[92.79464721979343,9.239083354113575]]],[[[92.73929256739814,11.961751367931356],[92.767201334574,11.954716780055378],[92.73642796318,11.952318209917507],[92.73929256739814,11.961751367931356]]],[[[92.99847200098213,12.033712551393194],[93.0450210818575,11.884483664589482],[92.92902706304858,12.000196937538703],[92.99847200098213,12.033712551393194]]],[[[93.00509434143078,12.103840126021055],[92.96407494000653,12.069049336457738],[92.95968609193966,12.106384653429075],[93.00509434143078,12.103840126021055]]],[[[92.98325628674831,12.111595906326045],[92.99215432206438,12.144082852241866],[93.00103798711348,12.119606633639307],[92.98325628674831,12.111595906326045]]],[[[92.77951315590747,12.28828272476801],[92.88714293919537,12.285620544452627],[92.76264797442457,12.06512281456628],[92.76863452656221,12.229094935183184],[92.74211767429131,12.245724766784633],[92.74999094922299,12.273610275693727],[92.7647822185246,12.264238187042736],[92.77951315590747,12.28828272476801]]],[[[92.94103382085422,12.21696990124002],[92.92706839718886,12.222284667903125],[92.93523599144788,12.224638137939735],[92.94103382085422,12.21696990124002]]],[[[92.88093780413641,12.22381722418561],[92.90081197509261,12.255152249177002],[92.91420453511125,12.232231270456793],[92.88093780413641,12.22381722418561]]],[[[92.91904930078465,12.237511145223209],[92.90219726828934,12.289858226376111],[92.9343706008226,12.308183936539479],[92.91904930078465,12.237511145223209]]],[[[92.76741057533786,12.273863183938829],[92.75379025841374,12.281582599257604],[92.76742815528519,12.286633586670746],[92.76741057533786,12.273863183938829]]],[[[92.86254255209718,12.379834271134769],[92.87288697965045,12.405892325270656],[92.89078460172806,12.392513714636266],[92.86254255209718,12.379834271134769]]],[[[92.93314423042193,12.360954241345212],[92.92796792607896,12.409798263479104],[92.95578684108989,12.429930768290376],[92.93314423042193,12.360954241345212]]],[[[92.97555816197968,12.541557037127632],[92.71031861800986,12.309808222771323],[92.7890810476523,12.675052717309086],[92.72364242216014,12.82726409775995],[92.80351240017717,12.897436745509424],[92.84431881695991,12.875154401454495],[92.87325024190523,12.880903776288278],[92.8989788321075,12.915877368345946],[92.97555816197968,12.541557037127632]]],[[[92.79372343888565,12.912639272984109],[92.79325774834649,12.892138902288536],[92.77537498306907,12.904557787911642],[92.79372343888565,12.912639272984109]]],[[[92.87230948719315,12.915999338898416],[92.86140577036008,12.933721095851922],[92.87662665569565,12.9324261548432],[92.87230948719315,12.915999338898416]]],[[[92.98119005657588,12.932929001772038],[92.95921585173022,12.988621370280043],[93.00632818969427,12.997075929210837],[92.98119005657588,12.932929001772038]]],[[[92.9208622755736,13.000524697956507],[92.93947074338018,13.025619637536295],[92.94446223704267,12.99790987863804],[92.9208622755736,13.000524697956507]]],[[[92.95286147417772,13.332524754813619],[93.00649916070773,13.031815743401864],[92.925994380936,13.061814737360294],[92.8019065293629,12.89987464300043],[92.9867292823306,13.569546596498299],[93.09004732632309,13.336012140447963],[92.95286147417772,13.332524754813619]]],[[[92.82227487328686,13.435130947635173],[92.83460588615276,13.419951669434056],[92.82188205211509,13.42180490057575],[92.82227487328686,13.435130947635173]]],[[[93.81951808409235,6.757471631510612],[93.65621511573505,7.126739829579492],[93.84861388352397,7.240511941073294],[93.9459452692588,6.995362528557905],[93.81951808409235,6.757471631510612]]],[[[93.70661067973913,7.444305757704626],[93.72420376079498,7.308199535380311],[93.64717290470583,7.24386973260215],[93.70661067973913,7.444305757704626]]],[[[93.38259491822095,8.022880219946217],[93.46216668194688,7.873354719644624],[93.31102532835627,7.962072461774767],[93.38259491822095,8.022880219946217]]],[[[93.58226566882564,7.992388051267596],[93.50812422924986,7.984910161474829],[93.53037967008578,8.024179142253672],[93.58226566882564,7.992388051267596]]],[[[93.59042543898289,8.101372103839594],[93.57219064308379,8.06782285713922],[93.56281207032083,8.120326428422004],[93.59042543898289,8.101372103839594]]],[[[93.45517505558439,8.175179630535581],[93.54729701854262,8.047054423722727],[93.49197889481019,8.00163084438799],[93.45517505558439,8.175179630535581]]],[[[93.22023275943434,8.245668473621208],[93.25061477824948,8.227534948579034],[93.23660480576723,8.22413967600528],[93.22023275943434,8.245668473621208]]],[[[93.12733566720732,8.355592038941495],[93.20465704208885,8.214572891325929],[93.20192582801462,8.197243665063127],[93.08511186042409,8.276390920904305],[93.12733566720732,8.355592038941495]]],[[[93.04424554339715,8.471210064692798],[93.0587941450338,8.441246245917569],[93.04448645648483,8.441610130503193],[93.04424554339715,8.471210064692798]]],[[[93.61428249504115,8.575312261751549],[93.64239061313634,8.468268480306165],[93.61936614493169,8.48057297756094],[93.61428249504115,8.575312261751549]]],[[[93.04595800455832,11.814464614750193],[93.01289898909715,11.849484071332881],[93.07154089919322,11.834625743183551],[93.04595800455832,11.814464614750193]]],[[[93.03413373898093,12.100330378744047],[93.00777809018678,12.075626789045145],[93.0288539244691,12.165880667658712],[93.03413373898093,12.100330378744047]]],[[[93.12367442553438,12.140311202599946],[93.11005122898109,12.142893389118683],[93.12040302288125,12.148284672799434],[93.12367442553438,12.140311202599946]]],[[[93.08559194191463,12.195570335302762],[93.0367775425496,12.133313590349985],[93.06644976694326,12.210652168362913],[93.08559194191463,12.195570335302762]]],[[[93.06711345941869,12.228424158747998],[93.07925767949837,12.259589187590962],[93.10216287062002,12.206404943733219],[93.06711345941869,12.228424158747998]]],[[[93.85086028747236,12.290114226490402],[93.87745923615489,12.2795323554339],[93.85585900718752,12.265413247523384],[93.85086028747236,12.290114226490402]]],[[[93.01487108003636,13.30869851942117],[93.017672035636,13.32929328655598],[93.02406253535776,13.305183806987145],[93.01487108003636,13.30869851942117]]],[[[94.27576452141557,13.46858455413394],[94.24638978286225,13.442780768917373],[94.25972397238348,13.466777376374864],[94.27576452141557,13.46858455413394]]],[[[93.02411162934828,13.627192461562913],[93.01673471453552,13.675074218100747],[93.03161277740782,13.634383011666728],[93.02411162934828,13.627192461562913]]]]}},{"type":"Feature","properties":{"name":"Andhra Pradesh"},"geometry":{"type":"MultiPolygon","coordinates":[[[[84.75544750280005,19.054767966968143],[83.99630982393927,18.35955429519464],[84.11836499724689,18.30100497210185],[82.30114490101641,17.02418018366859],[82.37546057074877,16.879474665523446],[82.3132329359513,16.554776275404834],[81.70875389787415,16.30276000666902],[81.31197510027073,16.359189608813438],[81.24562900217677,16.301419236208858],[81.15285244158696,15.974766278441052],[80.99603808269143,15.824328476178266],[81.00714198951124,15.762524543472978],[80.51243414282152,15.858019604421258],[80.13565615510754,15.558503514925349],[80.24180669752116,13.467971637381197],[80.00212545712418,13.53964147557366],[79.75710669901503,13.207746625006791],[79.4294289637757,13.33391683789182],[79.16497560713862,13.019080774857912],[78.71386947609551,13.066906137608214],[78.37990896282844,12.622343222861502],[78.20052500382593,12.693605325525425],[78.2519743826117,12.857411662418315],[78.46823515992475,12.876494627824854],[78.58829522414533,13.272301167464946],[78.37732504781275,13.32978709260027],[78.40070409441847,13.587593179581631],[78.08992243597169,13.644139096442188],[78.1149454369824,13.862142508969669],[77.8223351092779,13.938951062541548],[77.4573005048145,13.683351115061953],[77.18345347220003,13.924225946470301],[76.9987329919341,13.749223947627115],[76.89667266421213,14.165096122088414],[77.40417233278697,13.88778405019383],[77.35435716155382,14.131237522094011],[77.517335459364,14.179149083963125],[77.40134973410301,14.33590584308024],[77.3978719037654,14.197785178043603],[77.28730108287874,14.337669862374298],[76.94311127416603,14.246195425678422],[76.9784760596225,14.484176175789912],[76.76519029809384,14.601729112708426],[76.77633757292074,15.070083056188139],[77.15886920904683,15.125968426401812],[76.97431948305774,15.495670368392837],[77.08062729711213,15.914131942834956],[78.11600697963848,15.833175518135704],[78.41243491593866,16.087044634002723],[78.78255107936889,16.030374481197384],[79.21548389216792,16.23780928946718],[79.27384279371,16.568170900266864],[79.96665492938155,16.649711172932314],[80.19047938731393,17.05224481504621],[80.60645369778001,16.793519709966688],[80.37550563797487,17.06414171706666],[80.84135671424104,17.034061067364405],[81.42452039440076,17.370225742524042],[81.80958819873644,17.944102024988524],[82.34486748734474,18.05579042079131],[82.48223879318579,18.544550206327017],[82.64004922589112,18.23707562484026],[82.807420372852,18.447719365256546],[83.06443696479414,18.386012420836607],[83.05776440170581,18.622148436601094],[83.41920075031442,18.867512189036347],[83.34280172731792,19.01450046442494],[83.63784706119299,19.152604916483767],[84.09927074894597,18.754337010644576],[84.67210415058616,19.165471647398647],[84.75544750280005,19.054767966968143]],[[82.227200287963,16.762687908720068],[82.26301940642054,16.70090334561297],[82.31235859707164,16.734027504365883],[82.227200287963,16.762687908720068]]],[[[81.32692403241822,16.30651313207545],[81.27045886028822,16.286025632476992],[81.3937476741159,16.3338047116182],[81.32692403241822,16.30651313207545]]]]}},{"type":"Feature","properties":{"name":"Daman & Diu"},"geometry":{"type":"MultiPolygon","coordinates":[[[[72.88085870016891,20.36964998695737],[72.84460874080082,20.474556634780924],[72.90260940280177,20.415240633348617],[72.88085870016891,20.36964998695737]]],[[[70.88236045057437,20.728750228740125],[70.99764441685642,20.714029311603497],[70.8745822834457,20.709028243758496],[70.88236045057437,20.728750228740125]]],[[[71.01295724438137,20.73986244349703],[70.9912481569769,20.731531142947915],[71.00425784772153,20.74304610199607],[71.01295724438137,20.73986244349703]]]]}},{"type":"Feature","properties":{"name":"Bihar"},"geometry":{"type":"MultiPolygon","coordinates":[[[[84.49672419996193,24.27687608216553],[84.50490974648767,24.2818900238056],[84.50719832504274,24.263231032086537],[84.49672419996193,24.27687608216553]]],[[[83.88062237052605,27.361878102892206],[84.1171657198222,27.520928140421404],[84.62617408566558,27.336507740539844],[84.64616988273394,27.04666995255633],[85.217412432238,26.758067973358322],[85.63715671960699,26.872288541682906],[85.85827956734823,26.569540281558773],[86.34561579263476,26.61653384516086],[86.73509807481634,26.424430751078376],[87.07237240366356,26.58645639614582],[87.3411636941492,26.34830960330561],[87.90186830987466,26.477164638737122],[88.0311851327877,26.355448584484634],[88.23786905391376,26.55181770802085],[88.2955124098699,26.351084649437098],[87.80991072589933,25.920784550666554],[88.07379420014229,25.497210514753476],[87.7717457007036,25.42469378499021],[87.83527129643323,25.204649467199204],[87.5854579898944,25.344353519999004],[87.32955220097335,25.223549447549033],[87.05631950783908,24.6077320943607],[86.60620032158761,24.600298286636644],[86.45251437313988,24.369439075353114],[86.05462332910344,24.778642988183435],[85.7437418531041,24.822778651113936],[85.67158873543184,24.582279927876414],[84.95514523036815,24.371907310573988],[84.80269903063584,24.52932955001876],[84.50092983904091,24.28694713470253],[84.30059761099102,24.565403277339442],[83.50606603831704,24.525889651286434],[83.35796170337,25.19690409744618],[84.10287912037518,25.71844700172778],[84.63887354807582,25.726807833314922],[84.02702281664972,26.142757827911453],[84.18040643101205,26.371551865726076],[83.91147700555939,26.515330479618],[84.42360226693114,26.6247595626038],[84.06159410148666,26.88882050006606],[83.88062237052605,27.361878102892206]]]]}},{"type":"Feature","properties":{"name":"Lakshadweep"},"geometry":{"type":"MultiPolygon","coordinates":[[[[72.30120227256685,10.029964434710962],[72.32292753337902,10.136910172066848],[72.33420447875375,10.130994964945728],[72.30120227256685,10.029964434710962]]],[[[72.61533041176915,10.552528710731451],[72.65098117713967,10.56110169148991],[72.61538366692275,10.541626612678101],[72.61533041176915,10.552528710731451]]],[[[72.07558677610888,11.129400562086346],[72.00127836480476,11.191560650603606],[72.1028944993817,11.21791065884986],[72.07558677610888,11.129400562086346]]],[[[72.19512229545762,11.495777870552331],[72.16632048440289,11.601763917071139],[72.1905687941146,11.599922651409258],[72.19512229545762,11.495777870552331]]],[[[72.70793564611324,11.700316800679843],[72.70911009055828,11.679229455075358],[72.69995798147573,11.68803662558986],[72.70793564611324,11.700316800679843]]],[[[71.84485779744944,11.835468855803128],[71.73290458547831,11.947071759354287],[71.77335381852396,12.003507835718096],[71.84485779744944,11.835468855803128]]],[[[71.90091103241826,12.285319025152944],[71.87989250023873,12.393948084736394],[71.89744561812086,12.40304904128027],[71.90091103241826,12.285319025152944]]],[[[73.08064745711454,8.329399515475302],[73.01620584522362,8.265762993767225],[73.00674936419188,8.297794891720912],[73.08064745711454,8.329399515475302]]],[[[73.62151027927604,10.075126411154997],[73.65861946081952,10.15462929850338],[73.64593624915864,10.05336895821091],[73.62151027927604,10.075126411154997]]],[[[73.67769486292764,10.800505480243771],[73.66120273461854,10.816459259087594],[73.70387561966419,10.811481884781188],[73.67769486292764,10.800505480243771]]],[[[72.73313076926962,11.124641149269678],[72.71680470887026,11.120331942465214],[72.72218216097798,11.130025418238517],[72.73313076926962,11.124641149269678]]],[[[74.08207718021777,11.202950491472052],[73.99142560700619,11.352093635113192],[74.12129974158984,11.223593521623798],[74.08207718021777,11.202950491472052]]],[[[73.01091192574484,11.487840731164852],[73.0002998716418,11.477912184299896],[72.99725028767068,11.4918148038102],[73.01091192574484,11.487840731164852]]]]}},{"type":"Feature","properties":{"name":"Madhya Pradesh"},"geometry":{"type":"MultiPolygon","coordinates":[[[[74.17617291404878,22.39620570752743],[74.15897117028334,22.41304016996793],[74.17260899161175,22.418668317089214],[74.17617291404878,22.39620570752743]]],[[[74.13904705727595,21.96822618159308],[74.06791999141456,22.358545926853083],[74.27052664358979,22.39108541655878],[74.04070267069176,22.54039230516082],[74.37825094022878,22.636493886883443],[74.47662991923545,22.856305493403852],[74.32031935785216,23.060464116425862],[74.74454228609767,23.209373734910002],[74.51870693237908,23.32915961292582],[74.93953685614105,23.62730155812045],[74.99341290528139,24.02646651431826],[74.7133860418324,24.506215781832907],[74.8003894630034,24.79249823410629],[74.88897086970991,24.654480339096438],[75.02286627425923,24.76944521692326],[74.83408655555013,24.96424158987753],[75.04504330770254,24.855778025335667],[75.35210531890539,25.037911631816428],[75.26357359794326,24.885961904618227],[75.41947064295584,24.860050835677555],[75.30258913897762,24.81151788184485],[75.22126144985606,24.90284005342579],[75.21874154858364,24.71878425668814],[75.84171956380686,24.72568589778598],[75.83170996644185,24.068006863326104],[75.51592944258977,24.04501414388767],[75.58393474579196,23.79669297540056],[75.97814788281858,23.92897011647773],[76.18860563174457,24.327255115731077],[76.90402563097814,24.12670159420327],[76.81892562221975,24.52976400260667],[76.97946357998029,24.4603142299178],[77.06425515814908,24.637695664023738],[76.8069111464323,24.82182454776472],[76.95380547774067,24.868063378722013],[76.88699029236818,25.029236762366736],[77.39236104262807,25.116930405114147],[77.36729096570554,25.407796774701467],[76.77519187260691,25.30726560472391],[76.4875743416826,25.71323893692744],[78.18161154353794,26.826769781700136],[78.8201089173927,26.759680474874074],[79.13534957192525,26.439178616400056],[78.81275259075949,25.619301106960563],[78.30664419407435,25.378556184420404],[78.4497320755749,25.123744368607788],[78.16964971316378,24.866086480906404],[78.39174415516868,24.26862253610119],[78.50623016379109,24.389840981076475],[78.79810428758287,24.17602322199417],[78.97481753799906,24.352651655549494],[78.4356471571906,25.275705800482342],[78.89310730695672,25.5555683595922],[78.88435758693316,25.15722931288252],[79.00006566090161,25.27273778322217],[79.28403134537035,25.11548242737217],[79.30239678398448,25.33528392911012],[79.48086293807421,25.27731509051904],[79.40952483730143,25.108638362670376],[79.86371255289208,25.09400225430062],[80.26412814229997,25.424166690540403],[80.43182240128283,25.169905352450087],[80.32208519077898,24.999356845841817],[80.88635783524597,25.19164470114208],[80.8103131325451,24.940682579937175],[81.1363428619336,24.890120991190827],[81.27702916236603,25.16153095279128],[81.57485177538916,25.192285878190773],[82.3011550444698,24.614612952126095],[82.80446149360313,24.59790876907448],[82.66526892931768,24.133386166838193],[82.81553199420625,23.961983259319993],[82.63725198179355,23.837927352565316],[81.6152990434162,23.90122527772445],[81.61279351600803,23.509329743972557],[81.92396183706916,23.530781181006773],[82.19507407450897,23.32143835849348],[82.15857298575474,23.141161752213122],[81.62921313827576,22.54359249589703],[81.11717398788926,22.440544539898667],[80.65517886461299,21.32699578782541],[80.26689847688328,21.619934082991563],[79.54271422997778,21.54344203951854],[79.23449704949928,21.722657461073027],[78.937275119751,21.486190780779964],[78.38430498298862,21.61687647257122],[77.49037584926612,21.37574422641495],[77.42680808792295,21.540351252208552],[77.61073313672495,21.540643393377934],[77.47482832656607,21.768822885767634],[76.79750185552626,21.595078504269622],[76.6249854299337,21.190544927306576],[76.16917544169331,21.083744258690615],[76.09917935064658,21.371609510570522],[75.21815277682924,21.408712556939008],[74.50880480759582,21.72218525134832],[74.4321872187652,22.029028359471283],[74.13904705727595,21.96822618159308]],[[79.36195525702954,25.049117588306103],[79.4241453721113,25.0568323100631],[79.36172983566343,25.14067310697834],[79.36195525702954,25.049117588306103]],[[79.37148041029275,25.181201173695285],[79.35657519418993,25.174291122137618],[79.36914078621834,25.170435096302697],[79.37148041029275,25.181201173695285]]]]}},{"type":"Feature","properties":{"name":"Karnataka"},"geometry":{"type":"MultiPolygon","coordinates":[[[[77.50224435879016,15.931251100957581],[77.0697720483414,15.903699988763492],[76.97431948305774,15.495670368392837],[77.15886920904683,15.125968426401812],[76.77633757292074,15.070083056188139],[76.94311127416603,14.246195425678422],[77.5062088932259,14.267526370645555],[77.40417233278697,13.88778405019383],[76.89667266421213,14.165096122088414],[76.9987329919341,13.749223947627115],[77.18345347220003,13.924225946470301],[77.48411400205958,13.68521044810376],[77.98706915261937,13.95589400300588],[78.58007119293126,13.16683279409824],[78.46823515992475,12.876494627824854],[77.83548561676787,12.868093473335193],[77.59997415048673,12.666345028000705],[77.47583036198165,12.211155176270438],[77.73729827969191,12.17680021345916],[77.67594019128683,11.949215389678557],[76.58339967865231,11.613055200337271],[74.84568344193735,12.792536910949707],[74.75409573203245,13.643799920729805],[74.29460498773005,14.591922708166521],[74.39048421657338,14.59419414834133],[74.41445588583053,14.617029451348174],[74.08801970874259,14.895984125966663],[74.33560189261328,15.295391063646719],[74.24863624656558,15.65641107561072],[74.0906155487686,15.668122802725236],[74.35868458472584,15.775816087142744],[74.50726093244612,16.19017195966825],[74.25323587593499,16.492550847543612],[74.68544095733438,16.60610503352052],[74.93438145474039,16.942440950389596],[75.67012034148064,16.960346900189336],[75.63406131987409,17.478787422201833],[76.3826304556311,17.313774242787133],[76.33232959383577,17.596474554157396],[76.69219955456583,17.681754240266002],[76.95629197549431,18.18631226419967],[77.3727248592649,18.449113421447294],[77.6572816465308,17.97173536759317],[77.4435254847134,17.5841447104101],[77.69220373621351,17.501606175884376],[77.38401883959784,17.222860335536097],[77.4756123663177,16.647483359769296],[77.23899106648457,16.471971135059903],[77.58918359264874,16.332578905991795],[77.50224435879016,15.931251100957581]]],[[[74.30910680123793,15.79856310010706],[74.2655200521088,15.82146516518526],[74.2897467331253,15.83079594707533],[74.30910680123793,15.79856310010706]]],[[[77.2748991449796,18.4748583622237],[77.27511440490593,18.44989206886396],[77.26833200491814,18.45297080795649],[77.2748991449796,18.4748583622237]]]]}},{"type":"Feature","properties":{"name":"Puducherry"},"geometry":{"type":"MultiPolygon","coordinates":[[[[75.53696559428681,11.692748940910917],[75.52913646707435,11.705315065338027],[75.54418722585984,11.703478021993192],[75.53696559428681,11.692748940910917]]],[[[75.55529693330686,11.717509243656707],[75.53309372869268,11.752667834353133],[75.54611985904432,11.757653164961653],[75.55529693330686,11.717509243656707]]],[[[79.64878176136926,11.843607456818745],[79.67001971913481,11.814905209707717],[79.64629870262308,11.816204128417837],[79.64878176136926,11.843607456818745]]],[[[79.63135181193661,11.888082281971776],[79.60242143110423,11.856514753453155],[79.5997736246531,11.879803101631865],[79.63135181193661,11.888082281971776]]],[[[79.66113570245079,11.957410268469175],[79.68893557251869,11.971887635705855],[79.68486013278897,11.953067338886626],[79.66113570245079,11.957410268469175]]],[[[79.6379448263927,11.977122118990621],[79.62007322799712,11.924433098508757],[79.62767192731764,12.030438591068162],[79.65429282845133,12.023789306931008],[79.6379448263927,11.977122118990621]]],[[[79.72134610933551,10.934091336346171],[79.85248976109364,10.987980570447007],[79.84947962318614,10.82700439193917],[79.72134610933551,10.934091336346171]]],[[[79.67573944511935,11.801549173855335],[79.68831460143775,11.811791887185905],[79.6905437437988,11.802742897966425],[79.67573944511935,11.801549173855335]]],[[[79.71250414584972,11.789296169982322],[79.80756347987074,11.832101179825656],[79.79509635641176,11.78485633215405],[79.71250414584972,11.789296169982322]]],[[[79.70661186154825,11.892727288433662],[79.73999485238056,11.905901577595785],[79.67804711808009,12.020502935062439],[79.84050475429103,11.954588883869917],[79.80812622254717,11.834093131392933],[79.70661186154825,11.892727288433662]],[[79.77058328449107,11.89403739650868],[79.7964923182659,11.889592491000712],[79.78147355556018,11.901777713870445],[79.77058328449107,11.89403739650868]]],[[[79.84226500722434,12.010641333730632],[79.87502541269271,12.043306995621379],[79.8578569717219,12.004583150591998],[79.84226500722434,12.010641333730632]]],[[[82.18417488036647,16.736101378775686],[82.29861723409812,16.752114610001286],[82.31235859707164,16.734027504365883],[82.26301940642054,16.70090334561297],[82.18417488036647,16.736101378775686]]]]}},{"type":"Feature","properties":{"name":"Uttar Pradesh"},"geometry":{"type":"MultiPolygon","coordinates":[[[[79.4241453721113,25.0568323100631],[79.36195525702954,25.049117588306103],[79.36172983566343,25.14067310697834],[79.4241453721113,25.0568323100631]]],[[[79.36914078621834,25.170435096302697],[79.36270759657839,25.1866126525519],[79.37148041029275,25.181201173695285],[79.36914078621834,25.170435096302697]]],[[[77.5762035912228,30.39961145380562],[77.94241046197328,30.234730399188606],[77.71539106444612,29.8844804180369],[77.804606266566,29.67647834979607],[78.04459332322335,29.546063495134263],[78.50015931010415,29.735600690319643],[78.91269149601578,29.4501849749567],[78.73960646596566,29.306809011826488],[79.42291472093768,28.84975836475678],[80.13338861709104,28.82214356976999],[80.52275975296027,28.55755243969338],[80.55778413153251,28.691286412338115],[81.89057850449444,27.85757723989775],[82.69941216114239,27.720434593881464],[82.74625101617153,27.500216342710075],[83.93368809542932,27.313195305818738],[84.06159410148666,26.88882050006606],[84.42360226693114,26.6247595626038],[83.91147700555939,26.515330479618],[84.18040643101205,26.371551865726076],[84.01192927441656,26.175827299790114],[84.63887354807582,25.726807833314922],[84.10287912037518,25.71844700172778],[83.35796170337,25.19690409744618],[83.54684282423699,24.62648076737355],[83.19725342480575,23.920404340188213],[82.94652384759752,23.875016684272623],[82.6713775644231,24.122529332562692],[82.77088768911563,24.643742697367657],[82.3011550444698,24.614612952126095],[81.57485177538916,25.192285878190773],[81.27702916236603,25.16153095279128],[81.1363428619336,24.890120991190827],[80.8103131325451,24.940682579937175],[80.88635783524597,25.19164470114208],[80.28647183540693,25.017461708591043],[80.43182240128283,25.169905352450087],[80.26412814229997,25.424166690540403],[79.86371255289208,25.09400225430062],[79.40952483730143,25.108638362670376],[79.48086293807421,25.27731509051904],[79.30239678398448,25.33528392911012],[79.3084772442295,25.126055900559436],[79.14074827231497,25.10623322658222],[79.01976753614292,25.26905734462082],[78.88435758693316,25.15722931288252],[78.96320931745612,25.342711196064897],[78.85320037499736,25.228786842838588],[78.7905437608859,25.298111726674904],[78.98194453751046,25.367501760098207],[78.93326404180215,25.554765583365054],[78.4356471571906,25.275705800482342],[78.97481753799906,24.352651655549494],[78.79810428758287,24.17602322199417],[78.52087596775175,24.386075705829228],[78.3474623739894,24.303344594977148],[78.16964971316378,24.866086480906404],[78.4497320755749,25.123744368607788],[78.30664419407435,25.378556184420404],[78.81275259075949,25.619301106960563],[79.13534957192525,26.439178616400056],[79.00193284052824,26.678819918804265],[78.22441614868637,26.948107209680018],[77.43619408279073,26.764513551159496],[77.75346947683494,27.007610934696913],[77.52236597910672,27.064747831147542],[77.6813648416142,27.1946075451022],[77.31980501249137,27.60608615095515],[77.54847806990705,28.24872622303684],[77.20468972215303,28.796959832929986],[77.09708158194951,29.59589522198695],[77.5762035912228,30.39961145380562]]]]}},{"type":"Feature","properties":{"name":"West Bengal"},"geometry":{"type":"MultiPolygon","coordinates":[[[[88.53083000749888,21.542209000644903],[88.49771200640402,21.599755000492905],[88.52971600738789,21.583060001318074],[88.53083000749888,21.542209000644903]]],[[[88.17444600517905,21.566666999882216],[88.18638700545597,21.576942999819664],[88.1866690067693,21.56],[88.17444600517905,21.566666999882216]]],[[[88.52469700616194,21.653281000218044],[88.53659900643908,21.588393999983168],[88.51027700667856,21.601389001201483],[88.52469700616194,21.653281000218044]]],[[[88.60333200726637,21.621111000572284],[88.57080900663038,21.666000001299096],[88.56751300662,21.6891790009102],[88.57688200699909,21.691734000923475],[88.58583000684939,21.658055000937566],[88.60333200726637,21.621111000572284]]],[[[88.32861400643134,21.70528100061773],[88.31659600530145,21.665351001047895],[88.30065100563945,21.702428001251292],[88.32861400643134,21.70528100061773]]],[[[88.26146600625123,21.731621001208282],[88.24833600600192,21.56388800033102],[88.22090900654547,21.762150000721988],[88.2724310055865,21.75205800117584],[88.26146600625123,21.731621001208282]]],[[[88.42064800670022,21.65135000110172],[88.47055200666983,21.67428700124418],[88.45111100676763,21.62055700020545],[88.42064800670022,21.65135000110172]]],[[[88.2045060064471,21.721181000902504],[88.205003005984,21.609720000477694],[88.18148900531338,21.689218000910046],[88.2045060064471,21.721181000902504]]],[[[88.41114800567595,21.660002000791735],[88.38726100579083,21.61334800050986],[88.40439500632453,21.71075100105793],[88.39499600546134,21.755001001095366],[88.40206100571089,21.73752000074751],[88.42856500577045,21.702558000051738],[88.41114800567595,21.660002000791735]]],[[[88.59194300636472,21.69416600066046],[88.58854700623942,21.65733100082508],[88.58082500716841,21.68406000136804],[88.59194300636472,21.69416600066046]]],[[[88.56610900752474,21.692769000988676],[88.52810000661009,21.656430000644093],[88.53509400628343,21.73225700085993],[88.5859600065491,21.711330000778958],[88.56610900752474,21.692769000988676]]],[[[88.36528100571388,21.72222000115221],[88.3578800052581,21.686820000043042],[88.34256000563983,21.753861000684708],[88.36538800615165,21.76416500101402],[88.35975600543537,21.74514100145609],[88.35977900559669,21.734172001037052],[88.36528100571388,21.72222000115221]]],[[[88.27722200529138,21.738611000697176],[88.30577900649604,21.732410000721018],[88.29482300577718,21.706991000334426],[88.27722200529138,21.738611000697176]]],[[[88.57972000747242,21.725839000769327],[88.56900100599171,21.769179000210727],[88.58222200773952,21.777781000292975],[88.5836170073191,21.761391000794106],[88.58715900698263,21.752229000967645],[88.61583100719531,21.727321000763652],[88.57972000747242,21.725839000769327]]],[[[88.37281800614613,21.763609001454313],[88.38743600576709,21.74233100047536],[88.3609910057304,21.73472100117334],[88.37281800614613,21.763609001454313]]],[[[88.1699970059571,21.817221001548035],[88.03694200616872,21.67389099917034],[88.13694800534626,21.87500000044969],[88.1699970059571,21.817221001548035]]],[[[88.47499800665275,21.79138900100162],[88.4231020056531,21.766162001375335],[88.44825000613292,21.79822700067558],[88.47499800665275,21.79138900100162]]],[[[87.95221676738998,21.76820324568331],[87.94519720358812,21.74506271277403],[87.93480291492267,21.74705787582036],[87.95221676738998,21.76820324568331]]],[[[88.52861000674648,21.80222200054493],[88.54171800598124,21.737679000885237],[88.53266900596992,21.730728000496867],[88.52481100602319,21.71848200144325],[88.52861000674648,21.80222200054493]]],[[[88.38282100518529,21.77959700040128],[88.42084600593847,21.744081001137317],[88.42506500624512,21.728558001150873],[88.38282100518529,21.77959700040128]]],[[[88.28797200550372,21.78062300095081],[88.27371200620416,21.776131000645194],[88.26500800591481,21.788290000183395],[88.28797200550372,21.78062300095081]]],[[[88.26029900639406,21.80720000077946],[88.34345300545192,21.760270001259585],[88.33980400624995,21.751010000511144],[88.34500100579186,21.721666000785376],[88.31710000606051,21.70891000069605],[88.30358900532838,21.76080300155735],[88.28213500612571,21.791255001117463],[88.2641990063791,21.793949000346117],[88.26029900639406,21.80720000077946]]],[[[88.46005200539577,21.800599000343652],[88.48487800541568,21.83469100138865],[88.50026700551797,21.812501000620728],[88.46005200539577,21.800599000343652]]],[[[88.61614300539543,21.83077100138064],[88.57604100598769,21.817034000119065],[88.59221600636369,21.850000001398996],[88.61614300539543,21.83077100138064]]],[[[88.48382500631902,21.88525100103294],[88.40320500540673,21.797564000678165],[88.41982300552735,21.903140000410758],[88.48382500631902,21.88525100103294]]],[[[88.5631190063371,21.830930000619105],[88.54250400625494,21.85556100063974],[88.55026200608677,21.880959000957205],[88.5483090059559,21.90381900114602],[88.56233900544083,21.89746000107823],[88.570503006009,21.901200000879385],[88.5631190063371,21.830930000619105]]],[[[88.48860900570111,21.91028100056775],[88.49028000541796,21.88944500018664],[88.47693600609188,21.8983310007751],[88.48860900570111,21.91028100056775]]],[[[88.13478900560818,21.92674500078124],[88.12944700567482,21.89888900132638],[88.11675200659988,21.913581000762633],[88.13478900560818,21.92674500078124]]],[[[88.08750200581295,21.932780001196136],[88.07026700601756,21.990830000903884],[88.14138700590564,22.02639100134371],[88.08750200581295,21.932780001196136]]],[[[88.86539921250369,27.106680128984806],[89.13525141701933,26.80909631024656],[89.88248703714709,26.612941285611896],[89.5619445634909,25.966254513435103],[89.1614807461396,26.139587444305164],[88.96772409469128,26.458873789893516],[89.0520646079953,26.243374862459973],[88.67568104584365,26.265273952331086],[88.41251314596497,26.6291930710035],[88.34570825333327,26.468051516164564],[88.52681621809404,26.35573674345602],[88.09542983811662,25.914798814213952],[89.00514089203858,25.299997256967913],[88.44302542078663,25.201172463338537],[88.39790317009528,24.944010509477494],[88.14338898491377,24.93077195745991],[88.01368173482427,24.67008318718939],[88.73496968720139,24.28454023594321],[88.56545982021458,23.64781187801583],[88.79985236619382,23.49857509516454],[88.72375401263764,23.255161882315065],[88.99324467080498,23.219786615260148],[88.95709200639106,22.609770001684296],[88.93775200664987,22.57078100144213],[88.89638500646294,22.563333002416186],[88.86889000656862,22.54583600133043],[88.84522300603697,22.50975700128464],[88.84365800671168,22.502042001637108],[88.85929000542944,22.498721002272475],[88.85273100603115,22.432891001718417],[88.81416300631776,22.456393001835636],[88.81093600589202,22.48210000201351],[88.7955020064125,22.497233001102188],[88.7716660061813,22.51338100203168],[88.75305300579163,22.516902001626136],[88.74186000583467,22.515200001379014],[88.73352100529024,22.511061001164308],[88.70848900656244,22.52909500093358],[88.69106300605296,22.527799001422807],[88.95415500584892,22.225690000992813],[88.66467200580848,22.27328100041791],[88.63104200628362,22.22293000051917],[88.60222000634826,21.906670001319583],[88.54504300642964,21.906041001091353],[88.52805400628739,21.85305600113361],[88.52081300601549,21.912341000237006],[88.42418700532608,21.90771200080826],[88.39722500572947,21.88583500098457],[88.38163800638893,21.791588000286026],[88.32565300568172,21.86215000052215],[88.25976600609636,21.809522000839706],[88.25836200610178,21.800770001034778],[88.28237900568661,21.755021000219017],[88.21722300563727,21.764445000436467],[88.20305600612983,22.166389001151515],[87.98404700586468,22.246464001212757],[87.94916500616017,22.399445000786216],[87.89392800577292,22.43478000069655],[87.93750100606661,22.26472300056605],[88.18888900572307,22.09916600111012],[87.96335500582893,22.103478000309508],[87.96092721941568,21.82606679074985],[87.49020214411371,21.602647452218207],[87.2393851555006,21.958925742828797],[87.03496717429573,21.869983791618722],[87.02240475417614,22.045655714339773],[86.72052881575229,22.147647019094734],[86.89339622785371,22.28538795888727],[86.4216591724329,22.779599799790958],[86.54750752605156,22.977181350638887],[85.9210175692055,23.131889472121486],[85.86572996126876,23.452831349986866],[86.04347151809617,23.585251286317884],[86.30582909643573,23.422185290219034],[86.79845402333456,23.83314933547348],[87.25092861226568,23.829964111254753],[87.24012988048963,24.038966333529515],[87.69455666915502,24.151430750728593],[87.97857559079097,24.897360005759708],[87.7717457007036,25.42469378499021],[88.07379420014229,25.497210514753476],[87.80991072589933,25.920784550666554],[88.2955124098699,26.351084649437098],[88.0168569001259,27.216439148947643],[88.86539921250369,27.106680128984806]]],[[[88.71444700612449,21.57833400101339],[88.71277600730696,21.624718000535324],[88.72885100666866,21.637081000487854],[88.73623700733208,21.610269000613926],[88.75709600697519,21.59957500028611],[88.71444700612449,21.57833400101339]]],[[[88.79805700642578,21.59194500096106],[88.75040400683952,21.592150000522167],[88.75694300711416,21.596111000622216],[88.75756800715789,21.601045001525677],[88.7303910066397,21.634147000983376],[88.76985900648799,21.655567000416795],[88.79805700642578,21.59194500096106]]],[[[88.70300300628378,21.687021000318964],[88.7413630071971,21.653709001069615],[88.72511300695976,21.638202000921638],[88.68712700710574,21.68362000086239],[88.69712100752855,21.712880001211147],[88.70300300628378,21.687021000318964]]],[[[88.74916900744381,21.673335001409214],[88.7319410070719,21.68306000021886],[88.76027800712438,21.68333300021783],[88.80999700755592,21.704167000506743],[88.74916900744381,21.673335001409214]]],[[[88.83167200615821,21.76610900072984],[88.83972100681905,21.620447000528713],[88.81916800689805,21.703333000717464],[88.78444600647805,21.71028000002201],[88.83167200615821,21.76610900072984]]],[[[88.72805800697148,21.777778001053946],[88.75222800731672,21.748610000451208],[88.75277000713021,21.73157800102399],[88.7761090069252,21.723610000501196],[88.73269600771465,21.68938000118618],[88.73077400721473,21.68203200047651],[88.75464600640811,21.66605100095296],[88.7477790071955,21.658331001074885],[88.71111200701358,21.69018000030684],[88.69499900769813,21.74389000132254],[88.71105300699071,21.8060210003689],[88.72805800697148,21.777778001053946]]],[[[88.621392006436,21.739721000623717],[88.58625000643269,21.756598000996973],[88.59259000652366,21.78519700054119],[88.63055400716178,21.740556000459094],[88.6091690075437,21.70806200026118],[88.621392006436,21.739721000623717]]],[[[88.78592700642628,21.735940000730523],[88.7649380070834,21.784395000428958],[88.78489700749094,21.82422900006833],[88.78592700642628,21.735940000730523]]],[[[88.7360760071021,21.77518000085638],[88.75063200656189,21.795401000755646],[88.75554600744232,21.780281000467824],[88.7360760071021,21.77518000085638]]],[[[88.83027700657863,21.767221000748634],[88.79722700682095,21.790555001212397],[88.81111100676759,21.80611000087589],[88.82029600675537,21.82207100037641],[88.83027700657863,21.767221000748634]]],[[[88.77694700779824,21.865279000025907],[88.82110500629108,21.825000000549608],[88.79499800655282,21.7913890001023],[88.77694700779824,21.865279000025907]]],[[[88.6528480055311,21.868659001211995],[88.64305900646804,21.788891000919023],[88.63861100639286,21.784721001073365],[88.62223700673252,21.793220000003032],[88.6188890061228,21.833610001000807],[88.59471900667688,21.85611000077597],[88.6528480055311,21.868659001211995]]],[[[88.77139300708166,21.876399001113043],[88.7036140074805,21.819441000501797],[88.71805700622593,21.907222000694844],[88.72667000681543,21.89916500056438],[88.74749900687374,21.896670000620077],[88.75749900667387,21.8788900008729],[88.77139300708166,21.876399001113043]]],[[[88.80777700770278,21.868055000338018],[88.84083600607687,21.886944000865014],[88.83082600671491,21.865550000831945],[88.80777700770278,21.868055000338018]]],[[[88.6527780059003,21.873333000917285],[88.63999900654898,21.92168100017807],[88.66694700549994,21.913335001109488],[88.6527780059003,21.873333000917285]]],[[[88.71694200696811,21.918608000558834],[88.81416300721708,21.90278000089637],[88.80860900650049,21.89528200046402],[88.80750400680455,21.883610000900887],[88.78722400688247,21.866945001310796],[88.79250200656242,21.878060000368748],[88.71694200696811,21.918608000558834]]],[[[88.78723100720526,21.942790001457467],[88.7327800061924,21.925277000533185],[88.72506000631432,21.978452000259665],[88.75472300726102,21.974721000873558],[88.7494970072811,21.959031001279754],[88.7758420063036,21.94144999991761],[88.7844620072159,21.951651000893037],[88.78723100720526,21.942790001457467]]],[[[88.90239800676267,21.987101000710652],[88.89746100751955,21.922839000519502],[88.85658300650061,21.919060000718503],[88.78722400688247,21.954999000603436],[88.75166300644264,21.958890001072746],[88.90239800676267,21.987101000710652]]],[[[88.7157820056351,22.00064100098149],[88.63237700579424,21.952552001074025],[88.65293900523096,22.01913000014946],[88.7157820056351,22.00064100098149]]],[[[88.7593230062518,22.035312000848194],[88.77526100649033,22.050044000330388],[88.77955700585119,22.036551000428403],[88.79104600596844,22.029372000317608],[88.7593230062518,22.035312000848194]]],[[[88.8127890068073,22.025450001116724],[88.80571000591209,22.06438200052895],[88.83186300687231,22.02697500039602],[88.8127890068073,22.025450001116724]]],[[[88.85038800680115,22.04270700102734],[88.8194420060438,22.062502001066548],[88.87056000713869,22.078939000934213],[88.87016400686349,22.06305100120278],[88.88863400695391,22.052474000874497],[88.85038800680115,22.04270700102734]]],[[[88.7956770054895,22.10914000061058],[88.78076900508557,22.048619001166003],[88.74794100657226,22.059302000087257],[88.7956770054895,22.10914000061058]]],[[[88.86689100701443,22.0888760014264],[88.80551200667384,22.085080999988236],[88.8058560063497,22.124818000550363],[88.86689100701443,22.0888760014264]]],[[[88.65286200617669,22.163392000540455],[88.73602300645666,22.132681000727644],[88.68283000590009,22.080231001159802],[88.73352100618956,22.010870000550142],[88.66339200613623,22.024397001120747],[88.65286200617669,22.163392000540455]]],[[[88.82616500581042,22.204733000427666],[88.73916600570664,22.05699100053431],[88.70471900537785,22.0650000011492],[88.82616500581042,22.204733000427666]]],[[[88.8098370055734,22.481193001555823],[88.80397100575738,22.444453000705494],[88.78138700570582,22.50056300178113],[88.8098370055734,22.481193001555823]]],[[[88.80223014940191,26.192461624404473],[88.76526656809767,26.228733520035973],[88.78129907629142,26.23829776502987],[88.80223014940191,26.192461624404473]]],[[[88.70832742447112,26.18174114443832],[88.68978443990005,26.24701525964656],[88.72958891569596,26.185193323413216],[88.70832742447112,26.18174114443832]]],[[[88.6385836418217,26.26330879246683],[88.66150942831752,26.26769233003705],[88.64791635725413,26.252737183574197],[88.6385836418217,26.26330879246683]]],[[[88.89250200636258,21.57944600103218],[88.83583100639589,21.56000000089938],[88.83472300746087,21.60722200039504],[88.89250200636258,21.57944600103218]]],[[[88.99513300698277,21.626400000759475],[88.93972100751853,21.646945001210895],[88.95423200670183,21.67654800029004],[88.9657670062424,21.64153400079357],[88.99513300698277,21.626400000759475]]],[[[89.02458900647753,21.631531000855034],[89.0002660062712,21.60209100029948],[88.99289800643788,21.6433600004637],[88.96499600666044,21.6440390002997],[88.95244500703149,21.701491001208808],[88.97165600621975,21.697603000877848],[88.98449000630882,21.70568900144633],[88.98944000615143,21.701667000331838],[88.98790600645708,21.65298000072653],[89.02458900647753,21.631531000855034]]],[[[89.06797000691034,21.62037000057512],[89.0260540074865,21.64392700053071],[89.02641200690863,21.687910000845932],[89.01848500647793,21.708208000698733],[89.02221600766268,21.715280000371763],[89.06797000691034,21.62037000057512]]],[[[88.94194800679514,21.68972200076979],[88.87305400703684,21.694444000889973],[88.88305700697538,21.745280000671528],[88.94194800679514,21.68972200076979]]],[[[89.02412400661768,21.68714600068745],[88.99275900722245,21.70000100084559],[88.97799700635682,21.72687600092678],[89.02412400661768,21.68714600068745]]],[[[88.96527000670551,21.7499639999387],[88.92250000657009,21.721112000418543],[88.92710100650629,21.761950000492163],[88.96527000670551,21.7499639999387]]],[[[89.01538800665122,21.73388200025414],[89.00511800699047,21.764977000688077],[89.0558310064958,21.72993300070749],[89.02088100635342,21.71725100043335],[89.01538800665122,21.73388200025414]]],[[[88.9902580070015,21.788850000826926],[88.9841690076936,21.748061000314976],[88.9522170064098,21.756669000673867],[88.9902580070015,21.788850000826926]]],[[[88.92333200716644,21.788055000138172],[88.89472200711498,21.75527900042556],[88.9008340065842,21.7769510006882],[88.8855590063431,21.810290000283317],[88.92333200716644,21.788055000138172]]],[[[88.8561110072173,21.865281001017422],[88.8925020072619,21.751388000855627],[88.91333100732021,21.72777900120002],[88.83499900669887,21.781667000531684],[88.8561110072173,21.865281001017422]]],[[[89.0166170066696,21.811630000923856],[88.99035000674746,21.789751001007915],[88.99957300668899,21.811671001015952],[89.0166170066696,21.811630000923856]]],[[[88.93889600724498,21.788611000597257],[88.91971700683445,21.775000000649584],[88.94139100628996,21.84722100004916],[88.95361200688865,21.825556000109373],[88.9750000075444,21.822780000696525],[88.94806000626431,21.804720000627583],[88.93889600724498,21.788611000597257]]],[[[88.99188300729503,21.800793001196098],[88.94335100764295,21.784942000472995],[88.97634200647849,21.804285000352536],[88.97905600752875,21.893490000563133],[88.99188300729503,21.800793001196098]]],[[[88.94499900719848,21.910000000199886],[88.97667000721509,21.86750099997124],[88.93860600736139,21.85389000092283],[88.88999900694864,21.812221000298962],[88.94499900719848,21.910000000199886]]],[[[89.00228100746256,22.059211000387393],[89.01560900695017,21.983536000885806],[88.96807800669472,22.015542000163236],[89.00228100746256,22.059211000387393]]],[[[88.90278500662282,22.04533300071745],[88.87701500713695,22.01484000016592],[88.85389800768695,22.04329100007965],[88.90278500662282,22.04533300071745]]],[[[88.90782900720296,22.034803000757904],[88.96066400743803,22.189352000694328],[88.9238900068184,22.024673001258066],[89.01510600713658,21.903069000733865],[88.90782900720296,22.034803000757904]]],[[[88.8814000070048,22.08394200052294],[88.89090600650707,22.060357000175486],[88.87168900614279,22.063356000878798],[88.870727006746,22.086993000926327],[88.8814000070048,22.08394200052294]]],[[[89.0130220072599,22.19582200048501],[88.96311800639091,22.04967500040101],[88.97268600695372,22.19343800116286],[89.0130220072599,22.19582200048501]]],[[[88.89994100677211,22.148092000945155],[88.83503800669871,22.130415001451183],[88.84808400577231,22.166929000872756],[88.89994100677211,22.148092000945155]]],[[[88.96099200637605,22.19405100065319],[88.92050100611658,22.23067200141179],[88.95418700642529,22.22160400052428],[88.96099200637605,22.19405100065319]]],[[[88.98770100599671,22.393118001294795],[89.06912300702123,22.189933000507608],[89.06218800647139,22.128430000744004],[89.01860900680026,22.206670999866787],[88.94721900525298,22.25556000069355],[88.98770100599671,22.393118001294795]]],[[[88.89322000619836,22.345771000531272],[88.86194500645695,22.398888001180353],[88.90301500553812,22.346699000158765],[88.89322000619836,22.345771000531272]]],[[[88.89614100600267,22.560794001342117],[88.99749700628189,22.42861100219602],[88.93248000544793,22.31117100124078],[88.89643100588626,22.379830000054483],[88.92555100517478,22.387502002215683],[88.92613900621024,22.405801001614975],[88.89472200621566,22.466112001267902],[88.9138870059806,22.514723001865093],[88.89614100600267,22.560794001342117]]],[[[88.89228700634033,22.46593400205262],[88.88439300563277,22.376081000737656],[88.88523800682862,22.54999100138366],[88.90569300672695,22.520521002142573],[88.89305800592228,22.486669001373343],[88.89228700634033,22.46593400205262]]],[[[89.61264737008014,25.943390468095686],[89.58395799136827,25.93466509002195],[89.60204231809854,25.960668625456776],[89.61264737008014,25.943390468095686]]],[[[89.793669115937,26.340475960597132],[89.81711626460401,26.345845042714586],[89.82701387299193,26.325070837449232],[89.793669115937,26.340475960597132]]]]}},{"type":"Feature","properties":{"name":"Odisha"},"geometry":{"type":"MultiPolygon","coordinates":[[[[86.38434756608734,19.97864820575012],[86.40820362929412,19.994874634756627],[86.38936784075332,19.96351229555603],[86.38434756608734,19.97864820575012]]],[[[87.44756212479228,21.58716678601843],[86.94734906021102,21.352007314386128],[86.97421893775385,20.793065377065545],[86.87177562204738,20.793607629588507],[86.79815157323657,20.737597932598533],[87.01511372641738,20.68329255071069],[86.75397918289303,20.515074839532247],[86.7838543033335,20.32593812774246],[86.53549407279326,20.177351712111886],[86.3820756951373,20.00119017508655],[86.3666052245515,19.94770385614811],[85.35092170387361,19.583861071031663],[84.31995526262534,18.788421356660308],[83.87788537021373,18.827157373114346],[83.62678820411242,19.149688853957514],[83.31567736321978,18.998742416729215],[83.41920075031442,18.867512189036347],[83.05776440170581,18.622148436601094],[83.06443696479414,18.386012420836607],[82.807420372852,18.447719365256546],[82.64004922589112,18.23707562484026],[82.48223879318579,18.544550206327017],[82.27582656444446,17.994997948396644],[81.39350610632181,17.814285493780574],[81.53623697315783,18.266104965272007],[82.24758022145011,18.917146808778227],[81.8677114194465,20.02749704825021],[82.70607393236617,19.832321815199634],[82.70819668672777,19.99802412351454],[82.39842490938213,20.06427706983095],[82.35400150026908,20.887002525346304],[82.64327972467959,21.15244394643105],[83.12711770591744,21.104636647463337],[83.40984202828702,21.351845333895085],[83.56440370326834,22.102268388775144],[84.00819173785845,22.371901695606823],[83.98360440891639,22.52037596757691],[84.29609191670863,22.339836147720064],[85.05786925955874,22.482265395431682],[84.99388088889197,22.080201614013333],[85.8079408135178,22.11470615476526],[85.90862445275633,21.970758164357846],[86.04425789068915,22.56685383203876],[87.02240475417614,22.045655714339773],[87.03496717429573,21.869983791618722],[87.2393851555006,21.958925742828797],[87.44756212479228,21.58716678601843]]],[[[86.80080081860297,20.390353966862108],[86.81110248699025,20.373820826769816],[86.80740834092228,20.369460215616527],[86.80080081860297,20.390353966862108]]],[[[86.78787999796361,20.405175992078398],[86.80626474142474,20.48311296099439],[86.79509847111763,20.396258870450538],[86.78787999796361,20.405175992078398]]],[[[86.9457880035136,20.783276017374362],[86.89515262988999,20.776490521020776],[86.88968226162712,20.786720426206728],[86.9457880035136,20.783276017374362]]]]}},{"type":"Feature","properties":{"name":"Chandigarh"},"geometry":{"type":"Polygon","coordinates":[[[76.7726598610638,30.795316057090417],[76.80746397048591,30.66545555083303],[76.70384626609234,30.742986202451334],[76.7726598610638,30.795316057090417]]]}},{"type":"Feature","properties":{"name":"Haryana"},"geometry":{"type":"Polygon","coordinates":[[[76.93998643762404,30.384387313823538],[76.77602430577713,30.889772535074485],[76.82376777176529,30.92670582631291],[77.2120816691338,30.480063628633616],[77.60510544196262,30.36593752599606],[77.13006713539005,29.77071269343611],[77.23193440115176,28.902813601766354],[76.8425143574517,28.57742259787466],[77.48443435226358,28.407891586027915],[77.5453867942652,27.94359479276551],[76.97883617874669,27.651763215000415],[76.87269762789327,28.219429982707595],[76.55497502437794,27.966397072666837],[76.48090743802788,28.144749718824528],[76.28747858766673,28.174079922950114],[76.23110054455452,27.836267570192263],[75.98302249699071,27.860254933518434],[75.94399260817238,28.08927731999239],[76.10108143026383,28.150797786388807],[75.56407536688471,28.611122447742844],[75.40504428706424,29.2591244181574],[74.60434473482172,29.327185264388504],[74.6147946123815,29.75211419461442],[74.47458421159217,29.787161936674067],[74.52874607427196,29.94298794423827],[75.0950272268251,29.913452287293296],[75.2477733099903,29.549252562156084],[75.45466074589677,29.805372279107473],[76.05232073301545,29.745247230475343],[76.2532535229318,29.86529106463098],[76.21429809797888,30.149342359162574],[76.54549011487694,30.078794999889396],[76.73777314171718,30.4164335595612],[76.93998643762404,30.384387313823538]]]}},{"type":"Feature","properties":{"name":"Himachal Pradesh"},"geometry":{"type":"Polygon","coordinates":[[[75.95045920312975,32.424260730348465],[75.824712,32.930309],[76.79484051482719,33.25306523438854],[77.33915510802188,32.820150230648665],[77.73056538378552,32.969290885865746],[78.00450003015231,32.58491912801537],[78.3908010289444,32.756745524486405],[78.29598167361542,32.504317787136245],[78.78775470781358,31.995347567836063],[78.72254429967973,31.51625131604544],[79.0118709390926,31.112332209863666],[78.3714747942264,31.286036323317717],[77.96951152553652,31.174136786483587],[77.70216567040944,30.76394145293574],[77.81266433599035,30.5063881734755],[77.2120816691338,30.480063628633616],[77.16689423647989,30.684437152752423],[76.62364350294536,31.000907290239297],[76.58456708770098,31.2771436839339],[76.37736510941232,31.43883515891548],[76.1866631851579,31.304390097724877],[75.90942331983041,31.94872876072378],[75.59364381311156,32.081439570180066],[75.95045920312975,32.424260730348465]]]}},{"type":"Feature","properties":{"name":"Arunachal Pradesh"},"geometry":{"type":"Polygon","coordinates":[[[95.23729640200742,26.679843368876448],[95.1958702327251,27.03715978649501],[96.01331107674486,27.35692887286922],[95.7593644842836,27.725375163433114],[95.97886721594932,27.962801791769323],[94.23758501083961,27.629420935627707],[93.67762825783791,26.96801061669663],[92.66196633887552,27.03683354842957],[92.19814357736425,26.889677766215982],[92.02323281204468,27.478924606385533],[91.65807308670367,27.482390482934477],[91.55140455008001,27.84653227824208],[91.92376103624287,27.7145022151052],[92.56525559147241,27.820088868206767],[92.68519402778219,28.117266190682187],[93.21190429085038,28.322351133398115],[93.3424528054527,28.639573971061964],[93.93962838354315,28.676042465687317],[94.63428502603318,29.348153157542242],[95.4588641830357,29.034810986238085],[96.08572168830534,29.461386555345314],[96.39705561142739,29.25341072212717],[96.11852517669558,29.074465494686876],[96.17004897348141,28.902245072851883],[96.52883267189037,29.075418368662838],[96.61875601637712,28.773647872151628],[96.26956602295365,28.404993152911743],[96.66649009344314,28.459830472997965],[97.40112500841246,28.191933569079026],[97.38888333419857,27.886911301215605],[96.89733739140758,27.61197044567956],[97.17023152666366,27.125892029293766],[96.71199806156136,27.371812287607042],[96.23406048730169,27.2770394784892],[95.23729640200742,26.679843368876448]]]}},{"type":"Feature","properties":{"name":"Nagaland"},"geometry":{"type":"Polygon","coordinates":[[[95.1958702327251,27.03715978649501],[95.0658582302732,26.443986304824136],[95.18230458289025,26.0673330054139],[94.90329513776044,25.560076319266784],[94.62383722680664,25.46268514300499],[94.57187254008574,25.691584800797955],[94.31240829750499,25.488835832707537],[93.83600942099804,25.55855179303086],[93.50463522213784,25.24013454597258],[93.33345487794031,25.545485444098006],[93.77316466062064,25.961904000769096],[93.79567082524846,25.81008520586761],[93.97922593253082,25.915120472032186],[94.21194627999688,26.485360695639656],[95.1958702327251,27.03715978649501]]]}},{"type":"Feature","properties":{"name":"Kerala"},"geometry":{"type":"Polygon","coordinates":[[[75.53696559428681,11.692748940910917],[74.86303796792794,12.758281100192676],[75.32948855745104,12.589981174791433],[75.8561413727262,11.962882610743918],[76.41206296213608,11.75679270262117],[76.24774023812154,11.466344477315829],[76.5471790866456,11.358921487736495],[76.46176900603484,11.187402133301873],[76.73651146123501,11.214242433041875],[76.65771882606305,10.936627486569307],[76.9090861476077,10.779034587276442],[76.83216530558445,10.303299410439479],[77.23581848313654,10.349343008473113],[77.17093114655523,9.610245288789088],[77.41268704647007,9.505892350851354],[77.14926491364491,9.020235823524501],[77.28411997575631,8.545841639280297],[77.10005572719012,8.29135591674219],[76.54951859021082,8.89814649936153],[75.53696559428681,11.692748940910917]],[[75.52833096859939,11.720236067240762],[75.54502380850204,11.73396049598017],[75.54611985904432,11.757653164961653],[75.52833096859939,11.720236067240762]]]}},{"type":"Feature","properties":{"name":"Punjab"},"geometry":{"type":"Polygon","coordinates":[[[76.78337062655322,30.90275598360182],[76.70384626609234,30.742986202451334],[76.93998643762404,30.384387313823538],[76.73777314171718,30.4164335595612],[76.54549011487694,30.078794999889396],[76.21429809797888,30.149342359162574],[76.2532535229318,29.86529106463098],[76.05232073301545,29.745247230475343],[75.45466074589677,29.805372279107473],[75.2477733099903,29.549252562156084],[75.0950272268251,29.913452287293296],[73.89020710407465,29.99767472320997],[73.93520261331003,30.48936955506099],[74.70662435682868,31.09595534945987],[74.51826046394933,31.13686956347965],[74.61175345236,31.8853994582185],[75.88863739437929,32.57602921105799],[75.95045920312975,32.424260730348465],[75.59364381311156,32.081439570180066],[75.90942331983041,31.94872876072378],[76.1866631851579,31.304390097724877],[76.37736510941232,31.43883515891548],[76.78337062655322,30.90275598360182]]]}},{"type":"Feature","properties":{"name":"Assam"},"geometry":{"type":"Polygon","coordinates":[[[92.29646594674608,24.249918609756094],[92.2434607525118,24.90005242937616],[92.49776543972331,24.86791893591021],[92.4848401782317,25.105868801504016],[92.80337424992177,25.218802369833554],[92.57231681906603,25.46178335501787],[92.65437558866256,25.589800568541477],[92.17132512935132,25.664709689200834],[92.30353466299437,26.074718834306793],[91.82185819240169,26.11752005350769],[91.22656973190766,25.722727772868495],[90.94884046451591,25.938622916414488],[90.11794247926207,25.957388301528965],[89.85608802574183,25.47661758403433],[89.88754214165658,25.93797892718578],[89.70505792458363,26.184847223820384],[89.86787349546552,26.7368813659823],[90.41489625635722,26.90167094785602],[91.68298126137614,26.803833885925144],[92.66196633887552,27.03683354842957],[93.65697539539826,26.96344767517013],[94.23758501083961,27.629420935627707],[95.97886721594932,27.962801791769323],[95.7593644842836,27.725375163433114],[96.01331107674486,27.35692887286922],[95.51134709868973,27.2601666878424],[94.28277648234882,26.558989295020012],[93.97922593253082,25.915120472032186],[93.79567082524846,25.81008520586761],[93.77316466062064,25.961904000769096],[93.33345487794031,25.545485444098006],[93.47362539649492,25.305372170289502],[93.03826728750539,24.407904368891536],[92.76474816749402,24.51816375815099],[92.48102265956817,24.140822901855472],[92.29646594674608,24.249918609756094]],[[89.793669115937,26.340475960597132],[89.82701387299193,26.325070837449232],[89.80486195401602,26.34943193563538],[89.793669115937,26.340475960597132]]]}},{"type":"Feature","properties":{"name":"Tripura"},"geometry":{"type":"Polygon","coordinates":[[[92.23341682892357,24.501713959131962],[92.26848374992517,23.72439394182703],[91.95643287287885,23.72804015133198],[91.83532659044982,23.095778186414236],[91.62154562353174,22.944180918814425],[91.45714984758746,23.25826374567538],[91.35644086275568,23.09551938221375],[91.15484127230695,23.729345511885924],[91.38208837278023,24.10494626635716],[91.90736157137945,24.13693055330242],[92.23341682892357,24.501713959131962]]]}},{"type":"Feature","properties":{"name":"Dadara & Nagar Havelli"},"geometry":{"type":"Polygon","coordinates":[[[73.03472427020898,20.072177282155906],[73.10432463437445,20.353002641958426],[73.20934714995104,20.097655781689014],[73.03472427020898,20.072177282155906]]]}},{"type":"Feature","properties":{"name":"Goa"},"geometry":{"type":"Polygon","coordinates":[[[74.08801970874259,14.895984125966663],[73.67573430579364,15.727968300696546],[73.85686625727203,15.799589106052451],[74.26091733626612,15.619280424552016],[74.29624375214752,15.042455472841823],[74.08801970874259,14.895984125966663]]]}},{"type":"Feature","properties":{"name":"Ladakh"},"geometry":{"type":"Polygon","coordinates":[[[77.33915510802188,32.820150230648665],[75.433622,34.350095],[75.1613985190001,34.86196495300007],[73.7317244191467,35.21730055487677],[73.78604238165065,35.52433405936938],[73.27273466647176,35.629756985496556],[73.07915729307467,35.886261350580924],[72.53372479616246,35.91744113460072],[72.59709731558871,36.2642493698126],[73.08541951979504,36.69972653015532],[73.90080940682873,36.70671912598692],[73.69031770130096,36.91212831926657],[74.05216328910456,36.80657808511057],[74.68505504565388,37.074847615025476],[74.91405659123876,36.909121598782804],[75.33288995530722,37.055277319592676],[75.76936460679121,36.57333113242589],[76.69727329572606,36.135897055404826],[76.8037793536343,35.850411746904626],[77.3584377049362,35.7177200129683],[77.37779990714006,35.47836330102558],[77.97185844491133,35.45817838642347],[77.96512485922494,35.60387241687857],[78.13731620058223,35.538868954438726],[78.4232214034451,35.78532063923615],[79.37807231318675,35.99528720004429],[80.29467636122513,35.602395856883334],[80.06904001668346,34.7147770564161],[79.50851027862649,34.474279706443326],[79.41970833387256,34.01435438094995],[78.90568264763613,33.97620644467173],[79.1053190108637,33.622494465747025],[78.91924642238456,33.63358016309411],[78.95366847821776,33.38112089011702],[79.45490562869185,33.25854828827295],[79.33331448217768,33.01045642442449],[79.62689617481868,32.73753783390396],[79.44812866510586,32.53251729703567],[78.97900245040285,32.33923906962741],[78.76133453895784,32.69736509382409],[78.32782320127978,32.47224773544468],[78.3908010289444,32.756745524486405],[78.00450003015231,32.58491912801537],[77.73056538378552,32.969290885865746],[77.33915510802188,32.820150230648665]]]}},{"type":"Feature","properties":{"name":"Chhattisgarh"},"geometry":{"type":"Polygon","coordinates":[[[80.27484775891702,18.722436820203143],[80.38633388190317,19.23632466914819],[80.89946563393192,19.46963946488944],[80.40711998340055,19.79642619681158],[80.55316170884583,20.068222490975245],[80.38981539316592,20.24375888136734],[80.62366850779546,20.327908234777283],[80.46407944181283,21.173487805318018],[80.67983642611023,21.298972232982237],[81.11717398788926,22.440544539898667],[81.62921313827576,22.54359249589703],[82.1970124858376,23.283854343902874],[81.92396183706916,23.530781181006773],[81.62479543276305,23.493345915181862],[81.6152990434162,23.90122527772445],[82.52392879837538,23.783130599097944],[83.43305939477528,24.083060190575395],[83.78228141755346,23.59972804921017],[84.01434178674413,23.63268280266925],[84.04082053294132,23.139529256969695],[84.39323491156199,22.91853054984506],[83.56440370326834,22.102268388775144],[83.40984202828702,21.351845333895085],[83.12711770591744,21.104636647463337],[82.64327972467959,21.15244394643105],[82.35400150026908,20.887002525346304],[82.39842490938213,20.06427706983095],[82.70819668672777,19.99802412351454],[82.70607393236617,19.832321815199634],[81.8677114194465,20.02749704825021],[82.24758022145011,18.917146808778227],[81.53623697315783,18.266104965272007],[81.39350610632181,17.814285493780574],[81.04083408002884,17.79694880584276],[80.98178743004593,18.17456872536644],[80.74251570133862,18.17779276972061],[80.64035842580074,18.52415424332372],[80.27484775891702,18.722436820203143]]]}},{"type":"Feature","properties":{"name":"Maharashtra"},"geometry":{"type":"Polygon","coordinates":[[[80.66342402359987,21.331383496451224],[80.44542653670538,21.12210950984604],[80.62366850779546,20.327908234777283],[80.38981539316592,20.24375888136734],[80.55316170884583,20.068222490975245],[80.40711998340055,19.79642619681158],[80.89946563393192,19.46963946488944],[80.38633388190317,19.23632466914819],[80.27484775891702,18.722436820203143],[79.90091823259041,18.834638759471204],[79.97980447010025,19.4039524763258],[79.79195202166852,19.59598749352807],[79.24302297592965,19.611234318009394],[79.19494718796238,19.460623502372812],[78.31477697647637,19.913107003585424],[78.31355647325267,19.457404437564776],[78.18780651266047,19.24270611719362],[77.86475146450852,19.30291769769366],[77.7611313373414,19.029601889215883],[77.9467175005123,18.82380574104218],[77.57379984278856,18.3100227782287],[77.32036977594447,18.45519056139534],[76.95629197549431,18.18631226419967],[76.69219955456583,17.681754240266002],[76.33232959383577,17.596474554157396],[76.3826304556311,17.313774242787133],[75.63406131987409,17.478787422201833],[75.67012034148064,16.960346900189336],[74.93438145474039,16.942440950389596],[74.68544095733438,16.60610503352052],[74.26475814916932,16.540276577102418],[74.50767421049648,16.20313523820073],[74.35868458472584,15.775816087142744],[74.02019627723644,15.60679362122869],[73.85686625727203,15.799589106052451],[73.65997185951375,15.745162531525636],[73.31923675597159,16.512830714366032],[72.64441577187046,19.83899715719309],[72.860785369849,20.22316396494506],[73.17145909795909,20.051850668573536],[73.41802779624584,20.201441725855034],[73.45056584164035,20.713952152469915],[73.74102749022654,20.566724983870984],[73.94324881078404,20.74138944736518],[73.90025327686732,20.982157330496477],[73.81131902025663,21.083801853073112],[73.76376373111134,21.067362641772547],[73.6216880212852,21.119417593447224],[73.58117419982949,21.167199935328824],[74.33133347366095,21.538569728510197],[73.85500973101432,21.49467194705278],[73.8049647308377,21.82213630464679],[74.4321872187652,22.029028359471283],[74.58646805076,21.662715643012575],[75.21815277682924,21.408712556939008],[76.09917935064658,21.371609510570522],[76.28255130919564,21.073254611311313],[76.6249854299337,21.190544927306576],[76.79750185552626,21.595078504269622],[77.47482832656607,21.768822885767634],[77.61073313672495,21.540643393377934],[77.42680808792295,21.540351252208552],[77.49037584926612,21.37574422641495],[78.38430498298862,21.61687647257122],[78.937275119751,21.486190780779964],[79.23449704949928,21.722657461073027],[79.54271422997778,21.54344203951854],[80.26689847688328,21.619934082991563],[80.66342402359987,21.331383496451224]],[[77.29394957291453,18.45824988592352],[77.2748991449796,18.4748583622237],[77.26833200491814,18.45297080795649],[77.29394957291453,18.45824988592352]],[[74.26523309643034,15.797056716794089],[74.2897467331253,15.83079594707533],[74.2655200521088,15.82146516518526],[74.26523309643034,15.797056716794089]]]}},{"type":"Feature","properties":{"name":"Manipur"},"geometry":{"type":"Polygon","coordinates":[[[94.57187254008574,25.691584800797955],[94.71678207932956,24.9353778560033],[94.15867286386163,23.846763909327024],[92.97527857804403,24.111750098088635],[93.40319953383147,25.259289729637374],[93.60733391562775,25.19783068333942],[93.77138328890771,25.536413077001953],[94.31240829750499,25.488835832707537],[94.57187254008574,25.691584800797955]]]}},{"type":"Feature","properties":{"name":"Meghalaya"},"geometry":{"type":"Polygon","coordinates":[[[92.425344459879,25.02952041933196],[92.06522335987023,25.18725996837287],[90.44744124181989,25.143240148014456],[89.81854815167594,25.388103389060234],[90.11794247926207,25.957388301528965],[90.94884046451591,25.938622916414488],[91.22656973190766,25.722727772868495],[91.82185819240169,26.11752005350769],[92.30353466299437,26.074718834306793],[92.17132512935132,25.664709689200834],[92.65437558866256,25.589800568541477],[92.57231681906603,25.46178335501787],[92.80337424992177,25.218802369833554],[92.425344459879,25.02952041933196]]]}},{"type":"Feature","properties":{"name":"Mizoram"},"geometry":{"type":"Polygon","coordinates":[[[93.33577796618027,24.049528908732213],[93.39120269285007,23.1347191250876],[93.13966969819808,23.057377773565463],[93.09696580632698,22.80738091359831],[93.20575625734546,22.25802385351807],[92.99627333304795,21.975653148174274],[92.70577359727378,22.15183917283963],[92.62785839195129,21.9835979776646],[92.29646594674608,24.249918609756094],[92.48102265956817,24.140822901855472],[92.76474816749402,24.51816375815099],[93.02344899897219,24.387274157676302],[92.97527857804403,24.111750098088635],[93.33577796618027,24.049528908732213]]]}},{"type":"Feature","properties":{"name":"Rajasthan"},"geometry":{"type":"Polygon","coordinates":[[[74.52874607427196,29.94298794423827],[74.60434473482172,29.327185264388504],[75.40504428706424,29.2591244181574],[75.56407536688471,28.611122447742844],[76.10108143026383,28.150797786388807],[75.94399260817238,28.08927731999239],[75.98302249699071,27.860254933518434],[76.23110054455452,27.836267570192263],[76.28747858766673,28.174079922950114],[76.55497502437794,27.966397072666837],[76.87269762789327,28.219429982707595],[76.89993215624406,27.674588066086415],[77.3042495235967,27.794263281625206],[77.6813648416142,27.1946075451022],[77.52236597910672,27.064747831147542],[77.7521041306012,27.01799371293953],[77.43017800411167,26.861415249814],[77.45590149875522,26.74114958708384],[77.76148261702923,26.931991478224177],[78.27075451750704,26.917668668474334],[76.4875743416826,25.71323893692744],[76.77519187260691,25.30726560472391],[77.36729096570554,25.407796774701467],[77.39236104262807,25.116930405114147],[76.88699029236818,25.029236762366736],[76.95380547774067,24.868063378722013],[76.8069111464323,24.82182454776472],[77.06425515814908,24.637695664023738],[76.97946357998029,24.4603142299178],[76.81892562221975,24.52976400260667],[76.90402563097814,24.12670159420327],[76.18860563174457,24.327255115731077],[75.97814788281858,23.92897011647773],[75.58393474579196,23.79669297540056],[75.51592944258977,24.04501414388767],[75.83170996644185,24.068006863326104],[75.84171956380686,24.72568589778598],[75.21874154858364,24.71878425668814],[75.22126144985606,24.90284005342579],[75.30258913897762,24.81151788184485],[75.41947064295584,24.860050835677555],[75.26357359794326,24.885961904618227],[75.35210531890539,25.037911631816428],[75.04504330770254,24.855778025335667],[74.83408655555013,24.96424158987753],[75.02286627425923,24.76944521692326],[74.88897086970991,24.654480339096438],[74.8003894630034,24.79249823410629],[74.7133860418324,24.506215781832907],[74.99341290528139,24.02646651431826],[74.93953685614105,23.62730155812045],[74.51870693237908,23.32915961292582],[74.74454228609767,23.209373734910002],[74.32031935785216,23.060464116425862],[73.62890274606491,23.451099968888514],[73.65724860893619,23.621547650703576],[73.35704999606054,23.790846121251548],[73.36612895428789,24.111690120502715],[73.24853596696136,24.01055239287865],[73.07851349899886,24.18479756815327],[73.22805309347552,24.364180633229694],[73.09079742606042,24.494575790040756],[72.91955467161085,24.326524778995406],[72.04630600861549,24.70848244081202],[71.1099736461669,24.674526424454996],[70.65798236819177,25.705805503321358],[70.27605905598068,25.7092609162583],[70.09927148559063,25.935461610564914],[70.17329952335439,26.551099190175535],[69.48436528502992,26.80800192704737],[69.58968520820582,27.18293801687605],[70.37431444385658,28.012031513343743],[70.88253801181986,27.708226072275465],[71.89865703729248,27.96321370374949],[72.38886392283183,28.76879920971578],[72.94945541913233,29.0331148082019],[73.40761965802085,29.946205787766928],[73.97591223156428,30.19643423215416],[73.90020871905722,29.97140461343224],[74.52874607427196,29.94298794423827]]]}},{"type":"Feature","properties":{"name":"Sikkim"},"geometry":{"type":"Polygon","coordinates":[[[88.0168569001259,27.216439148947643],[88.13262783940331,27.950395990382674],[88.6298710952749,28.130679192290927],[88.83733897431426,28.014936440464396],[88.90626944697743,27.274756287772504],[88.43912246473002,27.081326715255727],[88.0168569001259,27.216439148947643]]]}},{"type":"Feature","properties":{"name":"Uttarakhand"},"geometry":{"type":"Polygon","coordinates":[[[78.92226624509118,31.254063634029535],[79.144696686403,31.433656501046755],[79.42828892289555,31.032127358490868],[79.86731132315907,30.974741549482985],[80.23783543885446,30.75965011655967],[80.22566157891879,30.576645692944453],[81.03434811727186,30.24510544416097],[80.37463753589361,29.749373932461083],[79.99998960323768,28.710969747156184],[78.91230427582173,29.14457245145752],[78.73777375825239,29.32400140803861],[78.91269149601578,29.4501849749567],[78.48616902827808,29.742702711161257],[78.04459332322335,29.546063495134263],[77.76981391038373,29.710526245389985],[77.94241046197328,30.234730399188606],[77.5762035912228,30.39961145380562],[77.82573452862567,30.533049449672433],[77.7505760547412,30.958952300708177],[78.31350624431775,31.28342957991123],[79.0118709390926,31.112332209863666],[78.92226624509118,31.254063634029535]]]}},{"type":"Feature","properties":{"name":"Jharkhand"},"geometry":{"type":"Polygon","coordinates":[[[83.50606603831704,24.525889651286434],[84.30059761099102,24.565403277339442],[84.50092983904091,24.28694713470253],[84.80269903063584,24.52932955001876],[84.95514523036815,24.371907310573988],[85.67158873543184,24.582279927876414],[85.7437418531041,24.822778651113936],[86.05462332910344,24.778642988183435],[86.45251437313988,24.369439075353114],[86.60620032158761,24.600298286636644],[87.05631950783908,24.6077320943607],[87.15284539330031,25.024892384875727],[87.5854579898944,25.344353519999004],[87.97857559079097,24.897360005759708],[87.69455666915502,24.151430750728593],[87.24012988048963,24.038966333529515],[87.25092861226568,23.829964111254753],[86.9005564806971,23.88169135806976],[86.30582909643573,23.422185290219034],[86.04347151809617,23.585251286317884],[85.87220520590557,23.472087788320835],[85.84112361526269,23.194328380150694],[86.53964004814975,22.98418944178934],[86.4216591724329,22.779599799790958],[86.89339622785371,22.28538795888727],[86.68730576035261,22.223540710335556],[86.04425789068915,22.56685383203876],[85.90862445275633,21.970758164357846],[85.8079408135178,22.11470615476526],[84.99388088889197,22.080201614013333],[85.05786925955874,22.482265395431682],[84.29609191670863,22.339836147720064],[84.00952399893345,22.522861380748168],[84.39598137993681,22.940414748741716],[84.04082053294132,23.139529256969695],[84.01434178674413,23.63268280266925],[83.78228141755346,23.59972804921017],[83.33127145731197,24.100525260332574],[83.50606603831704,24.525889651286434]],[[84.49672419996193,24.27687608216553],[84.51099010241137,24.268493254060502],[84.50490974648767,24.2818900238056],[84.49672419996193,24.27687608216553]]]}},{"type":"Feature","properties":{"name":"NCT of Delhi"},"geometry":{"type":"Polygon","coordinates":[[[77.3476517858013,28.503455393851368],[77.17537869696935,28.40305213534782],[76.8425143574517,28.57742259787466],[77.0861236216079,28.879321705532334],[77.3476517858013,28.503455393851368]]]}},{"type":"Feature","properties":{"name":"Telangana"},"geometry":{"type":"Polygon","coordinates":[[[77.55350233126762,18.2931922395303],[77.9467175005123,18.82380574104218],[77.7611313373414,19.029601889215883],[77.86475146450852,19.30291769769366],[78.18780651266047,19.24270611719362],[78.31355647325267,19.457404437564776],[78.27427275798146,19.663800826546947],[78.37242128841177,19.78167074301041],[78.29868323794113,19.849991287368084],[78.33297810985192,19.91646202070575],[79.19494718796238,19.460623502372812],[79.24302297592965,19.611234318009394],[79.79195202166852,19.59598749352807],[79.97980447010025,19.4039524763258],[79.92322329262089,18.80121379368171],[80.64035842580074,18.52415424332372],[80.74251570133862,18.17779276972061],[80.98178743004593,18.17456872536644],[81.04083408002884,17.79694880584276],[81.80301047905044,17.852349636626457],[81.44250565721035,17.383534786101563],[80.84135671424104,17.034061067364405],[80.37550563797487,17.06414171706666],[80.5717187210422,16.771242562194516],[80.19047938731393,17.05224481504621],[79.95106105562326,16.64028544511723],[79.27384279371,16.568170900266864],[79.21548389216792,16.23780928946718],[78.27470671324426,16.040704374807092],[78.10755594425149,15.833898721448861],[77.51440942785285,15.92583542766289],[77.58918359264874,16.332578905991795],[77.23899106648457,16.471971135059903],[77.4756123663177,16.647483359769296],[77.38401883959784,17.222860335536097],[77.68822046440295,17.47595375556142],[77.4435254847134,17.5841447104101],[77.6572816465308,17.97173536759317],[77.55350233126762,18.2931922395303]]]}}]};
+
+// ─────────────────────────────────────────────────────────────
+// Data
+// ─────────────────────────────────────────────────────────────
+const CITY_COLORS = {
+  jodhpur:   "#3680b8",
+  bikaner:   "#9c5a1a",
+  jaisalmer: "#e8a02a",
+  jaipur:    "#d3577f",
+  delhi:     "#1f3a68",
+  dehradun:  "#3f6a3e",
+  hyderabad: "#6b4a2a",
+};
+const CITY_LABEL = {
+  jodhpur: "Jodhpur", bikaner: "Bikaner", jaisalmer: "Jaisalmer",
+  jaipur: "Jaipur", delhi: "Delhi", dehradun: "Dehradun", hyderabad: "Hyderabad",
+};
+
+// Real geographic coordinates [longitude, latitude]
+const CITY_COORDS = {
+  jodhpur:   [73.024, 26.239],
+  bikaner:   [73.312, 28.023],
+  jaisalmer: [70.908, 26.916],
+  jaipur:    [75.787, 26.912],
+  delhi:     [77.209, 28.614],
+  dehradun:  [78.032, 30.317],
+  hyderabad: [78.487, 17.385],
+};
+
+// Label offsets [dx, dy, text-anchor] — tuned to avoid pin/label overlap
+const CITY_LABEL_POS = {
+  jodhpur:   [-10, 12,  "end"],
+  bikaner:   [ 10, -8,  "start"],
+  jaisalmer: [ 10,  4,  "start"],
+  jaipur:    [ 10, 12,  "start"],
+  delhi:     [ 10, -6,  "start"],
+  dehradun:  [ 10,  4,  "start"],
+  hyderabad: [ 10,  4,  "start"],
+};
+
+const STOPS = [
+  { n: 1,  dateStr: "Jun 1 – 3",   d1: 1,  d2: 3,  days: 3, city: "Jodhpur",              cityKey: "jodhpur",   purpose: "Maharaja Man Singh Research Center",          kind: "archive", note: "Kicking off at the Maharaja Man Singh Research Center — the heart of the trip's archival work. Three days to settle into the routine." },
+  { n: 2,  dateStr: "Jun 4 – 5",   d1: 4,  d2: 5,  days: 2, city: "Bikaner",              cityKey: "bikaner",   purpose: "Rajasthan State Archives",                    kind: "archive", note: "Two days deep in the RSA at Bikaner — the mother archive for the region. Camel country." },
+  { n: 3,  dateStr: "Jun 6 – 7",   d1: 6,  d2: 7,  days: 2, city: "Jaisalmer",            cityKey: "jaisalmer", purpose: "Jain temples inside the fort",                kind: "site",    note: "Detour to the golden fort. The Jain temples here are some of the most exquisitely carved in India." },
+  { n: 4,  dateStr: "Jun 8 – 10",  d1: 8,  d2: 10, days: 3, city: "Jodhpur / Bikaner",    cityKey: "jodhpur",   purpose: "RSA or Rajasthan Oriental Research Institute", kind: "archive", note: "Back to the archives — RSA or the Rajasthan Oriental Research Institute, depending on what's open." },
+  { n: 5,  dateStr: "Jun 11 – 12", d1: 11, d2: 12, days: 2, city: "Jaipur",               cityKey: "jaipur",    purpose: "Maharaja Sawai Man Singh II Museum",          kind: "archive", note: "The Pink City — two days at the Maharaja Sawai Man Singh II Museum." },
+  { n: 6,  dateStr: "Jun 13 – 14", d1: 13, d2: 14, days: 2, city: "Delhi",                cityKey: "delhi",     purpose: "Friends in Delhi",                            kind: "rest",    note: "Two days off the archives — seeing old friends." },
+  { n: 7,  dateStr: "Jun 15",      d1: 15, d2: 15, days: 1, city: "Jaipur",               cityKey: "jaipur",    purpose: "Johari Bazaar — the Leeson paper",            kind: "site",    note: "Tourist day. Walking through Johari Bazaar — the bazaar at the center of the Leeson paper. Field notes encouraged." },
+  { n: 8,  dateStr: "Jun 16 – 18", d1: 16, d2: 18, days: 3, city: "Jodhpur / Bikaner",    cityKey: "jodhpur",   purpose: "State Archives — closing push",               kind: "archive", note: "Last archival sprint before heading north. Finish lists, photograph what's left." },
+  { n: 9,  dateStr: "Jun 19 – 21", d1: 19, d2: 21, days: 3, city: "Dehradun + Mussoorie", cityKey: "dehradun",  purpose: "With Debbie and Akshan",                      kind: "rest",    note: "Escape to the hills. Three days in Dehradun and Mussoorie with Debbie and Akshan." },
+  { n: 10, dateStr: "Jun 22",      d1: 22, d2: 22, days: 1, city: "Delhi",                cityKey: "delhi",     purpose: "1991 Fellowship Mixer",                       kind: "event",   note: "Trip wrap-up — the 1991 Fellowship Mixer in Delhi." },
+];
+
+const DAY_TO_STOP = {};
+for (const s of STOPS) for (let d = s.d1; d <= s.d2; d++) DAY_TO_STOP[d] = s.n;
+
+const FIRST_DOW = 0; // June 1 2026 = Monday
+
+function calDay(pos) {
+  if (pos <= 30) return { label: String(pos), day: pos, month: "Jun", planned: pos <= 22 };
+  const jd = pos - 30;
+  return { label: String(jd), day: jd, month: "Jul", planned: false };
+}
+
+// ─────────────────────────────────────────────────────────────
+// Render: India map (D3 + embedded GeoJSON)
+// ─────────────────────────────────────────────────────────────
+function renderMap() {
+  const frame = document.getElementById("map-frame");
+  const W = 500, H = 570;
+
+  // Exclude far-flung territories from the fitSize call so mainland India fills the canvas
+  const EXCLUDE_FROM_FIT = new Set(["Andaman & Nicobar Island", "Lakshadweep"]);
+  const mainlandGeo = {
+    type: "FeatureCollection",
+    features: INDIA_GEO.features.filter(f => !EXCLUDE_FROM_FIT.has(f.properties.name))
+  };
+
+  const proj = d3.geoMercator().fitSize([W, H], mainlandGeo);
+  const pathGen = d3.geoPath().projection(proj);
+
+  const svg = d3.select(frame)
+    .append("svg")
+    .attr("viewBox", `0 0 ${W} ${H}`)
+    .attr("xmlns", "http://www.w3.org/2000/svg");
+
+  // Ocean / background
+  svg.append("rect")
+    .attr("width", W).attr("height", H)
+    .attr("fill", "#dceaf5");
+
+  // State fills
+  const RAJASTHAN_STATES = new Set(["Rajasthan"]);
+  svg.append("g").attr("class", "states")
+    .selectAll("path")
+    .data(INDIA_GEO.features)
+    .enter().append("path")
+    .attr("d", pathGen)
+    .attr("fill", d => RAJASTHAN_STATES.has(d.properties.name) ? "#f0ddc4" : "#f5ebe0")
+    .attr("stroke", "#cda97a")
+    .attr("stroke-width", "0.65")
+    .attr("stroke-linejoin", "round");
+
+  // State name labels for Rajasthan only (subtle)
+  svg.append("g").attr("class", "state-labels")
+    .selectAll("text")
+    .data(INDIA_GEO.features.filter(f => f.properties.name === "Rajasthan"))
+    .enter().append("text")
+    .attr("transform", d => `translate(${pathGen.centroid(d)})`)
+    .attr("text-anchor", "middle")
+    .attr("dy", "0.35em")
+    .style("font", "400 9px 'JetBrains Mono', monospace")
+    .style("fill", "#9c6a30")
+    .style("letter-spacing", "1.5px")
+    .style("text-transform", "uppercase")
+    .style("opacity", "0.55")
+    .style("pointer-events", "none")
+    .text("Rajasthan");
+
+  // Project city coordinates
+  const px = {};
+  for (const [k, coord] of Object.entries(CITY_COORDS)) {
+    px[k] = proj(coord);
+  }
+
+  // Route lines (dashed terracotta)
+  const ROUTE = ["jodhpur","bikaner","jaisalmer","jodhpur","jaipur","delhi","jaipur","jodhpur","dehradun","delhi"];
+  const seenRoutes = new Set();
+  const routeG = svg.append("g").attr("class", "routes");
+  for (let i = 1; i < ROUTE.length; i++) {
+    const a = ROUTE[i-1], b = ROUTE[i];
+    if (a === b) continue;
+    const k = [a, b].sort().join("→");
+    if (seenRoutes.has(k)) continue;
+    seenRoutes.add(k);
+    routeG.append("line")
+      .attr("x1", px[a][0]).attr("y1", px[a][1])
+      .attr("x2", px[b][0]).attr("y2", px[b][1])
+      .attr("stroke", "#c0492b")
+      .attr("stroke-width", "2.2")
+      .attr("stroke-dasharray", "6 4")
+      .attr("stroke-linecap", "round")
+      .attr("opacity", "0.9");
+  }
+
+  // Trip city pins
+  const tripCities = ["jodhpur","bikaner","jaisalmer","jaipur","delhi","dehradun"];
+  const pinsG = svg.append("g").attr("class", "pins");
+
+  for (const k of tripCities) {
+    const [cx, cy] = px[k];
+    const color = CITY_COLORS[k];
+    const [dx, dy, anchor] = CITY_LABEL_POS[k];
+    const g = pinsG.append("g");
+
+    // Pin shadow
+    g.append("circle").attr("cx", cx).attr("cy", cy).attr("r", 8).attr("fill", "#fff").attr("opacity", 0.75);
+    // Pin fill
+    g.append("circle").attr("cx", cx).attr("cy", cy).attr("r", 5.5).attr("fill", color).attr("stroke", "#fff").attr("stroke-width", 1.8);
+
+    // City label (stroke first for legibility, then fill)
+    g.append("text")
+      .attr("x", cx + dx).attr("y", cy + dy)
+      .attr("text-anchor", anchor)
+      .style("font", "700 10.5px 'Work Sans', sans-serif")
+      .style("fill", "#1f3a68")
+      .style("stroke", "#f5ebe0")
+      .style("stroke-width", "3px")
+      .style("paint-order", "stroke")
+      .style("letter-spacing", "0.2px")
+      .text(CITY_LABEL[k]);
+  }
+
+  // Hyderabad — home heart pin
+  const [hx, hy] = px.hyderabad;
+  const heartG = pinsG.append("g");
+  const heartPath = `M ${hx} ${hy+4} C ${hx-5} ${hy-1},${hx-5} ${hy-5},${hx-2.5} ${hy-5} C ${hx-0.8} ${hy-5},${hx} ${hy-3.3},${hx} ${hy-2} C ${hx} ${hy-3.3},${hx+0.8} ${hy-5},${hx+2.5} ${hy-5} C ${hx+5} ${hy-5},${hx+5} ${hy-1},${hx} ${hy+4} Z`;
+  heartG.append("path")
+    .attr("d", heartPath)
+    .attr("fill", CITY_COLORS.hyderabad)
+    .attr("stroke", "#fff").attr("stroke-width", "1.4");
+  heartG.append("text")
+    .attr("x", hx + 9).attr("y", hy + 4)
+    .attr("text-anchor", "start")
+    .style("font", "700 10.5px 'Work Sans', sans-serif")
+    .style("fill", CITY_COLORS.hyderabad)
+    .style("stroke", "#f5ebe0")
+    .style("stroke-width", "3px")
+    .style("paint-order", "stroke")
+    .text("Hyderabad");
+  heartG.append("text")
+    .attr("x", hx + 9).attr("y", hy + 18)
+    .attr("text-anchor", "start")
+    .style("font", "italic 600 11px 'Bodoni Moda', serif")
+    .style("fill", CITY_COLORS.hyderabad)
+    .style("stroke", "#f5ebe0")
+    .style("stroke-width", "3px")
+    .style("paint-order", "stroke")
+    .text("home :)");
+
+  // Compass rose
+  const cx2 = W - 34, cy2 = 34;
+  const compassG = svg.append("g").attr("transform", `translate(${cx2},${cy2})`);
+  compassG.append("circle").attr("r", 15).attr("fill", "#fbf3e1").attr("stroke", "#1f3a68").attr("stroke-width", "1").attr("opacity", "0.9");
+  compassG.append("path").attr("d", "M 0 -9.5 L 2.8 0 L 0 9.5 L -2.8 0 Z").attr("fill", "#1f3a68");
+  compassG.append("text").attr("y", -18).attr("text-anchor", "middle")
+    .style("font", "700 8.5px 'JetBrains Mono', monospace")
+    .style("fill", "#1f3a68")
+    .style("letter-spacing", "1px")
+    .text("N");
+
+  // Legend
+  const legend = document.getElementById("map-legend");
+  const order = ["jodhpur","bikaner","jaisalmer","jaipur","delhi","dehradun"];
+  legend.innerHTML = order.map(k =>
+    `<span class="chip"><span class="swatch" style="background:${CITY_COLORS[k]}"></span>${CITY_LABEL[k]}</span>`
+  ).join("") + `<span class="chip" style="opacity:0.75"><span class="swatch" style="background:${CITY_COLORS.hyderabad}; border-radius: 1px; transform: rotate(45deg);"></span>Hyderabad (home)</span>`;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Render: Calendar
+// ─────────────────────────────────────────────────────────────
+let selectedPos = null;
+
+function renderCalendar() {
+  const weekdays = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const dowRow = weekdays.map((w, i) =>
+    `<div class="dow ${i >= 5 ? "weekend" : ""}">${w}</div>`
+  ).join("");
+
+  // ── JUNE ── (Jun 1 = Monday, 30 days)
+  const junGrid = document.getElementById("cal-grid-jun");
+  let junHtml = dowRow;
+  for (let col = 0; col < 35; col++) {
+    const day = col - FIRST_DOW + 1;
+    const colInRow = col % 7;
+    const isWeekend = colInRow >= 5;
+    if (day < 1 || day > 30) { junHtml += `<div class="cal-cell placeholder"></div>`; continue; }
+    const pos = day;
+    if (day > 22) {
+      junHtml += `<div class="cal-cell tbd ${isWeekend ? "weekend" : ""}" data-pos="${pos}">
+        <div class="num">${day}</div><div class="city">tbd</div></div>`;
+      continue;
+    }
+    const stopN = DAY_TO_STOP[day];
+    if (!stopN) {
+      junHtml += `<div class="cal-cell empty ${isWeekend ? "weekend" : ""}" data-pos="${pos}">
+        <div class="num">${day}</div><div class="city">open</div></div>`;
+      continue;
+    }
+    const stop = STOPS.find(s => s.n === stopN);
+    const color = CITY_COLORS[stop.cityKey];
+    junHtml += `<div class="cal-cell has-stop ${isWeekend ? "weekend" : ""}" data-pos="${pos}" style="background:${color}">
+      <div class="num">${day}</div><div class="city">${shortCity(stop.city)}</div></div>`;
+  }
+  junGrid.innerHTML = junHtml;
+
+  // ── JULY ── (Jul 1 = Wednesday → 2 leading placeholders)
+  const julGrid = document.getElementById("cal-grid-jul");
+  let julHtml = dowRow;
+  const julLead = 2;
+  for (let col = 0; col < 14; col++) {
+    const julDay = col - julLead + 1;
+    const colInRow = col % 7;
+    const isWeekend = colInRow >= 5;
+    if (julDay < 1 || julDay > 12) { julHtml += `<div class="cal-cell placeholder"></div>`; continue; }
+    const pos = 30 + julDay;
+    julHtml += `<div class="cal-cell tbd ${isWeekend ? "weekend" : ""}" data-pos="${pos}">
+      <div class="num">${julDay}</div><div class="city">tbd</div></div>`;
+  }
+  julGrid.innerHTML = julHtml;
+
+  document.querySelectorAll(".cal-grid .cal-cell").forEach(el => {
+    const pos = parseInt(el.dataset.pos, 10);
+    if (!pos) return;
+    el.addEventListener("click",      () => selectPos(pos));
+    el.addEventListener("mouseenter", () => previewPos(pos));
+    el.addEventListener("mouseleave", () => previewPos(null));
+  });
+}
+
+function shortCity(name) {
+  if (name.includes("/")) return name.split("/").map(s => s.trim().slice(0,3).toUpperCase()).join("/");
+  if (name.includes("+")) return name.split("+").map(s => s.trim().slice(0,3).toUpperCase()).join("+");
+  return name.slice(0, 7);
+}
+
+function previewPos(pos) { renderDayDetail(pos || selectedPos); }
+
+function selectPos(pos) {
+  selectedPos = pos;
+  document.querySelectorAll(".cal-cell").forEach(el => {
+    el.classList.toggle("selected", parseInt(el.dataset.pos, 10) === pos);
+  });
+  renderDayDetail(pos);
+  renderTimeline();
+}
+
+function renderDayDetail(pos) {
+  const el = document.getElementById("day-detail");
+  if (!pos) {
+    el.className = "day-detail placeholder";
+    el.innerHTML = `
+      <div class="badge" style="color: var(--indigo)">—</div>
+      <div><div class="meta">Tap any day above</div>
+      <div class="city-name" style="font-size:22px">to see what's happening</div></div>
+      <div></div>`;
+    return;
+  }
+  const d = calDay(pos);
+
+  if (d.month === "Jul" || (d.month === "Jun" && d.day > 22)) {
+    const indigo = "#1f3a68";
+    el.className = "day-detail";
+    el.style.borderLeftColor = indigo;
+    el.style.borderLeftStyle = "dashed";
+    el.style.color = indigo;
+    el.innerHTML = `
+      <div class="badge" style="background: transparent; color: ${indigo}; border: 1.5px dashed ${indigo}; box-shadow: none;">${d.day}</div>
+      <div style="color: var(--ink)">
+        <div class="meta">${d.month} ${d.day} · Weeks 4–6</div>
+        <div class="city-name" style="color:${indigo}">Still to plan.</div>
+        <div class="purpose">The second half of the trip — dates, cities, and archives all open.</div>
+      </div>
+      <div class="kind" style="color:${indigo}">TBD</div>`;
+    return;
+  }
+
+  const stopN = DAY_TO_STOP[d.day];
+  if (!stopN) {
+    const indigo = "#1f3a68";
+    el.className = "day-detail";
+    el.style.borderLeftColor = indigo;
+    el.style.borderLeftStyle = "solid";
+    el.style.color = indigo;
+    el.innerHTML = `
+      <div class="badge" style="background: ${indigo}; color: var(--sand); box-shadow: inset 0 0 0 3px var(--cream), inset 0 0 0 4px ${indigo};">${d.day}</div>
+      <div style="color: var(--ink)">
+        <div class="meta">${d.month} ${d.day} · Open</div>
+        <div class="city-name">A day on the road.</div>
+        <div class="purpose">No specific archive booked — travel or buffer day.</div>
+      </div><div></div>`;
+    return;
+  }
+  const stop = STOPS.find(s => s.n === stopN);
+  const color = CITY_COLORS[stop.cityKey];
+  el.className = "day-detail";
+  el.style.borderLeftColor = color;
+  el.style.borderLeftStyle = "solid";
+  el.style.color = color;
+  el.innerHTML = `
+    <div class="badge" style="background:${color}; color: var(--sand); box-shadow: inset 0 0 0 3px var(--cream), inset 0 0 0 4px ${color};">${d.day}</div>
+    <div style="color: var(--ink)">
+      <div class="meta">${d.month} ${d.day} · Stop ${stop.n} of 10</div>
+      <div class="city-name">${stop.city}</div>
+      <div class="purpose">${stop.purpose}</div>
+      <div class="note" style="border-top-color: ${color}66; color: var(--ink); opacity: 0.82;">${stop.note}</div>
+    </div>
+    <div class="kind" style="color:${color}">${stop.kind.toUpperCase()}</div>`;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Render: Timeline
+// ─────────────────────────────────────────────────────────────
+function renderTimeline() {
+  const bar = document.getElementById("timeline-bar");
+  const selectedStopN = selectedPos ? (DAY_TO_STOP[calDay(selectedPos).day] || null) : null;
+  const segs = STOPS.map(s => {
+    const color = CITY_COLORS[s.cityKey];
+    const sel = selectedStopN === s.n;
+    return `<div class="seg ${sel ? "selected" : ""}" data-stop="${s.n}"
+      style="flex:${s.days}; background:${color}" title="${s.city} · ${s.dateStr}">
+      ${s.days >= 2 ? s.n : ""}
+    </div>`;
+  }).join("");
+  const tbd = `<div class="seg tbd-seg" data-tbd="1" style="flex:21" title="Weeks 4–6 — still to plan">TBD</div>`;
+  bar.innerHTML = segs + tbd;
+
+  bar.querySelectorAll(".seg").forEach(el => {
+    el.addEventListener("click", () => {
+      if (el.dataset.tbd) {
+        selectPos(23);
+      } else {
+        const stop = STOPS.find(s => s.n === parseInt(el.dataset.stop, 10));
+        selectPos(stop.d1);
+      }
+      document.getElementById("calendar").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
+// Render: Stops list
+// ─────────────────────────────────────────────────────────────
+let openStop = null;
+function renderStops() {
+  const list = document.getElementById("stops");
+  list.innerHTML = STOPS.map(s => {
+    const color = CITY_COLORS[s.cityKey];
+    const dayLabel = s.d1 === s.d2 ? `${s.d1}` : `${s.d1} – ${s.d2}`;
+    return `
+      <div class="stop" data-stop="${s.n}" style="border-left-color:${color}; color:${color};">
+        <div class="date-stamp">
+          <div class="mon">Jun</div>
+          <div class="day">${dayLabel}</div>
+          <div class="duration">${s.days} ${s.days === 1 ? "day" : "days"}</div>
+        </div>
+        <div class="stop-info">
+          <div class="city-name">${s.city}</div>
+          <div class="purpose">${s.purpose}</div>
+        </div>
+        <div class="kind">${s.kind.toUpperCase()}</div>
+        <div class="note" style="border-top-color: ${color}66; color: var(--ink); opacity: 0.85;">${s.note}</div>
+      </div>`;
+  }).join("") + `
+    <div class="tbd-card">
+      <div class="date-stamp">
+        <div class="mon">Jun 23 —</div>
+        <div class="day">Jul 12</div>
+        <div class="duration">~21 days</div>
+      </div>
+      <div class="tbd-info">
+        <div class="tbd-title">Weeks 4 – 6: still to plan</div>
+        <div class="tbd-sub">Dates, cities, and archives all open. The second half of the trip will be filled in as it firms up.</div>
+      </div>
+      <div class="tbd-tag">TBD</div>
+    </div>`;
+
+  list.querySelectorAll(".stop").forEach(el => {
+    el.addEventListener("click", () => {
+      const n = parseInt(el.dataset.stop, 10);
+      openStop = openStop === n ? null : n;
+      list.querySelectorAll(".stop").forEach(x => {
+        x.classList.toggle("open", parseInt(x.dataset.stop, 10) === openStop);
+      });
+    });
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
+// Render: Menu / Food
+// ─────────────────────────────────────────────────────────────
+const MENU = [
+  { name: "Dal baati",      place: "Rajasthan · all of it",      note: "Wheat dumplings + lentil curry. The whole reason to go west." },
+  { name: "Gatte ki sabzi", place: "Bikaner / Jodhpur",          note: "Gram-flour dumplings in spiced yogurt curry." },
+  { name: "Ker sangri",     place: "Desert Rajasthan",           note: "Wild desert berries and beans. Tastes like the Thar." },
+  { name: "Pyaaz kachori",  place: "Jodhpur · mid-morning",      note: "Onion-stuffed, sneakily spicy. Eat with chutney, not regret." },
+  { name: "Samosa",         place: "Everywhere · the baseline",  note: "The constant. Quality control to be performed in every city.", cls: "spicy" },
+  { name: "Mirchi bada",    place: "Jodhpur",                    note: "A whole green chili, battered and fried. Wear a bib.", cls: "spicy" },
+  { name: "Momos",          place: "Mussoorie · Dehradun",       note: "Hill-station snack. Steamed, fried, anything goes." },
+  { name: "More samosas",   place: "Yes. Again.",                note: "The agenda demands it. Encore performance, possibly with chai.", cls: "encore" },
+  { name: "Chhole kulche",  place: "Delhi · proper breakfast",   note: "Spicy chickpeas with a soft, charred kulcha. Street-cart preferred." },
+];
+
+function renderMenu() {
+  const list = document.getElementById("menu");
+  list.innerHTML = MENU.map((m, i) => `
+    <li class="menu-item ${m.cls || ""}">
+      <div class="dish-no">№ ${String(i + 1).padStart(2, "0")}</div>
+      <div class="dish-name">${m.name}</div>
+      <div class="dish-place">${m.place}</div>
+      <div class="dish-note">${m.note}</div>
+    </li>`).join("");
+}
+
+// ─────────────────────────────────────────────────────────────
+// Right-side scroll-spy nav
+// ─────────────────────────────────────────────────────────────
+function initScrollSpy() {
+  const navItems = document.querySelectorAll(".page-nav .nav-item");
+  const sections = Array.from(navItems).map(a => {
+    const id = a.getAttribute("data-section");
+    return { id, el: document.getElementById(id), nav: a };
+  }).filter(x => x.el);
+
+  navItems.forEach(a => {
+    a.addEventListener("click", e => {
+      const id = a.getAttribute("data-section");
+      const el = document.getElementById(id);
+      if (!el) return;
+      e.preventDefault();
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      history.replaceState(null, "", "#" + id);
+    });
+  });
+
+  function update() {
+    const target = window.innerHeight * 0.3;
+    let best = sections[0], bestDist = Infinity;
+    sections.forEach(s => {
+      const r = s.el.getBoundingClientRect();
+      const dist = (r.top <= target && r.bottom >= target)
+        ? 0
+        : Math.min(Math.abs(r.top - target), Math.abs(r.bottom - target));
+      if (dist < bestDist) { bestDist = dist; best = s; }
+    });
+    sections.forEach(s => s.nav.classList.toggle("active", s === best));
+  }
+  update();
+  window.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("resize", update);
+}
+
+// Init
+renderMap();
+renderCalendar();
+renderTimeline();
+renderStops();
+renderMenu();
+initScrollSpy();
+selectPos(1);
+</script>
+</body>
+</html>

@@ -884,22 +884,13 @@ function renderMap() {
   const frame = document.getElementById("map-frame");
   const W = 500, H = 570;
 
-  // Exclude far-flung territories from the fitSize call so mainland India fills the canvas
-  const EXCLUDE_FROM_FIT = new Set(["Andaman & Nicobar Island", "Lakshadweep"]);
-  const mainlandGeo = {
-    type: "FeatureCollection",
-    features: INDIA_GEO.features.filter(f => !EXCLUDE_FROM_FIT.has(f.properties.name))
-  };
-
-  // Zoom into the trip corridor (Rajasthan → Delhi → Dehradun)
-  const tripBbox = {
-    type: "Feature",
-    geometry: {
-      type: "Polygon",
-      coordinates: [[[67.5, 23], [81, 23], [81, 33], [67.5, 33], [67.5, 23]]]
-    }
-  };
-  const proj = d3.geoMercator().fitExtent([[24, 24], [W - 24, H - 24]], tripBbox);
+  // Zoom into the trip corridor (Rajasthan → Delhi → Dehradun).
+  // center/scale/translate is more reliable than fitExtent for a bbox polygon.
+  // Chosen so 67.5–81°E sits between ~14px and ~486px, and 23–33°N between ~79px and ~491px.
+  const proj = d3.geoMercator()
+    .center([74.25, 28])
+    .scale(2000)
+    .translate([W / 2, H * 0.52]);
   const pathGen = d3.geoPath().projection(proj);
 
   const svg = d3.select(frame)
@@ -1096,9 +1087,7 @@ function renderCalendar() {
   document.querySelectorAll(".cal-grid .cal-cell").forEach(el => {
     const pos = parseInt(el.dataset.pos, 10);
     if (!pos) return;
-    el.addEventListener("click",      () => selectPos(pos));
-    el.addEventListener("mouseenter", () => previewPos(pos));
-    el.addEventListener("mouseleave", () => previewPos(null));
+    el.addEventListener("click", () => selectPos(pos));
   });
 }
 
@@ -1124,12 +1113,6 @@ function positionDetailAfterRow(pos) {
   if (lastCellInRow.nextElementSibling !== detail) {
     lastCellInRow.insertAdjacentElement('afterend', detail);
   }
-}
-
-function previewPos(pos) {
-  const effectivePos = pos || selectedPos;
-  renderDayDetail(effectivePos);
-  positionDetailAfterRow(effectivePos);
 }
 
 function selectPos(pos) {

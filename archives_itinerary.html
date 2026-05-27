@@ -4,12 +4,14 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>India · June 2026 — Archival Research Trip</title>
+<link rel="icon" type="image/svg+xml" href="images/samosa-cursor.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@500;600;700;800&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <style>
   :root {
+    --samosa-cursor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzOCIgaGVpZ2h0PSIzOCIgdmlld0JveD0iMCAwIDQ4IDQ4Ij4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2Ftb3NhRmlsbCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmNWQyOGMiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZDQ5NDNmIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cGF0aCBkPSJNNiA2IEw0MSAyNCBMMTMgNDIgUTkgMzUgOCAyOCBRNiAxOCA2IDYgWiIgZmlsbD0idXJsKCNzYW1vc2FGaWxsKSIgc3Ryb2tlPSIjOGY1YTFmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNMTIgMTYgUTIwIDE3IDI1IDIyIiBmaWxsPSJub25lIiBzdHJva2U9IiNiNjc4MmQiIHN0cm9rZS13aWR0aD0iMS42IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNMTEgMjQgUTIwIDI3IDIzIDMzIiBmaWxsPSJub25lIiBzdHJva2U9IiNiNjc4MmQiIHN0cm9rZS13aWR0aD0iMS40IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8Y2lyY2xlIGN4PSIxNyIgY3k9IjIwIiByPSIxLjIiIGZpbGw9IiM5ZjY0MjQiLz4KICA8Y2lyY2xlIGN4PSIxOSIgY3k9IjI5IiByPSIxLjIiIGZpbGw9IiM5ZjY0MjQiLz4KPC9zdmc+Cg==') 5 5;
     --sand:     #f5e6cf;
     --cream:    #fbf3e1;
     --paper:    #fdf8ec;
@@ -33,7 +35,7 @@
   }
 
   html { scroll-behavior: smooth; scroll-padding-top: 12px; }
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; cursor: var(--samosa-cursor), auto !important; }
   html, body { margin: 0; padding: 0; }
   body {
     background: var(--sand);
@@ -665,6 +667,59 @@
     .page-nav { display: none; }
   }
 
+  /* Top site nav */
+  .site-nav {
+    background: rgba(251,243,225,0.96);
+    border-bottom: 1px solid rgba(31,58,104,0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 200;
+  }
+  .site-nav-inner {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0.9rem 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+  .site-nav .logo {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--indigo);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    opacity: 0.85;
+    transition: opacity 150ms;
+  }
+  .site-nav .logo:hover { opacity: 1; }
+  .site-nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    padding: 0; margin: 0;
+  }
+  .site-nav-links a {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--indigo);
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 150ms;
+  }
+  .site-nav-links a:hover { opacity: 1; }
+  .site-nav-links a.current { opacity: 1; color: var(--terra); font-weight: 700; }
+  @media (max-width: 640px) {
+    .site-nav-inner { padding: 0.75rem 22px; }
+    .site-nav-links { gap: 1rem; }
+  }
+
   /* Footer */
   .foot {
     padding: 28px 36px 48px;
@@ -706,6 +761,18 @@
 </style>
 </head>
 <body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a href="index.html" class="logo">Samrudha Surana</a>
+    <ul class="site-nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="cv.html">CV</a></li>
+      <li><a href="archives_itinerary.html" class="current">India '26</a></li>
+    </ul>
+  </div>
+</nav>
 
 <main class="page">
 

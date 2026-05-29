@@ -12,6 +12,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=STIX+Two+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body data-theme="light" data-color="sage" class="font-palatino">
+    <script>
+    // Apply the saved (or system-preferred) theme before content paints to avoid a flash.
+    (function() {
+        var saved = localStorage.getItem('preferredTheme');
+        if (!saved) {
+            saved = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        }
+        document.body.setAttribute('data-theme', saved);
+    })();
+    </script>
     <div class="controls-bar">
         <div class="control-group">
             <button class="theme-toggle" onclick="toggleTheme()">
@@ -88,7 +98,7 @@
                     </a>
                 </div>
             </div>
-            <p class="footer-copyright">&copy; 2025 Samrudha Surana. All rights reserved.</p>
+            <p class="footer-copyright">&copy; <span class="cr-year">2026</span> Samrudha Surana. All rights reserved.</p>
         </div>
     </footer>
     <script>
@@ -116,11 +126,13 @@
         }
     }
 
-    // Load saved preferences
+    // Sync the toggle icon with the theme already applied by the early inline script,
+    // and stamp the current year in the footer.
     document.addEventListener('DOMContentLoaded', function() {
-        const savedTheme = localStorage.getItem('preferredTheme') || 'light';
-        document.body.setAttribute('data-theme', savedTheme);
-        updateThemeIcon(savedTheme);
+        updateThemeIcon(document.body.getAttribute('data-theme') || 'light');
+        document.querySelectorAll('.cr-year').forEach(function(el) {
+            el.textContent = new Date().getFullYear();
+        });
     });
     </script>
 </body>

@@ -63,7 +63,7 @@
 
 .pub-title a {
     color: var(--text-dark);
-    text-decoration: none;
+    text-decoration: underline;
     transition: color 0.3s ease;
 }
 
@@ -89,12 +89,8 @@
 
 .pub-venue a {
     color: var(--primary-color);
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.pub-venue a:hover {
     text-decoration: underline;
+    transition: color 0.3s ease;
 }
 
 .pub-date {
@@ -114,10 +110,6 @@
 
 .pub-note a {
     color: var(--primary-color);
-    text-decoration: none;
-}
-
-.pub-note a:hover {
     text-decoration: underline;
 }
 

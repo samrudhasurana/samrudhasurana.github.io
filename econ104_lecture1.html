@@ -73,6 +73,10 @@
   .navbtn:hover{background:rgba(20,24,26,.82);}
   #prevBtn{left:16px;}
   #nextBtn{right:16px;}
+  #fsBtn{position:fixed; top:16px; right:16px; width:38px; height:38px; border-radius:50%;
+    border:none; background:rgba(20,24,26,.5); color:#fff; font-size:16px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; z-index:85; transition:background .2s;}
+  #fsBtn:hover{background:rgba(20,24,26,.82);}
   #dots{
     position:fixed; bottom:14px; left:50%; transform:translateX(-50%); display:flex; gap:7px;
     z-index:85; background:rgba(20,24,26,.4); padding:7px 11px; border-radius:20px;
@@ -190,7 +194,7 @@
       <div class="slide-inner">
         <div class="kicker">The big picture</div>
         <div class="chart-card">
-          <iframe src="https://ourworldindata.org/grapher/global-average-gdp-per-capita-over-the-long-run?time=1..2024&tab=chart" loading="lazy" style="width:100%;height:500px;border:0;" allow="web-share; clipboard-write"></iframe>
+          <iframe src="https://ourworldindata.org/grapher/global-average-gdp-per-capita-over-the-long-run?time=1..2024&tab=chart" style="width:100%;height:500px;border:0;" allow="web-share; clipboard-write"></iframe>
         </div>
       </div>
       <div class="footer-tag">ECON 104</div>
@@ -215,7 +219,7 @@
         <h2 class="title">The share of newborns who die before age five</h2>
         <p class="lede">Until 1900, roughly <b>41%</b> — two in five children — died before their fifth birthday. Today, fewer than <b>4%</b> do.</p>
         <div class="chart-card">
-          <iframe src="https://ourworldindata.org/grapher/child-mortality?time=earliest..2024&country=~OWID_WRL&tab=line" loading="lazy" style="width:100%;height:480px;border:0;" allow="web-share; clipboard-write"></iframe>
+          <iframe src="https://ourworldindata.org/grapher/child-mortality?time=earliest..2024&country=~OWID_WRL&tab=line" style="width:100%;height:480px;border:0;" allow="web-share; clipboard-write"></iframe>
         </div>
       </div>
       <div class="footer-tag">ECON 104</div>
@@ -243,7 +247,7 @@
         <h2 class="title">The share of mothers who die from pregnancy and childbirth</h2>
         <p class="lede">In the world's healthiest countries around 1800, roughly <b>900</b> mothers died for every 100,000 births — nearly <b>1 in 100</b>. Today the high-income average is about <b>11</b> per 100,000.</p>
         <div class="chart-card">
-          <iframe src="https://ourworldindata.org/grapher/maternal-mortality?time=earliest..latest&country=~OWID_WRL&tab=line" loading="lazy" style="width:100%;height:480px;border:0;" allow="web-share; clipboard-write"></iframe>
+          <iframe src="https://ourworldindata.org/grapher/maternal-mortality?time=earliest..latest&country=~OWID_WRL&tab=line" style="width:100%;height:480px;border:0;" allow="web-share; clipboard-write"></iframe>
         </div>
       </div>
       <div class="footer-tag">ECON 104</div>
@@ -426,6 +430,7 @@
 <div id="progress"></div>
 <button id="prevBtn" class="navbtn" aria-label="Previous slide">&#8249;</button>
 <button id="nextBtn" class="navbtn" aria-label="Next slide">&#8250;</button>
+<button id="fsBtn" aria-label="Toggle fullscreen">&#9974;</button>
 <div id="dots"></div>
 <div class="navhint">&#8592; &#8594; or click to navigate</div>
 
@@ -475,6 +480,19 @@ function goTo(i){
 
 document.getElementById('prevBtn').addEventListener('click', ()=> goTo(current-1));
 document.getElementById('nextBtn').addEventListener('click', ()=> goTo(current+1));
+
+// ---------- FULLSCREEN ----------
+const fsBtn = document.getElementById('fsBtn');
+fsBtn.addEventListener('click', ()=>{
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen().catch(()=>{});
+  } else {
+    document.exitFullscreen();
+  }
+});
+document.addEventListener('fullscreenchange', ()=>{
+  fsBtn.innerHTML = document.fullscreenElement ? '&#10064;' : '&#9974;';
+});
 
 document.addEventListener('keydown', (e)=>{
   const fwd = ['ArrowRight','ArrowDown','PageDown',' '];

@@ -169,6 +169,109 @@
   .q-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:14px;}
   .q-card{background:#fff; border:1px solid var(--line); border-left:4px solid var(--gold); border-radius:8px; padding:12px 16px; font-size:18px; color:var(--green-dark); font-weight:600; line-height:1.42; box-shadow:0 8px 18px -14px rgba(0,0,0,.2);}
   .closer{margin-top:14px; font-size:18px; line-height:1.55; color:#333;}
+
+  /* ---------- ADA: SLIDE NOTES ---------- */
+  #descBtn{
+    position:fixed; right:16px; bottom:14px; z-index:95;
+    display:flex; align-items:center; gap:8px;
+    border:none; border-radius:22px; padding:9px 16px;
+    background:rgba(20,24,26,.62); color:#fff; cursor:pointer;
+    font-family:'EB Garamond',Georgia,serif; font-size:15px; font-weight:600;
+    transition:background .2s, box-shadow .2s;
+  }
+  #descBtn:hover{background:rgba(20,24,26,.9);}
+  #descBtn:focus-visible{outline:3px solid var(--gold); outline-offset:3px;}
+  #descBtn .dot{width:8px; height:8px; border-radius:50%; background:var(--gold); flex:none;}
+  #descBtn .kbd{font-size:12px; opacity:.65; border:1px solid rgba(255,255,255,.35);
+    border-radius:4px; padding:0 5px; margin-left:2px;}
+  #descBtn[aria-expanded="true"]{background:var(--green); box-shadow:0 0 0 2px var(--gold-light);}
+
+  #descPanel{
+    position:fixed; top:0; right:0; bottom:0; width:min(470px,94vw); z-index:96;
+    background:var(--cream); color:var(--ink);
+    border-left:4px solid var(--gold);
+    box-shadow:-24px 0 60px -30px rgba(0,0,0,.75);
+    transform:translateX(102%); transition:transform .28s ease;
+    display:flex; flex-direction:column;
+    font-family:'EB Garamond',Georgia,serif;
+  }
+  #descPanel.open{transform:translateX(0);}
+  #descPanel header{
+    background:var(--green-dark); color:#fff; padding:15px 18px 13px; flex:none;
+  }
+  #descPanel header .top{display:flex; align-items:flex-start; justify-content:space-between; gap:12px;}
+  #descPanel header h2{font-size:20px; font-weight:700; line-height:1.25;}
+  #descPanel header .slide-ref{font-size:12.5px; color:var(--gold-light); letter-spacing:.08em;
+    text-transform:uppercase; margin-bottom:4px;}
+  #descClose{
+    border:none; background:rgba(255,255,255,.14); color:#fff; cursor:pointer;
+    width:30px; height:30px; border-radius:50%; font-size:17px; line-height:1; flex:none;
+  }
+  #descClose:hover{background:rgba(255,255,255,.3);}
+  #descClose:focus-visible, #readBtn:focus-visible, #rateSel:focus-visible{outline:3px solid var(--gold); outline-offset:2px;}
+
+  .read-bar{display:flex; align-items:center; gap:9px; margin-top:12px; flex-wrap:wrap;}
+  #readBtn{
+    display:flex; align-items:center; gap:7px; border:1px solid rgba(255,255,255,.35);
+    background:rgba(255,255,255,.1); color:#fff; border-radius:18px; padding:6px 14px;
+    cursor:pointer; font-family:inherit; font-size:14.5px; font-weight:600;
+  }
+  #readBtn:hover{background:rgba(255,255,255,.22);}
+  #readBtn.playing{background:var(--gold); color:var(--green-dark); border-color:var(--gold);}
+  #readBtn .ico{font-size:12px;}
+  .read-bar label{font-size:12.5px; color:rgba(255,255,255,.7);}
+  #rateSel{
+    background:rgba(255,255,255,.1); color:#fff; border:1px solid rgba(255,255,255,.3);
+    border-radius:14px; padding:4px 8px; font-family:inherit; font-size:13px; cursor:pointer;
+  }
+  #rateSel option{color:#000;}
+  #readWarn{font-size:12.5px; color:#f6d98a; width:100%; margin-top:2px; display:none;}
+
+  #descBody{padding:20px 22px 32px; overflow-y:auto; font-size:16.5px; line-height:1.62;}
+  #descBody h3{font-size:16.5px; color:var(--green-dark); margin:16px 0 4px; font-weight:700;}
+  #descBody h3:first-child{margin-top:0;}
+  #descBody p{margin:0 0 11px;}
+  #descBody ul{margin:0 0 12px; padding-left:22px;}
+  #descBody li{margin-bottom:5px;}
+  #descBody b{color:var(--green-dark);}
+  #descBody .onslide{margin:0 0 11px;}
+  #descBody .takeaway{margin:11px 0 0;}
+  .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+    clip:rect(0 0 0 0); white-space:nowrap; border:0;}
+  .sr-only-focusable:focus, .sr-only-focusable:focus-visible{
+    position:fixed; top:10px; left:10px; z-index:200; width:auto; height:auto; margin:0;
+    clip:auto; white-space:normal; padding:10px 16px; border-radius:8px;
+    background:var(--green-dark); color:#fff; font-family:'EB Garamond',Georgia,serif;
+    font-size:16px; outline:3px solid var(--gold);
+  }
+  #autoRow{display:flex; align-items:center; gap:7px; margin-top:9px; font-size:13px; color:rgba(255,255,255,.8);}
+  #autoRead{width:15px; height:15px; accent-color:var(--gold); cursor:pointer;}
+  #autoRow label{cursor:pointer;}
+  #helpPanel{
+    position:fixed; inset:0; z-index:120; display:none;
+    align-items:center; justify-content:center; background:rgba(10,14,12,.72);
+  }
+  #helpPanel.open{display:flex;}
+  #helpInner{
+    background:var(--cream); color:var(--ink); border-radius:12px; border-top:5px solid var(--gold);
+    width:min(560px,92vw); max-height:86vh; overflow-y:auto; padding:24px 28px 26px;
+    font-family:'EB Garamond',Georgia,serif; box-shadow:0 40px 90px -30px rgba(0,0,0,.8);
+  }
+  #helpInner h2{font-size:24px; color:var(--green-dark); margin-bottom:4px;}
+  #helpInner p{font-size:16px; color:var(--sub); margin:0 0 14px;}
+  #helpInner dl{display:grid; grid-template-columns:auto 1fr; gap:8px 16px; font-size:16.5px; margin:0;}
+  #helpInner dt{font-weight:700; color:var(--green);}
+  #helpInner dd{margin:0;}
+  #helpInner kbd{
+    font-family:inherit; background:#fff; border:1px solid var(--line); border-bottom-width:2px;
+    border-radius:5px; padding:1px 7px; font-size:15px;
+  }
+  #helpClose{
+    margin-top:20px; border:none; background:var(--green); color:#fff; cursor:pointer;
+    border-radius:20px; padding:8px 20px; font-family:inherit; font-size:15.5px; font-weight:600;
+  }
+  #helpClose:focus-visible{outline:3px solid var(--gold); outline-offset:3px;}
+  @media print{ #descBtn,#descPanel,#helpPanel{display:none;} }
 </style>
 </head>
 <body>
@@ -189,7 +292,7 @@
       <div class="slide-inner">
         <div class="kicker">The big picture</div>
         <div class="chart-card">
-          <iframe src="https://ourworldindata.org/grapher/global-average-gdp-per-capita-over-the-long-run?time=1..2024&tab=chart" style="width:100%;height:580px;border:0;" allow="web-share; clipboard-write"></iframe>
+          <iframe title="Chart: global average GDP per capita over the long run (Our World in Data)" src="https://ourworldindata.org/grapher/global-average-gdp-per-capita-over-the-long-run?time=1..2024&tab=chart" style="width:100%;height:580px;border:0;" allow="web-share; clipboard-write"></iframe>
         </div>
       </div>
       <div class="footer-tag">ECON 104</div>
@@ -213,7 +316,7 @@
         <div class="kicker">Outcome #1 — Child mortality</div>
         <h2 class="title">The share of newborns who die before age five</h2>
         <div class="chart-card">
-          <iframe src="https://ourworldindata.org/grapher/child-mortality?time=earliest..2024&country=~OWID_WRL&tab=line" style="width:100%;height:580px;border:0;" allow="web-share; clipboard-write"></iframe>
+          <iframe title="Chart: child mortality rate for the world (Our World in Data)" src="https://ourworldindata.org/grapher/child-mortality?time=earliest..2024&country=~OWID_WRL&tab=line" style="width:100%;height:580px;border:0;" allow="web-share; clipboard-write"></iframe>
         </div>
       </div>
       <div class="footer-tag">ECON 104</div>
@@ -240,7 +343,7 @@
         <div class="kicker">Outcome #2 — Maternal mortality</div>
         <h2 class="title">The share of mothers who die from pregnancy and childbirth</h2>
         <div class="chart-card">
-          <iframe src="https://ourworldindata.org/grapher/maternal-mortality?time=earliest..latest&country=~OWID_WRL&tab=line" style="width:100%;height:580px;border:0;" allow="web-share; clipboard-write"></iframe>
+          <iframe title="Chart: maternal mortality ratio for the world (Our World in Data)" src="https://ourworldindata.org/grapher/maternal-mortality?time=earliest..latest&country=~OWID_WRL&tab=line" style="width:100%;height:580px;border:0;" allow="web-share; clipboard-write"></iframe>
         </div>
       </div>
       <div class="footer-tag">ECON 104</div>
@@ -253,7 +356,7 @@
         <div class="kicker">Outcome #3 — Life expectancy</div>
         <h2 class="title">How long could a newborn expect to live?</h2>
         <div class="chart-card">
-          <iframe src="https://ourworldindata.org/grapher/life-expectancy?time=earliest..latest&country=~OWID_WRL&tab=line" style="width:100%;height:580px;border:0;" allow="web-share; clipboard-write"></iframe>
+          <iframe title="Chart: life expectancy at birth for the world (Our World in Data)" src="https://ourworldindata.org/grapher/life-expectancy?time=earliest..latest&country=~OWID_WRL&tab=line" style="width:100%;height:580px;border:0;" allow="web-share; clipboard-write"></iframe>
         </div>
       </div>
       <div class="footer-tag">ECON 104</div>
@@ -266,7 +369,7 @@
         <div class="kicker">Outcome #4 — Life satisfaction</div>
         <h2 class="title">Does more income buy more satisfaction with life?</h2>
         <div class="chart-card">
-          <iframe src="https://ourworldindata.org/grapher/gdp-vs-happiness?tab=chart" style="width:100%;height:580px;border:0;" allow="web-share; clipboard-write"></iframe>
+          <iframe title="Chart: life satisfaction versus GDP per capita by country (Our World in Data)" src="https://ourworldindata.org/grapher/gdp-vs-happiness?tab=chart" style="width:100%;height:580px;border:0;" allow="web-share; clipboard-write"></iframe>
         </div>
       </div>
       <div class="footer-tag">ECON 104</div>
@@ -451,7 +554,77 @@
 <button id="nextBtn" class="navbtn" aria-label="Next slide">&#8250;</button>
 <button id="fsBtn" aria-label="Toggle fullscreen">&#9974;</button>
 <div id="dots"></div>
-<div class="navhint">&#8592; &#8594; or click to navigate</div>
+
+<a href="#descBtn" class="sr-only sr-only-focusable" id="skipLink">Skip to slide notes and keyboard controls</a>
+
+<div class="sr-only">
+  <h1>ECON 104 &mdash; Progress of Humanity. Accessible slide deck.</h1>
+  <p>This presentation has 14 slides. Every slide has written notes that describe both the
+     text on the slide and any chart or image it contains. Press the spacebar at any time to
+     open or close the notes for the current slide. Press R to have the notes read aloud.
+     Press A to have notes read aloud automatically whenever you move to a new slide.
+     Use the left and right arrow keys to move between slides. Press question mark for the
+     full list of keyboard shortcuts.</p>
+</div>
+
+<div id="srAnnounce" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<div id="helpPanel" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div id="helpInner">
+    <h2 id="helpTitle">Keyboard shortcuts</h2>
+    <p>This deck is designed to be used entirely from the keyboard.</p>
+    <dl>
+      <dt><kbd>Space</kbd></dt><dd>Open or close the notes for this slide</dd>
+      <dt><kbd>R</kbd></dt><dd>Read the notes aloud (press again to stop)</dd>
+      <dt><kbd>A</kbd></dt><dd>Auto-read: read notes aloud on every slide automatically</dd>
+      <dt><kbd>&rarr;</kbd> <kbd>&darr;</kbd></dt><dd>Next slide</dd>
+      <dt><kbd>&larr;</kbd> <kbd>&uarr;</kbd></dt><dd>Previous slide</dd>
+      <dt><kbd>Home</kbd> / <kbd>End</kbd></dt><dd>First / last slide</dd>
+      <dt><kbd>+</kbd> / <kbd>&minus;</kbd></dt><dd>Speak faster / slower</dd>
+      <dt><kbd>F</kbd></dt><dd>Fullscreen on or off</dd>
+      <dt><kbd>?</kbd></dt><dd>Show this list</dd>
+      <dt><kbd>Esc</kbd></dt><dd>Close notes or this list</dd>
+    </dl>
+    <button id="helpClose" type="button">Close</button>
+  </div>
+</div>
+
+<button id="descBtn" type="button" aria-expanded="false" aria-controls="descPanel"
+        title="Show notes for this slide (spacebar). R = read aloud, F = fullscreen">
+  <span class="dot" aria-hidden="true"></span><span>Notes</span><span class="kbd" aria-hidden="true">space</span>
+</button>
+
+<aside id="descPanel" role="dialog" aria-modal="false" aria-labelledby="descTitle" aria-hidden="true">
+  <header>
+    <div class="top">
+      <div>
+        <div class="slide-ref" id="descRef">Slide</div>
+        <h2 id="descTitle">Slide notes</h2>
+      </div>
+      <button id="descClose" type="button" aria-label="Close notes">&times;</button>
+    </div>
+    <div class="read-bar">
+      <button id="readBtn" type="button" aria-label="Read these notes aloud, shortcut key R" title="Shortcut: R">
+        <span class="ico" aria-hidden="true">&#9654;</span><span id="readLabel">Read aloud</span>
+      </button>
+      <label for="rateSel">Speed</label>
+      <select id="rateSel" aria-label="Reading speed">
+        <option value="0.8">0.8&times;</option>
+        <option value="1" selected>1&times;</option>
+        <option value="1.25">1.25&times;</option>
+        <option value="1.5">1.5&times;</option>
+      </select>
+      <span id="readWarn">Read-aloud is not supported in this browser.</span>
+    </div>
+    <div id="autoRow">
+      <input type="checkbox" id="autoRead">
+      <label for="autoRead">Auto-read each slide (A)</label>
+    </div>
+  </header>
+  <div id="descBody" tabindex="0"></div>
+</aside>
+
+<div class="navhint">&#8592; &#8594; navigate &nbsp;&middot;&nbsp; space = notes &nbsp;&middot;&nbsp; R = read aloud &nbsp;&middot;&nbsp; F = fullscreen</div>
 
 <script>
 // ---------- STAGE SCALING (keeps 16:9 always, no overflow) ----------
@@ -503,18 +676,21 @@ document.getElementById('nextBtn').addEventListener('click', ()=> goTo(current+1
 // ---------- FULLSCREEN ----------
 const fsBtn = document.getElementById('fsBtn');
 fsBtn.addEventListener('click', ()=>{
-  if(!document.fullscreenElement){
-    document.documentElement.requestFullscreen().catch(()=>{});
-  } else {
-    document.exitFullscreen();
-  }
+  try{
+    if(!document.fullscreenElement){
+      const rf = document.documentElement.requestFullscreen;
+      if(typeof rf === 'function'){ Promise.resolve(rf.call(document.documentElement)).catch(()=>{}); }
+    } else if(typeof document.exitFullscreen === 'function'){
+      document.exitFullscreen();
+    }
+  }catch(err){}
 });
 document.addEventListener('fullscreenchange', ()=>{
   fsBtn.innerHTML = document.fullscreenElement ? '&#10064;' : '&#9974;';
 });
 
 document.addEventListener('keydown', (e)=>{
-  const fwd = ['ArrowRight','ArrowDown','PageDown',' '];
+  const fwd = ['ArrowRight','ArrowDown','PageDown'];
   const back = ['ArrowLeft','ArrowUp','PageUp','Backspace'];
   if(fwd.includes(e.key)){ e.preventDefault(); goTo(current+1); }
   else if(back.includes(e.key)){ e.preventDefault(); goTo(current-1); }
@@ -552,6 +728,292 @@ function pfBuildRow(el){
   el.innerHTML = html;
 }
 document.querySelectorAll('.pf-row').forEach(pfBuildRow);
+
+
+// ---------- ADA: SLIDE NOTES + READ ALOUD ----------
+const SLIDE_NOTES = {
+ "s0": {
+  "t": "Title — Progress of Humanity",
+  "b": "\n<p>This is the opening slide of ECON 104, Principles of Macroeconomics. The lecture is titled <b>Progress of Humanity</b>. It is a plain title slide in dark green with no other content on it.</p>\n<p>The question we are going to work through today is whether life has actually gotten better over the long sweep of history, and how we would know. We are going to answer it with data, one outcome at a time.</p>\n"
+ },
+ "s1": {
+  "t": "Global GDP per capita over the long run",
+  "b": "\n<p>We begin with the big picture: how much income the average person in the world has had over time.</p>\n<p>There is an interactive chart on the slide from Our World in Data which shows global average GDP per capita from the year 1 CE through 2024. Income is measured in constant international dollars, which means it is adjusted both for inflation and for price differences between countries, so the numbers are comparable across two thousand years.</p>\n<p>For roughly eighteen centuries the line is essentially flat and very low. Average income per person barely moves from a few hundred dollars a year. Then, somewhere around 1800 to 1850, the line lifts off the floor, and after 1950 it turns sharply upward and climbs steeply without any major reversal, reaching well over fifteen thousand dollars per person by 2024. The shape is often called a hockey stick: a very long flat handle, then a near-vertical blade at the end.</p>\n<p>The main takeaway is that for almost all of human history the typical person was poor, and poor by roughly the same amount. Sustained growth in average income is only about two hundred years old. It is a very recent development, not the normal state of affairs.</p>\n"
+ },
+ "s3": {
+  "t": "Why do we care about income?",
+  "b": "\n<p>This is a transition slide, text only, on a dark green background. It asks: <b>why do we care about how much money people make?</b></p>\n<p>The answer given on the slide is that income is a means, not an end. GDP per capita measures purchasing power, not wellbeing. What we actually care about are the things income buys and the lives it makes possible.</p>\n<p>So for the next several slides we set the dollar figures aside and look directly at outcomes people care about: whether children live to grow up, whether mothers survive childbirth, how many years of life people get, how satisfied they say they are, whether they can afford knowledge, and how much everyday food and light and paper cost them in hours of work.</p>\n"
+ },
+ "s4": {
+  "t": "Outcome 1 — Child mortality",
+  "b": "\n<p>We now discuss the child mortality rate, which measures the share of newborns who die before the age of five.</p>\n<p>There is a chart on the slide from Our World in Data which shows how the child mortality rate has changed over time for the world as a whole, from the earliest available data through 2024. The horizontal axis is time and the vertical axis is the percentage of newborns who do not reach their fifth birthday.</p>\n<p>The line starts very high, on the order of forty to fifty percent, and it stays high with almost no improvement for most of recorded history. It begins to fall in the nineteenth century, and then through the twentieth century it drops steeply and continuously: roughly twenty-seven percent in 1950, about nine percent by 1990, and about four percent today. There are no lasting reversals in the modern period; once the decline starts, it does not stop.</p>\n<p>The main takeaway is that the risk of a child dying before age five has fallen by roughly a factor of ten within just a few generations. This is probably the single most dramatic improvement in human wellbeing that has ever been measured.</p>\n"
+ },
+ "s5": {
+  "t": "Child mortality across history",
+  "b": "\n<p>We now take the long view on the same question, and the claim on the slide is a strong one: for most of history, about half of all children died.</p>\n<p>There is a chart on the slide from Our World in Data titled &ldquo;The long-run history of child mortality.&rdquo; It is a scatter plot rather than a line. Each labelled dot is a single historical society, placed by its date on the horizontal axis — which runs from 300 BCE at the left to 2020 at the right — and by the share of its children who died before the end of puberty, roughly age fifteen, on the vertical axis, which runs from zero to about sixty percent.</p>\n<p>What is striking is how tightly the historical dots cluster. Almost every society before 1900 sits between about forty and sixty percent, regardless of where or when it was:</p>\n<ul>\n  <li>Teotihuacan in Mexico, 550 to 700 CE: sixty-two percent</li>\n  <li>Roman Egypt around the year zero: fifty-seven percent</li>\n  <li>Poland in 1875: fifty-five percent, and the Wari of Peru: fifty-three percent</li>\n  <li>Japan, Venice, Sweden and Bavaria in the seventeenth to nineteenth centuries: all around fifty percent</li>\n  <li>Rome, Nasca in Peru, and medieval Japan: forty-eight to fifty percent</li>\n  <li>Belgium in the nineteenth century: forty-one percent, the lowest of the entire historical group</li>\n</ul>\n<p>A horizontal red line marks the average across these twenty-one historical societies at forty-eight percent. Separately, at the far left, the average across seventeen hunter-gatherer societies is marked at forty-nine percent — essentially the same number. Farming societies, empires, city-states and hunter-gatherers all lost about half their children.</p>\n<p>Then, from the late 1800s, a thick red line plunges almost vertically down the right-hand side of the chart: twenty-seven percent globally in 1950, and four point three percent globally in 2020. Two thin branches show today's spread. Somalia, the worst in the world, is at fourteen percent. Iceland, Finland, Norway, Japan and Slovenia are at zero point three percent.</p>\n<p>There are two main takeaways. First, losing half your children was not a feature of one bad era or one poor region; it was the human condition everywhere, and it broke only in the last century and a half. Second, even the worst-performing country in the world today does dramatically better than the best-performing society of the pre-modern world.</p>\n"
+ },
+ "s-maternal": {
+  "t": "Outcome 2 — Maternal mortality",
+  "b": "\n<p>The second outcome is maternal mortality, which measures the share of mothers who die from pregnancy and childbirth.</p>\n<p>There is a chart on the slide from Our World in Data which shows the maternal mortality ratio for the world over the long run. It is measured as the number of maternal deaths per one hundred thousand live births, plotted from the earliest available data to the present.</p>\n<p>The line begins extremely high, on the order of five hundred to nine hundred deaths per hundred thousand births in the historical record. Because women had many pregnancies, that per-birth risk compounded into a substantial chance of dying in childbirth across a woman's reproductive life. The line then falls dramatically through the twentieth century as antisepsis, trained obstetric care, blood transfusion and antibiotics spread, and it continues down to roughly two hundred per hundred thousand today.</p>\n<p>The main takeaway is that childbirth has gone from one of the leading causes of death for women to a comparatively rare one. The important qualification is that the remaining burden is heavily concentrated in low-income countries, so the global average hides a very wide gap.</p>\n"
+ },
+ "s-life-expectancy": {
+  "t": "Outcome 3 — Life expectancy",
+  "b": "\n<p>The third outcome is life expectancy: how long a newborn could expect to live.</p>\n<p>There is a chart on the slide from Our World in Data which shows life expectancy at birth for the world, in years, from the earliest available data to the present.</p>\n<p>The line sits flat at roughly thirty years for centuries. It is worth pausing on what that number means, because it is easy to misread: it does not mean most adults dropped dead at thirty. It is an average pulled down hard by the very high rate of death in infancy and childhood we just looked at. Someone who survived to adulthood could often expect to reach their fifties or sixties. The line begins rising in the nineteenth century, accelerates sharply after 1900, and reaches roughly seventy-three years today. There are sharp visible dips along the way — the 1918 influenza pandemic and the COVID-19 pandemic in 2020 and 2021 are both clearly identifiable — but the trend recovers each time.</p>\n<p>The main takeaway is that global life expectancy has more than doubled in about two hundred years. Another way to put it: there is no country on earth today with a life expectancy as low as the world average was in 1800.</p>\n"
+ },
+ "s-happiness": {
+  "t": "Outcome 4 — Life satisfaction",
+  "b": "\n<p>The fourth outcome asks the question directly: does more income actually buy more satisfaction with life?</p>\n<p>There is a chart on the slide from Our World in Data which shows self-reported life satisfaction against GDP per capita. It is a scatter plot where each bubble is a country, sized by population and coloured by world region. The horizontal axis is GDP per capita on a logarithmic scale, so each equal step to the right represents a doubling of income rather than a fixed dollar amount. The vertical axis is average self-reported life satisfaction on a zero-to-ten ladder scale from the World Happiness Report, where people rate their own lives.</p>\n<p>The bubbles form a clear upward-sloping cloud running from the lower left to the upper right. Poorer countries cluster around scores of three to five; richer countries cluster around six point five to seven point five. Because the income axis is logarithmic, the roughly straight-line relationship tells us something specific: each <i>doubling</i> of income is associated with a roughly constant gain in reported satisfaction. So the absolute dollar amount needed to move the needle keeps getting larger as countries get richer. There is also meaningful scatter around the line — several countries report noticeably higher or lower satisfaction than their income alone would predict.</p>\n<p>The main takeaway is that income and self-reported wellbeing are strongly and positively related, and there is no visible point in the data where the relationship flattens out or reverses. But the scatter around the line is a reminder that income is clearly not the whole story.</p>\n"
+ },
+ "s6": {
+  "t": "Video — 200 Countries, 200 Years, 4 Minutes",
+  "b": "\n<p>Before we move on, there is a four-minute video linked on this slide, and it pulls together everything we have looked at so far.</p>\n<p>The slide shows a clickable video thumbnail which opens on YouTube. It is a clip from the BBC Four programme &ldquo;The Joy of Stats,&rdquo; presented by the Swedish statistician Hans Rosling, and the slide describes it as animating two centuries of income and life expectancy for nearly every country on earth.</p>\n<p>In the video, Rosling stands inside an animated bubble chart projected around him. Income per person runs along the horizontal axis and life expectancy runs along the vertical axis. Each bubble is a country, sized by its population and coloured by continent. He then plays the animation forward from 1810 to the present. Every bubble starts bunched together in the poor, short-lived lower-left corner of the chart. Over the two centuries they sweep up and to the right — the Western countries pulling away first, then the rest of the world following and, in many cases, catching up rapidly. The two world wars and the 1918 influenza pandemic appear as sharp downward jolts before the recovery resumes.</p>\n<p>The main takeaway is that the improvements we have been looking at one chart at a time all happened together, to nearly every country, and the gap that opened up in the nineteenth century has been closing since the mid-twentieth. The video is fully narrated, so it works without seeing the animation, and YouTube captions are available.</p>\n"
+ },
+ "s7": {
+  "t": "Outcome 5 — Access to knowledge",
+  "b": "\n<p>The fifth outcome is access to knowledge, and we measure it in a concrete way: how many days did the average worker have to work in order to buy one book?</p>\n<p>There is a chart on the slide adapted from Jeremiah Dittmar and Skipper Seabold's 2019 study of the printing press, published through the LSE. It is a scatter plot covering roughly 1250 to 1620. The horizontal axis is time. The vertical axis is the price of two hundred pages expressed in daily wages, on a logarithmic scale that runs from one-sixteenth of a day's wage at the bottom up to two hundred and fifty-six days at the top. Two dashed reference lines are drawn across the chart: one at sixty-four days, labelled &ldquo;two months of wages,&rdquo; and one at a single daily wage.</p>\n<p>There are two groups of points. The orange triangles are hand-copied manuscripts. They run from about 1250 to 1450 and sit high on the chart, mostly between thirty and three hundred days of wages — so a book typically cost a labourer two months of income or more. The purple circles are printed books. They appear abruptly around 1450, as Gutenberg's press spreads, and they immediately sit far lower on the chart. Through the 1500s the purple cloud drifts steadily further down, and by about 1600 most points lie <i>below</i> the one-daily-wage line, with some as low as one-sixteenth of a day's wage.</p>\n<p>Because the vertical axis is logarithmic, that visual drop represents a fall of several orders of magnitude. The labour cost of a book fell by a factor of several hundred within roughly a hundred and fifty years of the press arriving.</p>\n<p>The main takeaway is that a technology which lowers the time price of a good can move it from a luxury costing months of work to something an ordinary worker buys with a fraction of a day. That is the mechanism behind mass literacy, and it is the same mechanism we are about to see for everyday goods.</p>\n"
+ },
+ "s-light": {
+  "t": "Outcome 6, part 1 — Time prices: light and paper",
+  "b": "\n<p>The sixth outcome generalises that idea. Instead of asking what something costs in dollars, we ask what it costs in time: how much does an hour of work buy you now, versus then? This slide answers that for two goods, light and paper.</p>\n<p>There are two pictogram panels on the slide. In each row, repeated small icons represent the quantity of a good that one hour of the average worker's wage could buy. A partially filled icon at the end of a row represents a fraction of a unit, and where the count is too large to draw, the row is capped and a &ldquo;plus so-many more&rdquo; label follows.</p>\n<p>The left panel is light, where one icon represents a thousand lumen-hours:</p>\n<ul>\n  <li>In 1830, a single icon about one-third filled — an hour of work bought about a third of an hour of light.</li>\n  <li>Today, a full row of forty icons plus a label indicating roughly forty-nine thousand more — about forty-nine thousand hours of light per hour of work.</li>\n</ul>\n<p>That is roughly one hundred and forty-seven thousand times more light per hour worked.</p>\n<p>The right panel is paper, where one icon represents a ream of five hundred sheets:</p>\n<ul>\n  <li>In 1826, a barely-filled single icon — about one-hundredth of a ream, roughly five sheets, for an hour of work.</li>\n  <li>In 2026, about four and a half icons — 4.6 reams, or roughly two thousand three hundred sheets.</li>\n</ul>\n<p>That is about four hundred and sixty times more paper per hour worked. The figures come from Gale Pooley and Marian Tupy at HumanProgress.org.</p>\n<p>The main takeaway is about scale, and the pictogram is designed to make it unmissable: the &ldquo;then&rdquo; rows are almost invisible next to the &ldquo;now&rdquo; rows. Reading after dark, and writing things down, went from expensive to effectively free.</p>\n"
+ },
+ "s-food": {
+  "t": "Outcome 6, part 2 — Time prices: food",
+  "b": "\n<p>We apply the same time-price idea to food, and the slide covers six centuries of falling food prices in England. The question is how much a dozen eggs, a pound of flour, or a pound of sugar one hour of an unskilled worker's labour could buy, comparing the 1400s with 2022.</p>\n<p>There are three pictogram panels on the slide, one per good, each with a 1400s row and a 2022 row. As before, one icon is one unit of the good bought with one hour of wages.</p>\n<ul>\n  <li><b>Eggs, where one icon is a dozen.</b> In the 1400s, about half an icon — 0.58 dozen per hour. In 2022, four full icons — four dozen per hour. Roughly a sevenfold gain.</li>\n  <li><b>Flour, where one icon is a pound.</b> In the 1400s, one and a third icons — 1.33 pounds per hour. In 2022, fifty icons filling the row — fifty pounds per hour. Roughly a thirty-eightfold gain.</li>\n  <li><b>Sugar, where one icon is a pound.</b> In the 1400s, a barely visible sliver of a single icon — 0.05 pounds per hour, about three-quarters of an ounce. In 2022, thirty-three icons — 33.3 pounds per hour.</li>\n</ul>\n<p>Sugar shows the most dramatic change of the three: roughly six hundred and sixty times more per hour of work than six centuries ago. The source is again Pooley and Tupy at HumanProgress.org.</p>\n<p>The main takeaway is that across all three staples the 1400s rows are nearly empty and the 2022 rows are crowded. Goods that were once occasional luxuries — sugar most of all — are now so cheap in terms of labour that we barely think about their price.</p>\n"
+ },
+ "s9": {
+  "t": "Three broad variables",
+  "b": "\n<p>This is a transition slide that narrows the focus. Looking back across everything we have just seen, we were really tracking three broad variables. How much are people producing? How much are people working? And what are the prices of the goods they buy? That is output, employment, and prices — and they are what the rest of this course focuses on.</p>\n<p>The slide presents them as three numbered cards, each paired with the kind of news headline you would actually encounter:</p>\n<ul>\n  <li><b>Output, or GDP.</b> &ldquo;U.S. GDP grew at a 2.8 percent annual rate last quarter.&rdquo;</li>\n  <li><b>Employment.</b> &ldquo;Unemployment rate ticks up to 4.3 percent as hiring slows.&rdquo;</li>\n  <li><b>Prices, or inflation.</b> &ldquo;Fed holds interest rates steady as inflation cools to 2.6 percent.&rdquo;</li>\n</ul>\n<p>The main takeaway is that every chart in this lecture was, underneath, a statement about output, employment, or prices. Those three variables are the organising structure for everything that follows.</p>\n"
+ },
+ "s10": {
+  "t": "What is macroeconomics?",
+  "b": "\n<p>Finally, we arrive at a working definition. <b>Macroeconomics</b> is the study of the economy as a whole — explaining the economic changes that affect many households, firms, and markets simultaneously.</p>\n<p>The slide sets that definition in a box, and then lists four questions macroeconomists address:</p>\n<ul>\n  <li>Why is average income high in some countries and low in others?</li>\n  <li>Why do prices sometimes rise rapidly, and at other times stay stable?</li>\n  <li>Why do production and employment expand in some years and contract in others?</li>\n  <li>What, if anything, can government policy do about growth, inflation, and employment?</li>\n</ul>\n<p>The slide closes with the line that these questions are all macroeconomic in nature because they concern the workings of the <b>entire economy</b>.</p>\n<p>Notice that each of these four questions maps onto one of the three variables from the previous slide, and that the first one is exactly the question we spent this whole lecture on. That is where the course goes next.</p>\n"
+ }
+};
+const SLIDE_NUM_MAP = {"s0": "01", "s1": "02", "s3": "03", "s4": "04", "s5": "05", "s-maternal": "06", "s-life-expectancy": "07", "s-happiness": "08", "s6": "09", "s7": "10", "s-light": "11", "s-food": "12", "s9": "13", "s10": "14"};
+const descBtn   = document.getElementById('descBtn');
+const descPanel = document.getElementById('descPanel');
+const descBody  = document.getElementById('descBody');
+const descTitle = document.getElementById('descTitle');
+const descRef   = document.getElementById('descRef');
+const readBtn   = document.getElementById('readBtn');
+const readLabel = document.getElementById('readLabel');
+const rateSel   = document.getElementById('rateSel');
+const synth     = window.speechSynthesis || null;
+
+if(!synth){
+  readBtn.disabled = true;
+  rateSel.disabled = true;
+  document.getElementById('readWarn').style.display = 'block';
+}
+
+function renderNotes(){
+  const id = slides[current].id;
+  const n = SLIDE_NOTES[id];
+  descRef.textContent = 'Slide ' + (SLIDE_NUM_MAP[id] || (current+1)) + ' of ' + slides.length;
+  descTitle.innerHTML = n ? n.t : 'Slide notes';
+  descBody.innerHTML  = n ? n.b : '<p>No notes for this slide.</p>';
+  descBody.scrollTop = 0;
+}
+
+function setPanel(open){
+  descPanel.classList.toggle('open', open);
+  descPanel.setAttribute('aria-hidden', open ? 'false' : 'true');
+  descBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  if(open){ renderNotes(); descBody.focus(); }
+  else {
+    stopReading();
+    descBtn.focus();
+    if(typeof announce === 'function'){ announce('Notes closed.'); }
+  }
+}
+function panelOpen(){ return descPanel.classList.contains('open'); }
+
+// ----- read aloud -----
+function notesToSpeech(){
+  const clone = descBody.cloneNode(true);
+  // insert sentence breaks so headings and list items don't run together
+  clone.querySelectorAll('h3,li,p,div').forEach(el=>{ el.append('. '); });
+  const lead = descTitle.textContent + '. ';
+  return (lead + clone.textContent)
+    .replace(/\s+/g,' ')
+    .replace(/\.\s*\./g,'.')
+    .trim();
+}
+function setReadUI(playing){
+  readBtn.classList.toggle('playing', playing);
+  readLabel.textContent = playing ? 'Stop' : 'Read aloud';
+  readBtn.querySelector('.ico').innerHTML = playing ? '&#9632;' : '&#9654;';
+}
+function stopReading(){
+  if(synth){ synth.cancel(); }
+  setReadUI(false);
+}
+function startReading(){
+  if(!synth) return;
+  synth.cancel();
+  const u = new SpeechSynthesisUtterance(notesToSpeech());
+  u.rate = parseFloat(rateSel.value) || 1;
+  u.lang = 'en-US';
+  u.onend = ()=> setReadUI(false);
+  u.onerror = ()=> setReadUI(false);
+  setReadUI(true);
+  synth.speak(u);
+}
+readBtn.addEventListener('click', ()=>{
+  if(synth && (synth.speaking || synth.pending)) stopReading(); else startReading();
+});
+rateSel.addEventListener('change', ()=>{
+  if(synth && (synth.speaking || synth.pending)) startReading();
+});
+window.addEventListener('beforeunload', ()=>{ if(synth) synth.cancel(); });
+
+descBtn.addEventListener('click', ()=> setPanel(!panelOpen()));
+document.getElementById('descClose').addEventListener('click', ()=> setPanel(false));
+
+// Buttons keep keyboard focus after a mouse click, which would let the browser
+// re-trigger that button on the next spacebar press. Drop focus after any mouse
+// click on a control so the shortcut keys always mean the same thing.
+document.addEventListener('mouseup', (e)=>{
+  const c = e.target.closest && e.target.closest('button, select, a');
+  if(c && c.id !== 'rateSel'){ setTimeout(()=> c.blur(), 0); }
+});
+
+function isTyping(t){
+  const tag = (t && t.tagName || '').toLowerCase();
+  return tag === 'input' || tag === 'textarea' || tag === 'select' || (t && t.isContentEditable);
+}
+function toggleRead(){
+  if(synth && (synth.speaking || synth.pending)) stopReading(); else startReading();
+}
+
+// Capture phase: claim the key before the focused button can act on it.
+document.addEventListener('keydown', (e)=>{
+  if(isTyping(e.target)) return;
+  const k = e.key;
+
+  if(k === ' ' || k === 'Spacebar' || k === 'Space'){
+    e.preventDefault(); e.stopPropagation();
+    setPanel(!panelOpen());
+    return;
+  }
+  if(k === 'Escape'){
+    if(helpPanel.classList.contains('open')){ e.preventDefault(); e.stopPropagation(); setHelp(false); return; }
+    if(panelOpen()){ e.preventDefault(); e.stopPropagation(); setPanel(false); return; }
+  }
+  if((k === 'f' || k === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey){
+    e.preventDefault(); e.stopPropagation();
+    fsBtn.click();
+    return;
+  }
+  if((k === 'r' || k === 'R') && !e.metaKey && !e.ctrlKey && !e.altKey){
+    e.preventDefault(); e.stopPropagation();
+    if(!panelOpen()){ setPanel(true); }
+    toggleRead();
+    return;
+  }
+  if((k === 'a' || k === 'A') && !e.metaKey && !e.ctrlKey && !e.altKey){
+    e.preventDefault(); e.stopPropagation();
+    setAutoRead(!autoRead);
+    return;
+  }
+  if(k === '?' || (k === '/' && e.shiftKey) || k === 'h' || k === 'H'){
+    e.preventDefault(); e.stopPropagation();
+    setHelp(!helpPanel.classList.contains('open'));
+    return;
+  }
+  if(k === 'Home'){ e.preventDefault(); goTo(0); return; }
+  if(k === 'End'){ e.preventDefault(); goTo(slides.length-1); return; }
+  if(k === '+' || k === '='){ e.preventDefault(); bumpRate(1); return; }
+  if(k === '-' || k === '_'){ e.preventDefault(); bumpRate(-1); return; }
+}, true);
+
+// ---------- accessibility: announcements, auto-read, help ----------
+const srAnnounce = document.getElementById('srAnnounce');
+const autoChk    = document.getElementById('autoRead');
+const helpPanel  = document.getElementById('helpPanel');
+let autoRead = false;
+
+// hide non-current slides from assistive technology
+function syncSlideAria(){
+  slides.forEach((s,i)=>{
+    s.setAttribute('aria-hidden', i === current ? 'false' : 'true');
+    s.setAttribute('role','group');
+    s.setAttribute('aria-roledescription','slide');
+    s.setAttribute('aria-label','Slide ' + (SLIDE_NUM_MAP[s.id] || (i+1)) + ' of ' + slides.length);
+  });
+}
+
+function announce(msg){
+  srAnnounce.textContent = '';
+  setTimeout(()=>{ srAnnounce.textContent = msg; }, 60);
+}
+
+function slideHeadline(i){
+  const n = SLIDE_NOTES[slides[i].id];
+  if(!n) return '';
+  const tmp = document.createElement('span');
+  tmp.innerHTML = n.t;
+  return tmp.textContent;
+}
+
+function announceSlide(){
+  const num = SLIDE_NUM_MAP[slides[current].id] || (current+1);
+  announce('Slide ' + num + ' of ' + slides.length + '. ' + slideHeadline(current) +
+           (panelOpen() ? '. Notes open.' : '. Press space for notes.'));
+}
+
+function setAutoRead(on, quiet){
+  autoRead = on;
+  autoChk.checked = on;
+  if(!quiet){ announce(on ? 'Auto-read on. Notes will be read aloud on every slide.' : 'Auto-read off.'); }
+  if(on){ if(!panelOpen()) setPanel(true); startReading(); }
+  else { stopReading(); }
+}
+autoChk.addEventListener('change', ()=> setAutoRead(autoChk.checked));
+
+function bumpRate(step){
+  const opts = Array.from(rateSel.options).map(o=> parseFloat(o.value));
+  let idx = opts.indexOf(parseFloat(rateSel.value));
+  idx = Math.max(0, Math.min(opts.length-1, idx + step));
+  rateSel.value = String(opts[idx]);
+  announce('Reading speed ' + opts[idx] + ' times.');
+  if(synth && (synth.speaking || synth.pending)) startReading();
+}
+
+// help dialog
+let helpReturn = null;
+function setHelp(open){
+  helpPanel.classList.toggle('open', open);
+  if(open){ helpReturn = document.activeElement; document.getElementById('helpClose').focus(); }
+  else if(helpReturn){ helpReturn.focus(); helpReturn = null; }
+}
+document.getElementById('helpClose').addEventListener('click', ()=> setHelp(false));
+helpPanel.addEventListener('click', (e)=>{ if(e.target === helpPanel) setHelp(false); });
+
+// keep the panel in sync when the slide changes
+const _goTo = goTo;
+goTo = function(i){
+  const target = Math.max(0, Math.min(slides.length-1, i));
+  const changed = (target !== current);
+  _goTo(target);
+  syncSlideAria();
+  if(changed){
+    stopReading();
+    renderNotes();
+    announceSlide();
+    if(autoRead){
+      if(!panelOpen()) setPanel(true);
+      setTimeout(startReading, 220);
+    }
+  } else {
+    renderNotes();
+  }
+};
+
+syncSlideAria();
+renderNotes();
+setTimeout(()=> announce('ECON 104, Progress of Humanity. 14 slides. Press space for slide notes, ' +
+  'R to read them aloud, A to read every slide automatically, question mark for all shortcuts.'), 700);
 
 goTo(0);
 // re-check fit once web fonts finish loading (sizes can shift slightly)

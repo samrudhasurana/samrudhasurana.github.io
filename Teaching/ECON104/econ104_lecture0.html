@@ -365,108 +365,6 @@
 
   /* Class policies footnote, plain text instead of a card */
   .policy-footnote{margin-top:14px; font-size:15.5px; color:var(--sub); line-height:1.5;}
-
-  #descBtn{
-    position:fixed; right:16px; bottom:14px; z-index:95;
-    display:flex; align-items:center; gap:8px;
-    border:none; border-radius:22px; padding:9px 16px;
-    background:rgba(20,24,26,.62); color:#fff; cursor:pointer;
-    font-family:'EB Garamond',Georgia,serif; font-size:15px; font-weight:600;
-    transition:background .2s, box-shadow .2s;
-  }
-  #descBtn:hover{background:rgba(20,24,26,.9);}
-  #descBtn:focus-visible{outline:3px solid var(--gold); outline-offset:3px;}
-  #descBtn .dot{width:8px; height:8px; border-radius:50%; background:var(--gold); flex:none;}
-  #descBtn .kbd{font-size:12px; opacity:.65; border:1px solid rgba(255,255,255,.35);
-    border-radius:4px; padding:0 5px; margin-left:2px;}
-  #descBtn[aria-expanded="true"]{background:var(--blue); box-shadow:0 0 0 2px var(--gold-light);}
-
-  #descPanel{
-    position:fixed; top:0; right:0; bottom:0; width:min(470px,94vw); z-index:96;
-    background:var(--cream); color:var(--ink);
-    border-left:4px solid var(--gold);
-    box-shadow:-24px 0 60px -30px rgba(0,0,0,.75);
-    transform:translateX(102%); transition:transform .28s ease;
-    display:flex; flex-direction:column;
-    font-family:'EB Garamond',Georgia,serif;
-  }
-  #descPanel.open{transform:translateX(0);}
-  #descPanel header{
-    background:var(--blue-dark); color:#fff; padding:15px 18px 13px; flex:none;
-  }
-  #descPanel header .top{display:flex; align-items:flex-start; justify-content:space-between; gap:12px;}
-  #descPanel header h2{font-size:20px; font-weight:700; line-height:1.25;}
-  #descPanel header .slide-ref{font-size:12.5px; color:var(--gold-light); letter-spacing:.08em;
-    text-transform:uppercase; margin-bottom:4px;}
-  #descClose{
-    border:none; background:rgba(255,255,255,.14); color:#fff; cursor:pointer;
-    width:30px; height:30px; border-radius:50%; font-size:17px; line-height:1; flex:none;
-  }
-  #descClose:hover{background:rgba(255,255,255,.3);}
-  #descClose:focus-visible, #readBtn:focus-visible, #rateSel:focus-visible{outline:3px solid var(--gold); outline-offset:2px;}
-
-  .read-bar{display:flex; align-items:center; gap:9px; margin-top:12px; flex-wrap:wrap;}
-  #readBtn{
-    display:flex; align-items:center; gap:7px; border:1px solid rgba(255,255,255,.35);
-    background:rgba(255,255,255,.1); color:#fff; border-radius:18px; padding:6px 14px;
-    cursor:pointer; font-family:inherit; font-size:14.5px; font-weight:600;
-  }
-  #readBtn:hover{background:rgba(255,255,255,.22);}
-  #readBtn.playing{background:var(--gold); color:var(--blue-dark); border-color:var(--gold);}
-  #readBtn .ico{font-size:12px;}
-  .read-bar label{font-size:12.5px; color:rgba(255,255,255,.7);}
-  #rateSel{
-    background:rgba(255,255,255,.1); color:#fff; border:1px solid rgba(255,255,255,.3);
-    border-radius:14px; padding:4px 8px; font-family:inherit; font-size:13px; cursor:pointer;
-  }
-  #rateSel option{color:#000;}
-  #readWarn{font-size:12.5px; color:#f6d98a; width:100%; margin-top:2px; display:none;}
-
-  #descBody{padding:20px 22px 32px; overflow-y:auto; font-size:16.5px; line-height:1.62;}
-  #descBody h3{font-size:16.5px; color:var(--blue-dark); margin:16px 0 4px; font-weight:700;}
-  #descBody h3:first-child{margin-top:0;}
-  #descBody p{margin:0 0 11px;}
-  #descBody ul{margin:0 0 12px; padding-left:22px;}
-  #descBody li{margin-bottom:5px;}
-  #descBody b{color:var(--blue-dark);}
-  #descBody .onslide{margin:0 0 11px;}
-  #descBody .takeaway{margin:11px 0 0;}
-  .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
-    clip:rect(0 0 0 0); white-space:nowrap; border:0;}
-  .sr-only-focusable:focus, .sr-only-focusable:focus-visible{
-    position:fixed; top:10px; left:10px; z-index:200; width:auto; height:auto; margin:0;
-    clip:auto; white-space:normal; padding:10px 16px; border-radius:8px;
-    background:var(--blue-dark); color:#fff; font-family:'EB Garamond',Georgia,serif;
-    font-size:16px; outline:3px solid var(--gold);
-  }
-  #autoRow{display:flex; align-items:center; gap:7px; margin-top:9px; font-size:13px; color:rgba(255,255,255,.8);}
-  #autoRead{width:15px; height:15px; accent-color:var(--gold); cursor:pointer;}
-  #autoRow label{cursor:pointer;}
-  #helpPanel{
-    position:fixed; inset:0; z-index:120; display:none;
-    align-items:center; justify-content:center; background:rgba(10,14,12,.72);
-  }
-  #helpPanel.open{display:flex;}
-  #helpInner{
-    background:var(--cream); color:var(--ink); border-radius:12px; border-top:5px solid var(--gold);
-    width:min(560px,92vw); max-height:86vh; overflow-y:auto; padding:24px 28px 26px;
-    font-family:'EB Garamond',Georgia,serif; box-shadow:0 40px 90px -30px rgba(0,0,0,.8);
-  }
-  #helpInner h2{font-size:24px; color:var(--blue-dark); margin-bottom:4px;}
-  #helpInner p{font-size:16px; color:var(--sub); margin:0 0 14px;}
-  #helpInner dl{display:grid; grid-template-columns:auto 1fr; gap:8px 16px; font-size:16.5px; margin:0;}
-  #helpInner dt{font-weight:700; color:var(--blue);}
-  #helpInner dd{margin:0;}
-  #helpInner kbd{
-    font-family:inherit; background:#fff; border:1px solid var(--line); border-bottom-width:2px;
-    border-radius:5px; padding:1px 7px; font-size:15px;
-  }
-  #helpClose{
-    margin-top:20px; border:none; background:var(--blue); color:#fff; cursor:pointer;
-    border-radius:20px; padding:8px 20px; font-family:inherit; font-size:15.5px; font-weight:600;
-  }
-  #helpClose:focus-visible{outline:3px solid var(--gold); outline-offset:3px;}
-  @media print{ #descBtn,#descPanel,#helpPanel{display:none;} }
 </style>
 </head>
 <body>
@@ -540,7 +438,7 @@
             <div class="bt">Modern Principles: Macroeconomics</div>
             <div class="ba">6th ed., by Tyler Cowen and Alex Tabarrok.</div>
             <ul class="bullets tight" style="margin-top:16px;">
-              <li>The 4th or 5th edition works too.</li>
+              <li>The 5th edition works too.</li>
               <li>Physical book or e-book &mdash; either is fine.</li>
             </ul>
           </div>
@@ -598,7 +496,7 @@
         <h2 class="title">Exams</h2>
                 <ul class="bullets roomy">
           <li>Closed book exams.</li>
-          <li>Two midterms: September 22 and October 29.</li>
+          <li>Two midterms: September 22 and November 5.</li>
           <li>No make-ups. If you miss a midterm, the weight will be transferred to the final exam.</li>
           <li>Final exam will be cumulative.</li>
         </ul>
@@ -875,7 +773,6 @@
       <div class="slide-inner">
         <h2 class="title">For the next class (August 27)</h2>
                 <ul class="bullets roomy">
-          <li>Complete the &ldquo;About Me&rdquo; sheets and hand them to me.</li>
           <li>Be prepared with the readings/videos from the syllabus.</li>
           <li>Familiarize yourself with the course syllabus and Canvas page.</li>
         </ul>
@@ -893,80 +790,9 @@
 <button id="nextBtn" class="navbtn" aria-label="Next slide">&#8250;</button>
 <button id="fsBtn" aria-label="Toggle fullscreen">&#9974;</button>
 <div id="dots"></div>
-
-<a href="#descBtn" class="sr-only sr-only-focusable" id="skipLink">Skip to slide notes and keyboard controls</a>
-
-<div class="sr-only">
-  <h1>ECON 104 &mdash; Syllabus Day. Accessible slide deck.</h1>
-  <p>This presentation has 23 slides. Every slide has written notes that describe both the
-     text on the slide and any chart or image it contains. Press the spacebar at any time to
-     open or close the notes for the current slide. Press R to have the notes read aloud.
-     Press A to have notes read aloud automatically whenever you move to a new slide.
-     Use the left and right arrow keys to move between slides. Press question mark for the
-     full list of keyboard shortcuts.</p>
-</div>
-
-<div id="srAnnounce" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
-
-<div id="helpPanel" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
-  <div id="helpInner">
-    <h2 id="helpTitle">Keyboard shortcuts</h2>
-    <p>This deck is designed to be used entirely from the keyboard.</p>
-    <dl>
-      <dt><kbd>Space</kbd></dt><dd>Open or close the notes for this slide</dd>
-      <dt><kbd>R</kbd></dt><dd>Read the notes aloud (press again to stop)</dd>
-      <dt><kbd>A</kbd></dt><dd>Auto-read: read notes aloud on every slide automatically</dd>
-      <dt><kbd>&rarr;</kbd> <kbd>&darr;</kbd></dt><dd>Next slide</dd>
-      <dt><kbd>&larr;</kbd> <kbd>&uarr;</kbd></dt><dd>Previous slide</dd>
-      <dt><kbd>Home</kbd> / <kbd>End</kbd></dt><dd>First / last slide</dd>
-      <dt><kbd>+</kbd> / <kbd>&minus;</kbd></dt><dd>Speak faster / slower</dd>
-      <dt><kbd>F</kbd></dt><dd>Fullscreen on or off</dd>
-      <dt><kbd>?</kbd></dt><dd>Show this list</dd>
-      <dt><kbd>Esc</kbd></dt><dd>Close notes or this list</dd>
-    </dl>
-    <button id="helpClose" type="button">Close</button>
-  </div>
-</div>
-
-<button id="descBtn" type="button" aria-expanded="false" aria-controls="descPanel"
-        title="Show notes for this slide (spacebar). R = read aloud, F = fullscreen">
-  <span class="dot" aria-hidden="true"></span><span>Notes</span><span class="kbd" aria-hidden="true">space</span>
-</button>
-
-<aside id="descPanel" role="dialog" aria-modal="false" aria-labelledby="descTitle" aria-hidden="true">
-  <header>
-    <div class="top">
-      <div>
-        <div class="slide-ref" id="descRef">Slide</div>
-        <h2 id="descTitle">Slide notes</h2>
-      </div>
-      <button id="descClose" type="button" aria-label="Close notes">&times;</button>
-    </div>
-    <div class="read-bar">
-      <button id="readBtn" type="button" aria-label="Read these notes aloud, shortcut key R" title="Shortcut: R">
-        <span class="ico" aria-hidden="true">&#9654;</span><span id="readLabel">Read aloud</span>
-      </button>
-      <label for="rateSel">Speed</label>
-      <select id="rateSel" aria-label="Reading speed">
-        <option value="0.8">0.8&times;</option>
-        <option value="1" selected>1&times;</option>
-        <option value="1.25">1.25&times;</option>
-        <option value="1.5">1.5&times;</option>
-      </select>
-      <span id="readWarn">Read-aloud is not supported in this browser.</span>
-    </div>
-    <div id="autoRow">
-      <input type="checkbox" id="autoRead">
-      <label for="autoRead">Auto-read each slide (A)</label>
-    </div>
-  </header>
-  <div id="descBody" tabindex="0"></div>
-</aside>
-
-<div class="navhint">&#8592; &#8594; navigate &nbsp;&middot;&nbsp; space = notes &nbsp;&middot;&nbsp; R = read aloud &nbsp;&middot;&nbsp; F = fullscreen</div>
+<div class="navhint">&#8592; &#8594; or click to navigate</div>
 
 <script>
-
 // ---------- STAGE SCALING (keeps 16:9 always, no overflow) ----------
 const stage = document.getElementById('stage');
 function fitStage(){
@@ -1016,21 +842,18 @@ document.getElementById('nextBtn').addEventListener('click', ()=> goTo(current+1
 // ---------- FULLSCREEN ----------
 const fsBtn = document.getElementById('fsBtn');
 fsBtn.addEventListener('click', ()=>{
-  try{
-    if(!document.fullscreenElement){
-      const rf = document.documentElement.requestFullscreen;
-      if(typeof rf === 'function'){ Promise.resolve(rf.call(document.documentElement)).catch(()=>{}); }
-    } else if(typeof document.exitFullscreen === 'function'){
-      document.exitFullscreen();
-    }
-  }catch(err){}
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen().catch(()=>{});
+  } else {
+    document.exitFullscreen();
+  }
 });
 document.addEventListener('fullscreenchange', ()=>{
   fsBtn.innerHTML = document.fullscreenElement ? '&#10064;' : '&#9974;';
 });
 
 document.addEventListener('keydown', (e)=>{
-  const fwd = ['ArrowRight','ArrowDown','PageDown'];
+  const fwd = ['ArrowRight','ArrowDown','PageDown',' '];
   const back = ['ArrowLeft','ArrowUp','PageUp','Backspace'];
   if(fwd.includes(e.key)){ e.preventDefault(); goTo(current+1); }
   else if(back.includes(e.key)){ e.preventDefault(); goTo(current-1); }
@@ -1068,332 +891,6 @@ function pfBuildRow(el){
   el.innerHTML = html;
 }
 document.querySelectorAll('.pf-row').forEach(pfBuildRow);
-
-
-// ---------- ADA: SLIDE NOTES + READ ALOUD ----------
-const SLIDE_NOTES = {
- "s0": {
-  "t": "Title — Contemporary Macroeconomic Principles",
-  "b": "\n<p>The title slide: <b>Contemporary Macroeconomic Principles</b>, ECON 104. August 25, 2026.</p>\n"
- },
- "s-me": {
-  "t": "Hello — meet the instructor",
-  "b": "\n<p>This slide introduces the instructor. My name is <b>Samrudha Surana</b>, shown on the card on the left, a PhD student in the Department of Economics.</p>\n<p>You can call me &ldquo;Professor.&rdquo; My research interests are the role of ideas in policy change, and the political economy of conflict.</p>\n"
- },
- "s-objectives": {
-  "t": "Class objectives / Course outline",
-  "b": "\n<p>The main goal of this course is to gain an appreciation for the economic way of thinking about the world. We are going to study macroeconomics and focus on business activity, output, unemployment and employment, and inflation.</p>\n<p>The course outline, shown as three cards: one, microfoundations. Two, understanding the macroeconomy. Three, macroeconomic policy.</p>\n"
- },
- "s-textbook": {
-  "t": "Textbook",
-  "b": "\n<p>The textbook for this course is <b>Modern Principles: Macroeconomics</b>, sixth edition, by Tyler Cowen and Alex Tabarrok. The slide shows the book's cover next to its title and authors.</p>\n<p>The fourth or fifth edition works too, and either a physical book or an e-book is fine.</p>\n"
- },
- "s-grading": {
-  "t": "Grading",
-  "b": "\n<p>This slide shows how the grade is put together, as a table of five components and their weights: quizzes, twenty-five percent. Midterm Exam 1, twenty percent. Midterm Exam 2, twenty percent. Final Exam, thirty percent. &ldquo;Wonder how, wonder why,&rdquo; five percent.</p>\n"
- },
- "s-grading-parameters": {
-  "t": "Grading parameters — quizzes",
-  "b": "\n<p>There will be eight randomized quizzes over the semester. Each quiz will have no more than two questions, drawn from: fill in the blank, multiple choice, graphs, or a one-line definition.</p>\n<p>Quizzes are based on the assigned readings for that week, and may also ask about the last two classes. Your one lowest grade will be dropped, and there are no make-ups.</p>\n"
- },
- "s-exams": {
-  "t": "Exams",
-  "b": "\n<p>Exams are closed book. There are two midterms: September twenty-second and October twenty-ninth.</p>\n<p>There are no make-ups &mdash; if you miss a midterm, its weight is transferred to the final exam. The final exam is cumulative.</p>\n"
- },
- "s-wonder": {
-  "t": "Wonder how, wonder why",
-  "b": "\n<p>The goal of the course is to furnish you with the &ldquo;eyeglasses&rdquo; of economics, and to make you curious. Every week, you will respond to the Canvas assignment with one thing that made you wonder.</p>\n<p>Some examples, shown as four cards on the slide:</p>\n<ul>\n  <li>Why do some brands give you &ldquo;coupons&rdquo; but not discounts to everyone?</li>\n  <li>Why is it okay to take shampoo bottles from the hotel, but not a lamp?</li>\n  <li>Why do drivers in some states drive more rashly than others?</li>\n  <li>Why do some countries use a currency that is not their domestic currency?</li>\n</ul>\n"
- },
- "s-scale": {
-  "t": "Grading scale",
-  "b": "\n<p>This slide shows the letter grade cutoffs as a table. A plus: ninety-seven to one hundred. A: ninety-two to ninety-six point nine. A minus: ninety to ninety-one point nine. B plus: eighty-eight to eighty-nine point nine. B: eighty-two to eighty-seven point nine. B minus: eighty to eighty-one point nine. C plus: seventy-eight to seventy-nine point nine. C: seventy-two to seventy-seven point nine. C minus: seventy to seventy-one point nine. D: sixty to sixty-nine point nine. F: below sixty.</p>\n"
- },
- "s-policies": {
-  "t": "Class policies",
-  "b": "\n<p>The ground rules for the course, shown as six cards.</p>\n<ul>\n  <li><b>Office hours</b>: Tuesday, two-thirty to four in the afternoon, at D150, Department of Economics, Buchanan Hall. Or, email me to schedule an appointment.</li>\n  <li><b>Communication policy</b>: best way to reach me is email, ssurana at gmu dot edu. Please include ECON104-001/8 in the subject line.</li>\n  <li><b>Electronic devices</b>: only flat devices for note-taking are allowed. No laptops. Phones out of reach.</li>\n  <li><b>No recording</b> of audio or video in class.</li>\n  <li><b>No extra credit.</b></li>\n  <li>Exceptions to the device and recording rules require an accommodation from Disability Services.</li>\n</ul>\n"
- },
- "s-tips": {
-  "t": "Tips for success",
-  "b": "\n<p>Seven tips for success, shown as seven numbered cards: read. Take notes. Test yourself. Meet in study groups. Prepare to teach your peers. Come to every class &mdash; talk, ask questions. Reach out to me for help on a regular basis.</p>\n"
- },
- "s-questions": {
-  "t": "Questions?",
-  "b": "\n<p>A pause for questions. Standard university policies regarding accommodations, class closures, and academic standards are available on the syllabus.</p>\n"
- },
- "s-why": {
-  "t": "Why study economics?",
-  "b": "\n<p>Why study economics? To answer the big questions.</p>\n"
- },
- "s-gdp": {
-  "t": "People have become richer over time",
-  "b": "\n<p>There is a chart on the slide from Our World in Data titled &ldquo;Global average GDP per capita over the long run.&rdquo; It plots average income per person across the world against time.</p>\n<p>The main takeaway, stated in the slide's title: people have become richer over time.</p>\n"
- },
- "s-why-care": {
-  "t": "But why do we care about how rich people are?",
-  "b": "\n<p>But why do we care about how rich people are? Because we also care about the other things.</p>\n"
- },
- "s-mortality": {
-  "t": "Children are dying less!",
-  "b": "\n<p>There is a chart on the slide from Our World in Data showing the child mortality rate over time &mdash; the share of children who die before age five.</p>\n<p>The main takeaway, stated in the slide's title: children are dying less.</p>\n"
- },
- "s-mortality-history": {
-  "t": "The long-run history of child mortality!",
-  "b": "\n<p>This slide shows a chart from Our World in Data, by Max Roser, titled &ldquo;The long-run history of child mortality.&rdquo; It plots the share of children who died before reaching the end of puberty, across dozens of historical societies, from ancient Rome and Roman Egypt through early modern Europe, Asia, and the Americas, up to the present day.</p>\n<p>Almost every historical society shown clusters between forty and sixty percent child mortality. The global rate was still twenty-seven percent as recently as nineteen fifty, and has fallen to about four point three percent globally by twenty-twenty.</p>\n"
- },
- "s-life-expectancy": {
-  "t": "People are living longer",
-  "b": "\n<p>There is a chart on the slide from Our World in Data plotting life expectancy over time.</p>\n<p>The main takeaway, stated in the slide's title: people are living longer.</p>\n"
- },
- "s-happiness": {
-  "t": "People are happier!",
-  "b": "\n<p>There is a chart on the slide from Our World in Data plotting GDP per capita against self-reported life satisfaction.</p>\n<p>The main takeaway, stated in the slide's title: people are happier.</p>\n"
- },
- "s-book": {
-  "t": "People need to work less",
-  "b": "\n<p>This slide asks: how many days did the average worker have to work to be able to buy one book? It's a chart from Jeremiah Dittmar and Skipper Seabold, plotting the price of a book in days of wages, from the late twelve hundreds through the sixteen hundreds.</p>\n<p>The main takeaway, stated in the slide's title: people need to work less.</p>\n"
- },
- "s-lifetime-hours": {
-  "t": "People have more lifetime leisure, too!",
-  "b": "\n<p>This slide shows a chart from the CORE Team's textbook The Economy (Unit three, section nine), based on Our World in Data, plotting estimated lifetime hours of work and leisure from around eighteen eighty through a projection to around twenty forty.</p>\n<p>Three stacked areas are shown over time: lifetime work hours, lifetime leisure hours, and lifetime discretionary hours, which is the sum of the two. All three have risen over time, mostly because life expectancy itself has risen, but leisure hours have grown much faster than work hours \u2014 in eighteen eighty, work and leisure hours over a lifetime were roughly similar in size, while by the twenty forties projection, lifetime leisure hours are projected to be noticeably larger than lifetime work hours.</p>\n<p>The main takeaway: even across a person's whole lifetime, and not just a single week, work has become a smaller share of our hours and leisure a larger one.</p>\n"
- },
- "s-food": {
-  "t": "One hour of work: eggs, flour, and sugar",
-  "b": "\n<p>This slide shows how much a dozen eggs, a pound of flour, or a pound of sugar one hour of an unskilled worker's labor could buy in England, comparing the 1400s to 2022.</p>\n<p>Eggs: zero point five eight dozen per hour in the 1400s, versus four dozen per hour in 2022. Flour: one point three three pounds per hour, versus fifty pounds per hour. Sugar: zero point zero five pounds per hour, versus thirty-three point three pounds per hour.</p>\n"
- },
- "s-scope": {
-  "t": "The things we will be looking at in this course",
-  "b": "\n<p>The things we will be looking at in this course: output, or GDP. Employment. And inflation.</p>\n<p>I want you all to be able to intelligibly read the headlines.</p>\n"
- },
- "s-next": {
-  "t": "For the next class (August 27)",
-  "b": "\n<p>Before the next class on August twenty-seventh:</p>\n<ul>\n  <li>Complete the &ldquo;About Me&rdquo; sheets and hand them to me.</li>\n  <li>Be prepared with the readings and videos from the syllabus.</li>\n  <li>Familiarize yourself with the course syllabus and Canvas page.</li>\n</ul>\n"
- }
-};
-const SLIDE_NUM_MAP = {"s0": "01", "s-me": "02", "s-objectives": "03", "s-textbook": "04", "s-grading": "05", "s-grading-parameters": "06", "s-exams": "07", "s-wonder": "08", "s-scale": "09", "s-policies": "10", "s-tips": "11", "s-questions": "12", "s-why": "13", "s-gdp": "14", "s-why-care": "15", "s-mortality": "16", "s-mortality-history": "17", "s-life-expectancy": "18", "s-happiness": "19", "s-book": "20", "s-lifetime-hours": "21", "s-food": "22", "s-scope": "23", "s-next": "24"};
-const descBtn   = document.getElementById('descBtn');
-const descPanel = document.getElementById('descPanel');
-const descBody  = document.getElementById('descBody');
-const descTitle = document.getElementById('descTitle');
-const descRef   = document.getElementById('descRef');
-const readBtn   = document.getElementById('readBtn');
-const readLabel = document.getElementById('readLabel');
-const rateSel   = document.getElementById('rateSel');
-const synth     = window.speechSynthesis || null;
-
-if(!synth){
-  readBtn.disabled = true;
-  rateSel.disabled = true;
-  document.getElementById('readWarn').style.display = 'block';
-}
-
-function renderNotes(){
-  const id = slides[current].id;
-  const n = SLIDE_NOTES[id];
-  descRef.textContent = 'Slide ' + (SLIDE_NUM_MAP[id] || (current+1)) + ' of ' + slides.length;
-  descTitle.innerHTML = n ? n.t : 'Slide notes';
-  descBody.innerHTML  = n ? n.b : '<p>No notes for this slide.</p>';
-  descBody.scrollTop = 0;
-}
-
-function setPanel(open){
-  descPanel.classList.toggle('open', open);
-  descPanel.setAttribute('aria-hidden', open ? 'false' : 'true');
-  descBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-  if(open){ renderNotes(); descBody.focus(); }
-  else {
-    stopReading();
-    descBtn.focus();
-    if(typeof announce === 'function'){ announce('Notes closed.'); }
-  }
-}
-function panelOpen(){ return descPanel.classList.contains('open'); }
-
-// ----- read aloud -----
-function notesToSpeech(){
-  const clone = descBody.cloneNode(true);
-  // insert sentence breaks so headings and list items don't run together
-  clone.querySelectorAll('h3,li,p,div').forEach(el=>{ el.append('. '); });
-  const lead = descTitle.textContent + '. ';
-  return (lead + clone.textContent)
-    .replace(/\s+/g,' ')
-    .replace(/\.\s*\./g,'.')
-    .trim();
-}
-function setReadUI(playing){
-  readBtn.classList.toggle('playing', playing);
-  readLabel.textContent = playing ? 'Stop' : 'Read aloud';
-  readBtn.querySelector('.ico').innerHTML = playing ? '&#9632;' : '&#9654;';
-}
-function stopReading(){
-  if(synth){ synth.cancel(); }
-  setReadUI(false);
-}
-function startReading(){
-  if(!synth) return;
-  synth.cancel();
-  const u = new SpeechSynthesisUtterance(notesToSpeech());
-  u.rate = parseFloat(rateSel.value) || 1;
-  u.lang = 'en-US';
-  u.onend = ()=> setReadUI(false);
-  u.onerror = ()=> setReadUI(false);
-  setReadUI(true);
-  synth.speak(u);
-}
-readBtn.addEventListener('click', ()=>{
-  if(synth && (synth.speaking || synth.pending)) stopReading(); else startReading();
-});
-rateSel.addEventListener('change', ()=>{
-  if(synth && (synth.speaking || synth.pending)) startReading();
-});
-window.addEventListener('beforeunload', ()=>{ if(synth) synth.cancel(); });
-
-descBtn.addEventListener('click', ()=> setPanel(!panelOpen()));
-document.getElementById('descClose').addEventListener('click', ()=> setPanel(false));
-
-// Buttons keep keyboard focus after a mouse click, which would let the browser
-// re-trigger that button on the next spacebar press. Drop focus after any mouse
-// click on a control so the shortcut keys always mean the same thing.
-document.addEventListener('mouseup', (e)=>{
-  const c = e.target.closest && e.target.closest('button, select, a');
-  if(c && c.id !== 'rateSel'){ setTimeout(()=> c.blur(), 0); }
-});
-
-function isTyping(t){
-  const tag = (t && t.tagName || '').toLowerCase();
-  return tag === 'input' || tag === 'textarea' || tag === 'select' || (t && t.isContentEditable);
-}
-function toggleRead(){
-  if(synth && (synth.speaking || synth.pending)) stopReading(); else startReading();
-}
-
-// Capture phase: claim the key before the focused button can act on it.
-document.addEventListener('keydown', (e)=>{
-  if(isTyping(e.target)) return;
-  const k = e.key;
-
-  if(k === ' ' || k === 'Spacebar' || k === 'Space'){
-    e.preventDefault(); e.stopPropagation();
-    setPanel(!panelOpen());
-    return;
-  }
-  if(k === 'Escape'){
-    if(helpPanel.classList.contains('open')){ e.preventDefault(); e.stopPropagation(); setHelp(false); return; }
-    if(panelOpen()){ e.preventDefault(); e.stopPropagation(); setPanel(false); return; }
-  }
-  if((k === 'f' || k === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey){
-    e.preventDefault(); e.stopPropagation();
-    fsBtn.click();
-    return;
-  }
-  if((k === 'r' || k === 'R') && !e.metaKey && !e.ctrlKey && !e.altKey){
-    e.preventDefault(); e.stopPropagation();
-    if(!panelOpen()){ setPanel(true); }
-    toggleRead();
-    return;
-  }
-  if((k === 'a' || k === 'A') && !e.metaKey && !e.ctrlKey && !e.altKey){
-    e.preventDefault(); e.stopPropagation();
-    setAutoRead(!autoRead);
-    return;
-  }
-  if(k === '?' || (k === '/' && e.shiftKey) || k === 'h' || k === 'H'){
-    e.preventDefault(); e.stopPropagation();
-    setHelp(!helpPanel.classList.contains('open'));
-    return;
-  }
-  if(k === 'Home'){ e.preventDefault(); goTo(0); return; }
-  if(k === 'End'){ e.preventDefault(); goTo(slides.length-1); return; }
-  if(k === '+' || k === '='){ e.preventDefault(); bumpRate(1); return; }
-  if(k === '-' || k === '_'){ e.preventDefault(); bumpRate(-1); return; }
-}, true);
-
-// ---------- accessibility: announcements, auto-read, help ----------
-const srAnnounce = document.getElementById('srAnnounce');
-const autoChk    = document.getElementById('autoRead');
-const helpPanel  = document.getElementById('helpPanel');
-let autoRead = false;
-
-// hide non-current slides from assistive technology
-function syncSlideAria(){
-  slides.forEach((s,i)=>{
-    s.setAttribute('aria-hidden', i === current ? 'false' : 'true');
-    s.setAttribute('role','group');
-    s.setAttribute('aria-roledescription','slide');
-    s.setAttribute('aria-label','Slide ' + (SLIDE_NUM_MAP[s.id] || (i+1)) + ' of ' + slides.length);
-  });
-}
-
-function announce(msg){
-  srAnnounce.textContent = '';
-  setTimeout(()=>{ srAnnounce.textContent = msg; }, 60);
-}
-
-function slideHeadline(i){
-  const n = SLIDE_NOTES[slides[i].id];
-  if(!n) return '';
-  const tmp = document.createElement('span');
-  tmp.innerHTML = n.t;
-  return tmp.textContent;
-}
-
-function announceSlide(){
-  const num = SLIDE_NUM_MAP[slides[current].id] || (current+1);
-  announce('Slide ' + num + ' of ' + slides.length + '. ' + slideHeadline(current) +
-           (panelOpen() ? '. Notes open.' : '. Press space for notes.'));
-}
-
-function setAutoRead(on, quiet){
-  autoRead = on;
-  autoChk.checked = on;
-  if(!quiet){ announce(on ? 'Auto-read on. Notes will be read aloud on every slide.' : 'Auto-read off.'); }
-  if(on){ if(!panelOpen()) setPanel(true); startReading(); }
-  else { stopReading(); }
-}
-autoChk.addEventListener('change', ()=> setAutoRead(autoChk.checked));
-
-function bumpRate(step){
-  const opts = Array.from(rateSel.options).map(o=> parseFloat(o.value));
-  let idx = opts.indexOf(parseFloat(rateSel.value));
-  idx = Math.max(0, Math.min(opts.length-1, idx + step));
-  rateSel.value = String(opts[idx]);
-  announce('Reading speed ' + opts[idx] + ' times.');
-  if(synth && (synth.speaking || synth.pending)) startReading();
-}
-
-// help dialog
-let helpReturn = null;
-function setHelp(open){
-  helpPanel.classList.toggle('open', open);
-  if(open){ helpReturn = document.activeElement; document.getElementById('helpClose').focus(); }
-  else if(helpReturn){ helpReturn.focus(); helpReturn = null; }
-}
-document.getElementById('helpClose').addEventListener('click', ()=> setHelp(false));
-helpPanel.addEventListener('click', (e)=>{ if(e.target === helpPanel) setHelp(false); });
-
-// keep the panel in sync when the slide changes
-const _goTo = goTo;
-goTo = function(i){
-  const target = Math.max(0, Math.min(slides.length-1, i));
-  const changed = (target !== current);
-  _goTo(target);
-  syncSlideAria();
-  if(changed){
-    stopReading();
-    renderNotes();
-    announceSlide();
-    if(autoRead){
-      if(!panelOpen()) setPanel(true);
-      setTimeout(startReading, 220);
-    }
-  } else {
-    renderNotes();
-  }
-};
-
-syncSlideAria();
-renderNotes();
-setTimeout(()=> announce('ECON 104, Syllabus Day. 23 slides. Press space for slide notes, ' +
-  'R to read them aloud, A to read every slide automatically, question mark for all shortcuts.'), 700);
 
 goTo(0);
 // re-check fit once web fonts finish loading (sizes can shift slightly)

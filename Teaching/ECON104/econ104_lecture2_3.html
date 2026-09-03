@@ -1309,18 +1309,19 @@
     <section class="slide" id="s-final-consumption-table">
       <div class="slide-inner">
         <h2 class="title">Final Consumption After Trade</h2>
-        <p class="lede">Original (no-trade) consumption, plus the extra gained from trade, equals the new total.</p>
-        <table class="data-table">
-          <tr><th>Person</th><th>Burgers</th><th>Pies</th></tr>
-          <tr><td>Ax</td><td><span style="color:var(--blue); font-weight:700;">2</span><span style="color:var(--sub); font-weight:400;"> + </span><span style="color:#b8860b; font-weight:700;">0.5</span><span style="color:var(--sub); font-weight:400;"> = </span><span style="color:var(--blue-dark); font-weight:700;">2.5</span></td><td><span style="color:var(--blue); font-weight:700;">8</span><span style="color:var(--sub); font-weight:400;"> + </span><span style="color:#b8860b; font-weight:700;">0</span><span style="color:var(--sub); font-weight:400;"> = </span><span style="color:var(--blue-dark); font-weight:700;">8</span></td></tr>
-          <tr><td>Debbie</td><td><span style="color:var(--blue); font-weight:700;">6</span><span style="color:var(--sub); font-weight:400;"> + </span><span style="color:#b8860b; font-weight:700;">0</span><span style="color:var(--sub); font-weight:400;"> = </span><span style="color:var(--blue-dark); font-weight:700;">6</span></td><td><span style="color:var(--blue); font-weight:700;">12</span><span style="color:var(--sub); font-weight:400;"> + </span><span style="color:#b8860b; font-weight:700;">2</span><span style="color:var(--sub); font-weight:400;"> = </span><span style="color:var(--blue-dark); font-weight:700;">14</span></td></tr>
-          <tr class="total"><td>Total</td><td><span style="color:var(--blue); font-weight:700;">8</span><span style="color:var(--sub); font-weight:400;"> + </span><span style="color:#b8860b; font-weight:700;">0.5</span><span style="color:var(--sub); font-weight:400;"> = </span><span style="color:var(--blue-dark); font-weight:700;">8.5</span></td><td><span style="color:var(--blue); font-weight:700;">20</span><span style="color:var(--sub); font-weight:400;"> + </span><span style="color:#b8860b; font-weight:700;">2</span><span style="color:var(--sub); font-weight:400;"> = </span><span style="color:var(--blue-dark); font-weight:700;">22</span></td></tr>
+        <p class="lede">Initial (no trade), production (after specializing), and final consumption (after trading) &mdash; Burgers and Pies.</p>
+        <table class="data-table" style="max-width:720px;">
+          <tr><th rowspan="2">Person</th><th colspan="2">Initial</th><th colspan="2">Production</th><th colspan="2">Final</th></tr>
+          <tr><th>Burgers</th><th>Pies</th><th>Burgers</th><th>Pies</th><th>Burgers</th><th>Pies</th></tr>
+          <tr><td>Ax</td><td>2</td><td>8</td><td>0.5</td><td>14</td><td><span style="color:var(--blue); font-weight:700;">2</span><span style="color:var(--sub); font-weight:400;"> + </span><span style="color:#b8860b; font-weight:700;">0.5</span></td><td><span style="color:var(--blue); font-weight:700;">8</span><span style="color:var(--sub); font-weight:400;"> + </span><span style="color:#b8860b; font-weight:700;">0</span></td></tr>
+          <tr><td>Debbie</td><td>6</td><td>12</td><td>8</td><td>8</td><td><span style="color:var(--blue); font-weight:700;">6</span><span style="color:var(--sub); font-weight:400;"> + </span><span style="color:#b8860b; font-weight:700;">0</span></td><td><span style="color:var(--blue); font-weight:700;">12</span><span style="color:var(--sub); font-weight:400;"> + </span><span style="color:#b8860b; font-weight:700;">2</span></td></tr>
+          <tr class="total"><td>Total</td><td>8</td><td>20</td><td>8.5</td><td>22</td><td><span style="color:var(--blue); font-weight:700;">8</span><span style="color:var(--sub); font-weight:400;"> + </span><span style="color:#b8860b; font-weight:700;">0.5</span></td><td><span style="color:var(--blue); font-weight:700;">20</span><span style="color:var(--sub); font-weight:400;"> + </span><span style="color:#b8860b; font-weight:700;">2</span></td></tr>
         </table>
-        <div style="display:flex; gap:28px; justify-content:center; margin-top:16px; font-size:15px; color:var(--sub);">
-          <span><span style="display:inline-block; width:12px; height:12px; background:var(--blue); border-radius:3px; margin-right:7px; vertical-align:middle;"></span>Original (no-trade) consumption</span>
-          <span><span style="display:inline-block; width:12px; height:12px; background:#e8b74d; border-radius:3px; margin-right:7px; vertical-align:middle;"></span>Extra gained from trade</span>
+        <div style="display:flex; gap:28px; justify-content:center; margin-top:14px; font-size:15px; color:var(--sub);">
+          <span><span style="display:inline-block; width:12px; height:12px; background:var(--blue); border-radius:3px; margin-right:7px; vertical-align:middle;"></span>Initial (no-trade) amount</span>
+          <span><span style="display:inline-block; width:12px; height:12px; background:#e8b74d; border-radius:3px; margin-right:7px; vertical-align:middle;"></span>Additional gained from trade</span>
         </div>
-        <div class="callout" style="font-size:20px; max-width:760px; margin-left:auto; margin-right:auto;"><b>The trade itself:</b> Ax buys 2 burgers from Debbie for 6 pies &mdash; a price of <b>3 pies per burger</b>, exactly as proposed.</div>
+        <div class="callout" style="font-size:20px; max-width:760px; margin-left:auto; margin-right:auto; margin-top:12px;"><b>The trade itself:</b> Ax buys 2 burgers from Debbie for 6 pies &mdash; a price of <b>3 pies per burger</b>, exactly as proposed.</div>
       </div>
       <div class="footer-tag">ECON 104</div>
       <div class="slide-num">63</div>

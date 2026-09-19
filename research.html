@@ -158,7 +158,34 @@
         .then(data => {
             const container = document.getElementById('research-content');
             let html = '';
-            
+
+            // Journal Articles
+            if (data.journalArticles && data.journalArticles.length > 0) {
+                html += '<section class="research-section"><h2 class="section-title">Journal Articles</h2>';
+                data.journalArticles.forEach((paper, index) => {
+                    html += `
+                        <div class="publication-card">
+                            <h3 class="pub-title">
+                                ${paper.url ? `<a href="${paper.url}" target="_blank">${paper.title}</a>` : paper.title}
+                            </h3>
+                            ${paper.authors ? `<p class="pub-authors">${paper.authors}</p>` : ''}
+                            ${paper.venue ? `<p class="pub-venue">${paper.venue}</p>` : ''}
+                            ${paper.date ? `<p class="pub-date">${formatDate(paper.date)}</p>` : ''}
+                            <div class="pub-actions">
+                                ${paper.pdfUrl ? `<a href="${paper.pdfUrl}" target="_blank" class="pdf-link">PDF</a>` : ''}
+                                ${paper.abstract ? `<button class="abstract-toggle" onclick="toggleAbstract('journal-abstract-${index}')">Show Abstract</button>` : ''}
+                            </div>
+                            ${paper.abstract ? `
+                                <div id="journal-abstract-${index}" class="abstract-content" style="display: none;">
+                                    <p>${paper.abstract}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+                html += '</section>';
+            }
+
             // Policy Papers
             if (data.policyPapers && data.policyPapers.length > 0) {
                 html += '<section class="research-section"><h2 class="section-title">Policy Paper</h2>';

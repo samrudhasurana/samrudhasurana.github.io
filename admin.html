@@ -412,6 +412,23 @@
             display: flex;
             gap: 0.5rem;
             flex-shrink: 0;
+            align-items: center;
+        }
+
+        .move-select {
+            padding: 0.4rem 0.6rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-cream);
+            color: var(--text-dark);
+            font-size: 0.85rem;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .move-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
         }
 
         /* Edit mode indicator */
@@ -603,6 +620,7 @@
                     <label for="entry-type">Entry Type *</label>
                     <select id="entry-type" required onchange="updateFormFields()">
                         <option value="">Select type...</option>
+                        <option value="journalArticles">Journal Article</option>
                         <option value="policyPapers">Policy Paper</option>
                         <option value="bookReviews">Book Review</option>
                         <option value="workingPapers">Working Paper</option>
@@ -711,6 +729,7 @@
                 <label for="category-filter">Filter by category:</label>
                 <select id="category-filter" onchange="renderEntries()">
                     <option value="all">All Categories</option>
+                    <option value="journalArticles">Journal Articles</option>
                     <option value="policyPapers">Policy Papers</option>
                     <option value="bookReviews">Book Reviews</option>
                     <option value="workingPapers">Working Papers</option>
@@ -734,6 +753,7 @@
     const ADMIN_PASSWORD = 'buchanan1986';
 
     const CATEGORY_LABELS = {
+        journalArticles: 'Journal Articles',
         policyPapers: 'Policy Papers',
         bookReviews: 'Book Reviews',
         workingPapers: 'Working Papers',
@@ -876,6 +896,10 @@
             if (entries.length === 0) return;
 
             const isConference = category === 'conferences';
+            const moveOptions = Object.keys(CATEGORY_LABELS)
+                .filter(c => c !== category)
+                .map(c => `<option value="${c}">${CATEGORY_LABELS[c]}</option>`)
+                .join('');
             html += `
                 <div class="entries-section">
                     <h3>${CATEGORY_LABELS[category]} <span class="count">(${entries.length})</span></h3>
@@ -894,6 +918,10 @@
                                 </div>
                                 <div class="entry-actions">
                                     <button class="btn btn-warning btn-small" onclick="editEntry('${category}', ${index})">Edit</button>
+                                    <select class="move-select" title="Move to another category" onchange="startRecategorize('${category}', ${index}, this.value); this.selectedIndex=0;">
+                                        <option value="">Move to…</option>
+                                        ${moveOptions}
+                                    </select>
                                     <button class="btn btn-danger btn-small" onclick="promptDelete('${category}', ${index})">Delete</button>
                                 </div>
                             </div>
@@ -977,6 +1005,86 @@
         document.getElementById('edit-mode-banner').classList.add('hidden');
         document.getElementById('publish-btn').textContent = 'Publish to GitHub';
         resetForm();
+    }
+
+    // Recategorize: load an entry into the edit form under a new category,
+    // carrying over any fields the two categories share, for review before publishing.
+    function startRecategorize(fromCat, index, toCat) {
+        if (!toCat || fromCat === toCat) return;
+        const entry = researchData[fromCat] && researchData[fromCat][index];
+        if (!entry) return;
+
+        // Normalize the shared fields from the source entry (conferences use name/location).
+        const common = {
+            title: entry.title || entry.name || '',
+            authors: entry.authors || '',
+            venue: entry.venue || entry.location || '',
+            date: entry.date || entry.dates || '',
+            url: entry.url || '',
+            pdfUrl: entry.pdfUrl || '',
+            abstract: entry.abstract || '',
+            noteText: '',
+            noteLinkText: '',
+            noteLinkUrl: ''
+        };
+        if (entry.note) {
+            if (typeof entry.note === 'object') {
+                common.noteText = entry.note.text || '';
+                common.noteLinkText = (entry.note.link && entry.note.link.text) || '';
+                common.noteLinkUrl = (entry.note.link && entry.note.link.url) || '';
+            } else {
+                common.noteText = entry.note;
+            }
+        }
+
+        // Switch to the form and enter edit mode pointed at the ORIGINAL category,
+        // so publishing removes it from there and adds it to the new one.
+        switchTab('add');
+        editMode = true;
+        editOriginalTitle = entry.title || entry.name;
+        document.getElementById('edit-type').value = fromCat;
+        document.getElementById('edit-index').value = index;
+        document.getElementById('edit-mode-banner').classList.remove('hidden');
+        document.getElementById('edit-title').textContent =
+            'Recategorizing "' + common.title.replace(/<[^>]*>/g, '').substring(0, 40) +
+            '" → ' + CATEGORY_LABELS[toCat];
+        document.getElementById('publish-btn').textContent = 'Update Entry';
+
+        // Set the target type and reveal its fields.
+        document.getElementById('entry-type').value = toCat;
+        updateFormFields();
+
+        // Carry the shared fields over into the target-shaped form.
+        if (toCat === 'conferences') {
+            document.getElementById('title').value = common.title;   // stored as name
+            document.getElementById('venue').value = common.venue;   // stored as location
+            document.getElementById('date').value = common.date;
+            document.getElementById('end-date').value = entry.endDate || '';
+            document.getElementById('role').value = entry.role || '';
+            document.getElementById('presentations-container').innerHTML = '';
+            const presentations = entry.presentations || [];
+            if (presentations.length > 0) presentations.forEach(p => addPresentation(p));
+            else addPresentation();
+        } else {
+            document.getElementById('presentations-container').innerHTML = '';
+            document.getElementById('title').value = common.title;
+            document.getElementById('authors').value = common.authors;
+            document.getElementById('venue').value = common.venue;
+            document.getElementById('date').value = common.date;
+            document.getElementById('url').value = common.url;
+            document.getElementById('pdfUrl').value = common.pdfUrl;
+            document.getElementById('abstract').value = common.abstract;
+            document.getElementById('note').value = common.noteText;
+            document.getElementById('note-link-text').value = common.noteLinkText;
+            document.getElementById('note-link-url').value = common.noteLinkUrl;
+        }
+
+        showFormMessage(
+            'Review the carried-over fields, then click "Update Entry" to move this into ' +
+            CATEGORY_LABELS[toCat] + '. Fields that don\'t apply to the new category are dropped automatically.',
+            'success'
+        );
+        document.getElementById('research-form').scrollIntoView({ behavior: 'smooth' });
     }
 
     // Delete entry
@@ -1109,6 +1217,10 @@
         document.getElementById('date').placeholder = '';
 
         switch(type) {
+            case 'journalArticles':
+                document.getElementById('pdf-group').classList.remove('hidden');
+                document.getElementById('abstract-group').classList.remove('hidden');
+                break;
             case 'policyPapers':
                 document.getElementById('pdf-group').classList.remove('hidden');
                 document.getElementById('abstract-group').classList.remove('hidden');
@@ -1257,12 +1369,12 @@
         }
 
         const pdfUrl = document.getElementById('pdfUrl').value;
-        if (pdfUrl && type === 'policyPapers') {
+        if (pdfUrl && ['policyPapers', 'journalArticles'].includes(type)) {
             entry.pdfUrl = pdfUrl;
         }
 
         const abstract = document.getElementById('abstract').value;
-        if (abstract && ['policyPapers', 'workingPapers'].includes(type)) {
+        if (abstract && ['policyPapers', 'workingPapers', 'journalArticles'].includes(type)) {
             entry.abstract = abstract;
         }
 

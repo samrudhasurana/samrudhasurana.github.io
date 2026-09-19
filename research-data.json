@@ -1,5 +1,14 @@
 {
-  "journalArticles": [],
+  "journalArticles": [
+    {
+      "title": "A Dissenting Voice: B.R. Shenoy's Austrian Economic Critique of India's Central Planning",
+      "authors": "with Vinayakan Sajeev-Beena",
+      "venue": "Forthcoming, the Journal of History of Economic Thought",
+      "url": "https://papers.ssrn.com/abstract=5117877",
+      "abstract": "B. R. Shenoy stood as a steadfast dissenter against central planning in the early decades of India’s independence. Shenoy differed not only from the economists in favor of central planning, but his conviction towards free-markets was stronger than that of other critics of the five-year plans in India. We argue that this was because of his foundations in Austrian economics by showing that Shenoy’s three central objections: the epistemic limits of planners, the inflationary character of monetized deficits in a capital-scarce economy, and the incompatibility of planning with democracy map onto the socialist calculation debate and the Hayek-Keynes debates in the inter-war years. We show that it was these Austrian foundations which explain why Shenoy alone among his peers foresaw the consequences of central planning in India and anticipated the diagnosis that eventually motivated India’s liberalization in 1991.",
+      "note": "Also, a profile on B.R. Shenoy for Azim Premji University's Profiles on Indian Economists project."
+    }
+  ],
   "policyPapers": [
     {
       "title": "Powering Progress: Resolving Electricity Challenges Faced by India's Manufacturers",
@@ -19,21 +28,7 @@
       "date": "2025-06"
     }
   ],
-  "workingPapers": [
-    {
-      "title": "A Dissenting Voice: B.R. Shenoy's Austrian Economic Critique of India's Central Planning",
-      "authors": "with Vinayakan Sajeev-Beena",
-      "url": "https://papers.ssrn.com/abstract=5117877",
-      "abstract": "B. R. Shenoy stood as the sole Indian dissenter against central planning in the early decades of India's independence. Although it has been noted that Shenoy's critique of planning was influenced by F. A. Hayek after he attended his lectures as a graduate student at the London School of Economics, the influence of the Austrian school of economics on Shenoy's arguments has not been fully explored. We trace the roots of Shenoy's arguments within the Austrian framework, particularly in the context of the Socialist Calculation Debate and the Hayek-Keynes debate on government fiscal and monetary interventions. This paper highlights how Shenoy's prescient critiques of inflation, resource misallocation, and the knowledge problem in India's planning efforts were grounded in the theories and frameworks of the Austrian school of economics.",
-      "note": {
-        "text": "Also, a profile on B.R. Shenoy for Azim Premji University's Profiles on Indian Economists project.",
-        "link": {
-          "text": "profile on B.R. Shenoy",
-          "url": "https://azimpremjiuniversity.edu.in/indian-economists/b-r-shenoy"
-        }
-      }
-    }
-  ],
+  "workingPapers": [],
   "worksInProgress": [
     {
       "title": "Choosing Identity: Markets and Political Processes in Society",

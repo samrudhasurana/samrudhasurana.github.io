@@ -375,9 +375,9 @@
   .chart-card iframe.owid{height:555px;}
   #s-fact2 .chart-card iframe.owid{height:500px;}
   /* chart-only slides: no slide title; the OWID frame fills the slide.
-     960px wide keeps OWID from opening its country side-panel (which appears at ~1000px+) */
+     930px wide keeps OWID from opening its country side-panel (it appears once the frame is wider than ~940px) */
   .slide.chart-only{padding:22px 66px 40px;}
-  .slide.chart-only .chart-card{max-width:960px; margin-top:0;}
+  .slide.chart-only .chart-card{max-width:930px; margin-top:0;}
   .slide.chart-only .chart-card iframe.owid{height:654px;}
 
   /* --- small source/footnote line under a component --- */
@@ -386,6 +386,7 @@
 
   /* --- click-to-play video (thumbnail swaps to embedded player) --- */
   .video-link{cursor:pointer; max-width:840px;}
+  .video-wrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
   .video-caption a{color:var(--blue);}
 
 </style>
@@ -719,7 +720,7 @@
             <div class="play-overlay"><svg width="84" height="60" viewBox="0 0 84 60"><rect width="84" height="60" rx="14" fill="rgba(0,23,68,.86)"/><polygon points="33,17 33,43 56,30" fill="#fff"/></svg></div>
           </div>
         </a>
-        <div class="video-caption">Hans Rosling, <i>The Joy of Stats</i> (BBC Four) &middot; click to play on YouTube &#8599;</div>
+        <div class="video-caption">Hans Rosling, <i>The Joy of Stats</i> (BBC Four) &middot; click to play</div>
       </div>
       <div class="footer-tag">ECON 104</div>
       <div class="slide-num">28</div>
@@ -856,7 +857,8 @@ function fitStage(){
   const availW = window.innerWidth - 24;
   const availH = window.innerHeight - 24;
   const scale = Math.min(availW/1280, availH/720);
-  stage.style.transform = `scale(${scale})`;
+  // CSS zoom (not transform) so embedded OWID charts render crisply at the projected size
+  stage.style.zoom = scale;
 }
 window.addEventListener('resize', fitStage);
 fitStage();
@@ -1024,6 +1026,24 @@ window.addEventListener('resize', ()=> fitSlideContent(slides[current]));
   set('g-simon', s);
 })();
 
+
+// ---------- VIDEO: click thumbnail to play in the slide ----------
+// On a website (http/https) the YouTube player loads inside the slide. Opened as a local file,
+// YouTube refuses embeds (error 153), so the thumbnail's link opens YouTube in a new tab instead.
+(function(){
+  const el=document.getElementById('rosling'); if(!el) return;
+  const wrap=el.querySelector('.video-wrap'), thumb=wrap.innerHTML;
+  const canEmbed=/^https?:$/.test(location.protocol);
+  el.addEventListener('click', e=>{
+    if(!canEmbed) return;               // fall through to the normal link
+    e.preventDefault();
+    if(wrap.querySelector('iframe')) return;
+    wrap.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/jbkSRLYSojo?autoplay=1&rel=0" title="Hans Rosling: 200 Countries, 200 Years, 4 Minutes (BBC Four)" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+  });
+  // stop the video when leaving its slide
+  const slideEl=el.closest('.slide'), _goTo=goTo;
+  goTo=function(i){ _goTo(i); if(!slideEl.classList.contains('active') && wrap.querySelector('iframe')) wrap.innerHTML=thumb; };
+})();
 </script>
 
 </body>

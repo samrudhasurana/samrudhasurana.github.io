@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECON 104 &mdash; Lecture 17: Different Schools of Thought</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --blue:#002060;
+    --blue-dark:#001744;
+    --gold:#e8b74d;
+    --gold-light:#f6d98a;
+    --cream:#faf7f1;
+    --ink:#1c2321;
+    --sub:#5b6560;
+    --line:#e2ddd0;
+    --card:#ffffff;
+    --orange:#d9642c;
+    --purple:#6d5ea8;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; height:100%; overflow:hidden;
+    font-family:'EB Garamond',Georgia,serif; color:var(--ink);
+    background:#14181a;
+  }
+  h1,h2,h3{font-family:'EB Garamond',Georgia,serif; margin:0;}
+
+  /* ---------- VIEWPORT / STAGE (16:9 canvas) ---------- */
+  #viewport{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:#14181a;}
+  #stage{
+    position:relative; width:1280px; height:720px; flex:none;
+    transform-origin:center center;
+    background:var(--cream);
+    border-radius:8px; overflow:hidden;
+    box-shadow:0 40px 100px -30px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.04);
+  }
+  .slide{
+    position:absolute; inset:0; width:1280px; height:720px;
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    padding:46px 66px 44px;
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity .45s ease;
+  }
+  .slide.active{opacity:1; visibility:visible; pointer-events:auto;}
+  .slide-inner{width:100%; max-width:1148px; transform-origin:center center;}
+
+  .kicker{
+    text-transform:uppercase; letter-spacing:.12em; font-size:16px; font-weight:700;
+    color:var(--blue); margin-bottom:10px; display:flex; align-items:center; gap:9px;
+  }
+  .kicker::before{content:""; width:24px; height:3px; background:var(--gold); display:inline-block; flex:none;}
+  h2.title{font-size:36px; line-height:1.22; color:var(--blue-dark); font-weight:700;}
+  p.lede{font-size:25px; line-height:1.5; color:var(--sub); margin:10px 0 0;}
+  .footer-tag{
+    position:absolute; bottom:18px; left:66px;
+    font-size:11.5px; letter-spacing:.07em; text-transform:uppercase; color:#9aa39c; font-weight:600;
+  }
+  .slide-num{
+    position:absolute; bottom:18px; right:66px;
+    font-size:11.5px; color:#9aa39c; font-weight:600; letter-spacing:.05em;
+  }
+
+  /* ---------- HUD (outside stage, fixed to real viewport) ---------- */
+  #progress{position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,var(--blue),var(--gold)); z-index:90; width:0%; transition:width .25s;}
+  .navbtn{
+    position:fixed; top:50%; transform:translateY(-50%); width:42px; height:42px; border-radius:50%;
+    border:none; background:rgba(20,24,26,.5); color:#fff; font-size:19px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; z-index:85; transition:background .2s;
+  }
+  .navbtn:hover{background:rgba(20,24,26,.82);}
+  #prevBtn{left:16px;}
+  #nextBtn{right:16px;}
+  #fsBtn{position:fixed; top:16px; right:16px; width:38px; height:38px; border-radius:50%;
+    border:none; background:rgba(20,24,26,.5); color:#fff; font-size:16px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; z-index:85; transition:background .2s;}
+  #fsBtn:hover{background:rgba(20,24,26,.82);}
+  #dots{
+    position:fixed; bottom:14px; left:50%; transform:translateX(-50%); display:flex; gap:7px;
+    z-index:85; background:rgba(20,24,26,.4); padding:7px 11px; border-radius:20px;
+  }
+  #dots button{width:6.5px; height:6.5px; border-radius:50%; border:none; background:rgba(255,255,255,.4); cursor:pointer; padding:0; transition:all .2s;}
+  #dots button.active{background:#fff; transform:scale(1.5);}
+
+  /* ---------- TITLE SLIDE ---------- */
+  #s0{background:linear-gradient(160deg,var(--blue-dark) 0%, var(--blue) 62%, #0b3078 100%); color:#fff;}
+  #s0 .kicker{color:var(--gold-light);}
+  #s0 .kicker::before{background:var(--gold-light);}
+  #s0 h1{font-size:66px; font-weight:800; line-height:1.08;}
+
+  /* ---------- IFRAME CARD ---------- */
+  .chart-card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+    box-shadow:0 16px 34px -20px rgba(0,60,42,.28); margin:16px auto 0; max-width:860px;
+  }
+  .chart-card iframe{display:block; width:100%; height:420px; border:0;}
+  .stat-row{display:flex; gap:16px; margin-top:14px;}
+  .stat{background:#fff; border:1px solid var(--line); border-radius:9px; padding:10px 18px; box-shadow:0 8px 18px -14px rgba(0,0,0,.25); flex:1;}
+  .stat .num{font-family:'EB Garamond',Georgia,serif; font-size:24px; font-weight:700; color:var(--blue); line-height:1.1;}
+  .stat .lab{font-size:13px; color:var(--sub); margin-top:2px; font-weight:500;}
+  .stat.gold .num{color:var(--orange);}
+  .caption{margin-top:10px; font-size:15px; color:var(--sub); font-style:italic;}
+
+  /* ---------- TRANSITION SLIDES ---------- */
+  .transition{background:var(--blue-dark); color:#fff;}
+  .transition .kicker{color:var(--gold-light);}
+  .transition .kicker::before{background:var(--gold-light);}
+  .transition h2.title{color:#fff; font-size:38px;}
+  .transition p.lede{color:#cfd7e6; font-size:21px;}
+
+  /* ---------- CHART VISUALS (source images) ---------- */
+  .viz-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 20px 12px; margin:14px auto 0; width:fit-content; max-width:100%; box-shadow:0 16px 34px -20px rgba(0,0,0,.28); text-align:center;}
+  .viz-card img{display:block; margin:0 auto; border-radius:6px;}
+  .viz-card .src{font-size:14px; color:#a2a89e; margin-top:10px; line-height:1.4; text-align:left;}
+
+  /* ---------- NEWS-HEADLINE CARD (text-only "clipping") ---------- */
+  .headline-card{background:#fff; border:1px solid var(--line); border-left:4px solid var(--gold); border-radius:10px; padding:16px 18px; margin-top:0; width:320px; max-width:100%; box-shadow:0 14px 30px -20px rgba(0,0,0,.28); text-align:left;}
+  .headline-card .hl{font-size:16.5px; font-weight:700; color:var(--blue-dark); line-height:1.4;}
+  .headline-card .src{font-size:13px; color:#a2a89e; margin-top:10px; line-height:1.4;}
+
+  /* ---------- VIDEO ---------- */
+  .video-link{display:block; text-decoration:none; margin:14px auto 0; max-width:660px;}
+  .video-wrap{position:relative; padding-bottom:56.25%; height:0; border-radius:12px; overflow:hidden; box-shadow:0 16px 34px -20px rgba(0,60,42,.3); border:1px solid var(--line); background:#111;}
+  .video-wrap img{position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;}
+  .play-overlay{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; transition:transform .2s;}
+  .video-link:hover .play-overlay{transform:scale(1.08);}
+  .video-caption{margin-top:8px; font-size:15px; color:var(--sub); font-weight:600; text-align:center;}
+
+  /* ---------- TIME-PRICE SLIDES (light+paper / food) ---------- */
+  .light-note{margin-top:14px; font-size:16px; color:var(--sub); max-width:960px; line-height:1.55; text-align:center; margin-left:auto; margin-right:auto;}
+  .light-note a{color:var(--blue);}
+
+  /* pictogram: N icons = amount bought per hour of work */
+  .pf-panels{display:flex; gap:18px; margin-top:18px;}
+  .pf-panel{flex:1; background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 20px; box-shadow:0 12px 26px -20px rgba(0,0,0,.25);}
+  .pf-panel h3{font-size:16px; text-transform:uppercase; letter-spacing:.07em; color:var(--blue); margin:0 0 12px; font-weight:700;}
+  .pf-row-wrap{margin-bottom:12px;}
+  .pf-row-wrap:last-child{margin-bottom:0;}
+  .pf-row-label{font-size:16px; color:var(--sub); font-weight:600; margin-bottom:5px; display:flex; justify-content:space-between; gap:10px;}
+  .pf-row-label .val{color:var(--ink); font-weight:700; flex:none;}
+  .pf-row{display:flex; flex-wrap:wrap; gap:3px; align-items:flex-end; min-height:20px;}
+  .pf-more{font-size:14px; color:var(--sub); align-self:center; margin-left:4px;}
+  .pf-icon{position:relative; width:13px; height:19px; flex:none;}
+  .pf-icon .pf-bg, .pf-icon .pf-fg{position:absolute; inset:0;}
+  .pf-icon .pf-fg{overflow:hidden;}
+  .pf-icon .pf-fg > .pf-shape{position:absolute; top:0; left:0; width:13px; height:19px;}
+  .pf-shape.bulb .pf-globe{position:absolute; width:82%; height:62%; border-radius:50%; top:0; left:9%;}
+  .pf-shape.bulb .pf-base{position:absolute; width:38%; height:22%; bottom:0; left:31%; border-radius:2px;}
+  .pf-shape.sheet .pf-body{position:absolute; inset:0; border-radius:2px 6px 2px 2px;}
+  .pf-shape.egg .pf-body{position:absolute; width:78%; height:100%; left:11%; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;}
+  .pf-shape.sack .pf-body{position:absolute; inset:0; border-radius:3px 3px 6px 6px;}
+  .pf-shape.cube .pf-body{position:absolute; width:70%; height:70%; top:15%; left:15%; transform:rotate(45deg);}
+  .pf-bg .pf-shape *{background:var(--line);}
+  .pf-fg .pf-shape *{background:var(--gold);}
+
+  /* ---------- THREE THEMES ---------- */
+  .theme-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:20px;}
+  .theme-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px 18px; box-shadow:0 12px 26px -20px rgba(0,0,0,.25);}
+  .theme-card h3{font-size:24px; color:var(--blue-dark); font-weight:700;}
+  .theme-card p{font-size:19px; color:var(--sub); line-height:1.45; margin-top:8px;}
+  .theme-card .n{font-family:'EB Garamond',Georgia,serif; font-size:17px; color:var(--gold); font-weight:700; margin-bottom:6px;}
+  .theme-card .tag{text-transform:uppercase; letter-spacing:.07em; font-size:13px; font-weight:700; color:#9aa39c; margin-top:10px;}
+  .theme-card .headline{font-style:italic; font-size:18px; color:var(--ink); border-left:3px solid var(--line); padding-left:9px; margin:4px 0 2px; line-height:1.42;}
+
+  /* ---------- DEFINITION SLIDE ---------- */
+  .def-box{
+    background:linear-gradient(180deg,#fff, #fbf8f1); border:1px solid var(--line); border-left:5px solid var(--blue);
+    border-radius:9px; padding:22px 26px; margin-top:16px; box-shadow:0 16px 34px -22px rgba(0,0,0,.28);
+  }
+  .def-box .term{font-family:'EB Garamond',Georgia,serif; font-weight:700; font-size:25px; color:var(--blue-dark); margin-bottom:10px;}
+  .def-box p{font-size:25px; line-height:1.6; color:#333; margin:0 0 10px;}
+  .q-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:14px;}
+  .q-card{background:#fff; border:1px solid var(--line); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; font-size:25px; color:var(--blue-dark); font-weight:600; line-height:1.42; box-shadow:0 8px 18px -14px rgba(0,0,0,.2);}
+  .q-answer{margin-top:10px; padding-top:9px; border-top:1px dashed var(--line); font-size:19px; font-weight:700; color:var(--orange); line-height:1.4;}
+  .closer{margin-top:14px; font-size:25px; line-height:1.5; color:#333;}
+
+  /* --- generic bullet list --- */
+  ul.bullets{margin:14px 0 0; padding:0; list-style:none;}
+  ul.bullets li{
+    position:relative; padding-left:26px; margin-bottom:15px;
+    font-size:25px; line-height:1.5; color:var(--ink);
+  }
+  ul.bullets li::before{
+    content:""; position:absolute; left:0; top:9px; width:11px; height:11px;
+    border-radius:50%; background:var(--gold); border:2px solid var(--blue);
+  }
+  ul.bullets li b{color:var(--blue-dark);}
+  ul.bullets.tight li{font-size:25px; margin-bottom:12px;}
+
+  /* --- callout strip --- */
+  .callout{
+    background:#fff; border:1px solid var(--line); border-left:4px solid var(--gold);
+    border-radius:8px; padding:14px 18px; font-size:25px; line-height:1.5; color:var(--ink);
+    margin-top:16px;
+  }
+  .callout b{color:var(--blue-dark);}
+
+  /* --- date strip (reused here as a row of price chips) --- */
+  .date-strip{display:flex; gap:12px; margin-top:16px;}
+  .date-chip{
+    flex:1; background:#fff; border:1px solid var(--line); border-radius:9px; padding:11px 15px;
+    box-shadow:0 8px 18px -15px rgba(0,0,0,.3); text-align:center;
+  }
+  .date-chip .d{font-size:26px; font-weight:700; color:var(--blue-dark);}
+  .date-chip .e{font-size:13px; color:var(--sub); text-transform:uppercase; letter-spacing:.06em;
+    font-weight:600; margin-top:2px;}
+  .date-chip.exam{border-left:4px solid var(--orange);}
+
+  /* ================= V4: no kickers, bigger titles ================= */
+  h2.title{font-size:44px; margin-top:4px;}
+  .transition h2.title{font-size:46px;}
+  #s0 h1{font-size:64px;}
+
+  /* ================= V8 REVISIONS ================= */
+  ul.bullets{list-style:disc; padding-left:22px;}
+  ul.bullets li{position:static; padding-left:0;}
+  ul.bullets li::before{content:none; display:none;}
+  ul.bullets li::marker{color:var(--gold); font-size:1.15em;}
+  ul.bullets.tight{padding-left:20px;}
+  ul.bullets ul.bullets{margin-top:8px;}
+  ol.bullets{list-style:decimal; padding-left:26px; margin:14px 0 0;}
+  ol.bullets li{margin-bottom:15px; font-size:25px; line-height:1.5; color:var(--ink);}
+  ol.bullets li::marker{color:var(--blue-dark); font-weight:700;}
+  ol.bullets li b{color:var(--blue-dark);}
+
+  /* ================= LECTURE 1 COMPONENTS ================= */
+  .split-media{display:flex; gap:34px; align-items:center; margin-top:14px;}
+  .split-media .col-text{flex:none; width:460px;}
+  .split-media .col-photo{flex:1; display:flex; justify-content:center;}
+  .split-media .col-photo .viz-card{margin-top:0;}
+
+  .step{opacity:0; transition:opacity .35s ease;}
+  .step.shown{opacity:1;}
+
+  /* ================= LECTURE 4 COMPONENTS ================= */
+  .curve-card{
+    background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 20px;
+    margin:14px auto 0; width:fit-content; max-width:100%;
+    box-shadow:0 16px 34px -20px rgba(0,0,0,.28);
+  }
+  .curve-card svg{display:block;}
+  .curve-hint{margin-top:8px; font-size:14px; color:var(--sub); text-align:center; font-style:italic;}
+
+  .curve-grid{display:flex; gap:20px; margin-top:14px; justify-content:center;}
+  .curve-grid .curve-card{margin-top:0;}
+  .curve-grid-label{text-align:center; font-size:16px; font-weight:700; color:var(--blue-dark); margin-bottom:8px;}
+
+  /* ================= LECTURE 7 REVIEW SLIDE (4-up shift recap) ================= */
+  .shift-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:6px 28px; margin-top:14px;}
+  .shift-cell{text-align:center;}
+  .shift-cell .curve-card{margin:6px auto 0; padding:8px 12px;}
+
+  /* ================= LECTURE 7 PRICE-SIGNAL SLIDE ================= */
+  .signal-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:26px; margin-top:22px;}
+  .signal-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:22px 26px; box-shadow:0 16px 34px -22px rgba(0,0,0,.28);}
+  .signal-card.up{border-left:6px solid #1a7a4a;}
+  .signal-card.down{border-left:6px solid var(--orange);}
+  .signal-head{font-size:27px; font-weight:700; color:var(--blue-dark); display:flex; align-items:center; gap:9px;}
+  .signal-arrow{font-size:29px; font-weight:800;}
+  .signal-card.up .signal-arrow{color:#1a7a4a;}
+  .signal-card.down .signal-arrow{color:var(--orange);}
+  .signal-cause{margin:10px 0 0; font-size:19px; font-weight:600; color:var(--sub); font-style:italic;}
+  .signal-card ul.bullets{margin-top:14px;}
+  .signal-card ul.bullets li{font-size:22px; margin-bottom:12px;}
+
+  .split-curve{display:flex; gap:34px; align-items:center; margin-top:16px;}
+  .split-curve .col-text{flex:none; width:480px;}
+  .split-curve .col-chart{flex:1; display:flex; justify-content:center;}
+  .split-curve .curve-card{margin-top:0;}
+
+  /* ================= LECTURE 5 COMPONENTS ================= */
+  /* --- interactive poll: price/quantity input form beside a live chart --- */
+  .poll-layout{display:flex; gap:30px; align-items:center; justify-content:center; margin-top:10px;}
+  .poll-form{display:flex; flex-direction:column; gap:9px; background:#fff; border:1px solid var(--line);
+    border-radius:12px; padding:18px 20px; box-shadow:0 16px 34px -20px rgba(0,0,0,.28); flex:none; width:250px;}
+  .poll-row{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .poll-row label{font-size:18px; color:var(--ink); font-weight:600;}
+  .poll-row input{width:64px; font-size:17px; font-family:'EB Garamond',Georgia,serif; padding:4px 7px;
+    border:1px solid var(--line); border-radius:6px; text-align:right; color:var(--blue-dark);}
+  .poll-btn{margin-top:4px; background:var(--blue); color:#fff; border:none; border-radius:8px;
+    padding:10px 14px; font-size:17px; font-family:'EB Garamond',Georgia,serif; font-weight:700; cursor:pointer;}
+  .poll-btn:hover{background:var(--blue-dark);}
+  .poll-layout .curve-card{margin-top:0;}
+
+  #s0 .rule{width:110px; height:4px; background:var(--gold); margin:22px 0 20px; border-radius:2px;}
+  #s0 .meta{font-size:21px; line-height:1.62; color:#d8dfec;}
+  #s0 .meta b{color:#fff; font-weight:600;}
+
+
+  /* ================= LECTURE 6 COMPONENTS ================= */
+  .data-table{width:100%; max-width:760px; margin:16px auto 0; border-collapse:collapse; background:#fff;
+    border:1px solid var(--line); border-radius:10px; overflow:hidden; box-shadow:0 12px 28px -20px rgba(0,0,0,.3);}
+  .data-table th{background:var(--blue-dark); color:#fff; font-size:13px; letter-spacing:.04em; text-transform:uppercase;
+    padding:11px 14px; font-weight:700; text-align:left; line-height:1.28; vertical-align:top;}
+  .data-table td{padding:12px 14px; font-size:18px; border-top:1px solid var(--line); color:var(--ink);
+    vertical-align:top; line-height:1.38;}
+  .data-table td:first-child{font-weight:700; color:var(--blue-dark);}
+  #s-comp-table .data-table{max-width:1140px;}
+  #s-comp-table .data-table td{font-size:17px;}
+
+  .chart-legend{display:flex; gap:22px; justify-content:center; flex-wrap:wrap; margin-top:10px;
+    font-size:16px; color:var(--sub);}
+  .chart-legend span{display:inline-flex; align-items:center; gap:7px;}
+  .chart-legend i{width:15px; height:15px; border-radius:3px; display:inline-block; flex:none;}
+
+  .eqm-caption{margin-top:12px; font-size:19px; text-align:center; color:var(--blue-dark);
+    font-weight:600; line-height:1.42; max-width:900px; margin-left:auto; margin-right:auto;}
+  .eqm-caption .up{color:#1a7a4a;}
+  .eqm-caption .down{color:var(--orange);}
+
+  .quote-box{background:#fff; border-left:5px solid var(--gold); border-radius:4px 10px 10px 4px;
+    padding:20px 28px; margin:16px 0; box-shadow:0 12px 26px -20px rgba(0,0,0,.3);}
+  .quote-box p{font-size:24px; font-style:italic; line-height:1.48; color:var(--ink); margin:0;}
+  .quote-box .attr{display:block; font-size:17px; font-style:normal; color:var(--sub); margin-top:9px; text-align:right;}
+  .quote-box .hl{color:#b3261e; font-style:normal; font-weight:600;}
+  .quote-box.blue{border-left-color:var(--blue);}
+  .quote-stack{display:flex; flex-direction:column; gap:10px; margin-top:8px;}
+  .quote-box.centered{text-align:center; border-left:none; border-top:5px solid var(--gold); border-radius:10px;}
+  .quote-box.centered p{font-size:28px;}
+
+  .concl-head{margin-bottom:12px; padding-bottom:10px; border-bottom:2px solid var(--line);}
+  .concl-head .t{font-family:'EB Garamond',Georgia,serif; font-size:27px; font-weight:700; color:var(--blue-dark); display:block;}
+  .concl-head .s{display:block; font-size:18px; color:var(--ink); font-weight:500; margin-top:4px;}
+  .concl-grid{align-items:flex-start;}
+  .concl-col{flex:1; max-width:560px;}
+  .concl-row{display:flex; gap:22px; align-items:flex-start; margin-top:4px;}
+  .concl-row ol.bullets{flex:1; margin-top:0;}
+  .concl-row .curve-card{flex:none; margin:0;}
+
+  /* ================= LECTURE 9 COMPONENTS ================= */
+  /* --- colored-term phrase (Introduction slide) --- */
+  .term-a{color:var(--orange); font-weight:700;}
+  .term-b{color:var(--blue); font-weight:700;}
+  .term-c{color:var(--purple); font-weight:700;}
+
+  /* --- stacked definition cards (two .def-box in a column) --- */
+  .def-stack{display:flex; flex-direction:column; gap:14px; margin-top:16px;}
+  .def-stack .def-box{margin-top:0;}
+
+  /* --- worked-calculation card: labeled equation lines --- */
+  .calc-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:22px 30px;
+    margin:18px auto 0; max-width:840px; box-shadow:0 16px 34px -22px rgba(0,0,0,.28); text-align:left;}
+  .calc-row{margin-bottom:16px;}
+  .calc-row:last-child{margin-bottom:0;}
+  .calc-label{font-size:15px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--blue); margin-bottom:5px;}
+  .calc-eq{font-size:24px; color:var(--ink); line-height:1.4;}
+  .calc-eq b{color:var(--blue-dark);}
+  .calc-eq .res{color:var(--orange); font-weight:700;}
+  .calc-eq sub{font-size:15px;}
+
+  /* --- expenditure waterfall bar chart --- */
+  .bar-chart-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px 34px 14px;
+    margin:14px auto 0; width:fit-content; max-width:100%; box-shadow:0 16px 34px -22px rgba(0,0,0,.28);}
+  .bar-legend{display:flex; gap:18px; justify-content:center; margin-top:10px; font-size:15px; color:var(--sub); flex-wrap:wrap;}
+  .bar-legend span{display:inline-flex; align-items:center; gap:7px;}
+  .bar-legend i{width:14px; height:14px; border-radius:3px; display:inline-block; flex:none;}
+  .bar-legend b{color:var(--ink);}
+
+
+  /* ================= LECTURE 9 (ECONOMIC GROWTH) COMPONENTS ================= */
+  /* --- nested lettered sub-lists inside ol.bullets --- */
+  ol.bullets ol.alpha{list-style:lower-alpha; padding-left:30px; margin:8px 0 0;}
+  ol.bullets ol.alpha li{margin-bottom:8px;}
+  ol.bullets ol.alpha li::marker{color:var(--gold); font-weight:700;}
+
+  /* --- two-column numbered list (long lists of short items) --- */
+  ol.bullets.two-col{columns:2; column-gap:56px;}
+  ol.bullets.two-col li{break-inside:avoid; margin-bottom:12px;}
+  .closer.center{text-align:center; margin-top:18px;}
+
+  /* --- live OWID chart height, tuned so title + chart fit without scaling --- */
+  .chart-card iframe.owid{height:555px;}
+  #s-fact2 .chart-card iframe.owid{height:500px;}
+  /* chart-only slides: no slide title; the OWID frame fills the slide.
+     930px wide keeps OWID from opening its country side-panel (it appears once the frame is wider than ~940px) */
+  .slide.chart-only{padding:22px 66px 40px;}
+  .slide.chart-only .chart-card{max-width:930px; margin-top:0;}
+  .slide.chart-only .chart-card iframe.owid{height:654px;}
+
+  /* --- small source/footnote line under a component --- */
+  .src-note{font-size:15px; color:#8f978f; margin-top:10px; line-height:1.4;}
+  .src-note a{color:var(--blue);}
+
+  /* --- click-to-play video (thumbnail swaps to embedded player) --- */
+  .video-link{cursor:pointer; max-width:840px;}
+  .video-wrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .video-caption a{color:var(--blue);}
+
+
+  /* ================= LECTURE 11 COMPONENTS ================= */
+  .grp{font-size:27px; font-weight:700; color:var(--blue); margin:14px 0 0; line-height:1.2;}
+  .grp + ul.bullets{margin-top:6px;}
+  .grp:first-of-type{margin-top:8px;}
+
+  /* text column + photo column(s) */
+  .split-media.l11 .col-text{width:640px;}
+  .split-media.l11.wide .col-text{width:700px;}
+  .split-media.l11 .col-photo{flex-direction:column; align-items:center; gap:14px;}
+  .viz-card.ph{padding:10px 12px 8px; margin:0;}
+  .viz-card.ph img{width:100%; height:auto; border-radius:6px;}
+  .viz-card.ph .src{font-size:13px; margin-top:7px; max-width:100%;}
+  .viz-card.ph.crop img{object-fit:cover;}
+
+  /* bonds / stocks: image under bullets */
+  .bond-card{padding:12px 16px 8px;}
+  .bond-card img{width:auto; max-height:290px;}
+
+  /* curve + bullets side by side */
+  .split-curve.l11 .col-text{width:430px;}
+  .split-curve.l11 .col-text ul.bullets li{margin-bottom:12px;}
+  .split-curve.l11 .curve-card{padding:12px 14px;}
+
+  /* ================= LECTURE 12 COMPONENTS ================= */
+  /* opening question slide */
+  .big-q{font-size:64px !important; line-height:1.2; text-align:center; max-width:1000px; margin:0 auto;}
+
+  /* labor-force equation: boxes joined by + / = / ÷ */
+  .lf-eq{display:flex; align-items:center; justify-content:center; gap:14px; margin-top:34px;}
+  .lf-grp{display:flex; align-items:center; gap:14px;}
+  .lf-box{background:#fff; border:1px solid var(--line); border-radius:12px; padding:22px 26px; text-align:center;
+    min-width:250px; box-shadow:0 16px 34px -22px rgba(0,0,0,.28);}
+  .lf-box .num{font-size:56px; font-weight:700; color:var(--blue); line-height:1.05;}
+  .lf-box .lab{font-size:24px; color:var(--sub); margin-top:6px; font-weight:600;}
+  .lf-box.un .num{color:var(--orange);}
+  .lf-box.tot{border-left:5px solid var(--gold);}
+  .lf-op{font-size:52px; font-weight:700; color:var(--gold); line-height:1;}
+
+  /* formula image */
+  .viz-card.formula{padding:14px 22px; margin-top:12px;}
+  .viz-card.formula img{width:520px; height:auto;}
+
+  /* chart cards drawn in SVG from FRED / BLS data */
+  .data-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 18px 10px;
+    margin:12px auto 0; width:fit-content; max-width:100%; box-shadow:0 16px 34px -22px rgba(0,0,0,.28);}
+  .data-card svg{display:block;}
+  .data-card .src{font-size:13px; color:#8f978f; margin-top:6px; line-height:1.4; max-width:940px;}
+  .data-card .src b{font-weight:600;}
+  .stat-row.two{max-width:760px; margin-left:auto; margin-right:auto;}
+  .stat-row .stat .num{font-size:30px;}
+  .stat-row .stat .lab{font-size:16px;}
+
+  /* "jobs created" headline clippings */
+  .hl-row{display:flex; gap:22px; margin-top:24px; justify-content:center; align-items:stretch;}
+  .hl-row .headline-card{width:520px; padding:22px 26px;}
+  .hl-row .headline-card .hl{font-size:25px;}
+  .hl-row .headline-card .quote{font-size:21px; font-style:italic; color:var(--sub); margin-top:12px; line-height:1.45;}
+  .hl-row .headline-card .src{font-size:15px; margin-top:14px;}
+
+  /* chart-only slide holding an image (textbook figure) */
+  .slide.chart-only .viz-card{margin-top:0;}
+  .slide.chart-only .viz-card img{width:auto;}
+
+  /* typeset formulas (replace the textbook formula images) */
+  .formula-card{display:grid; grid-template-columns:auto auto auto; column-gap:18px; row-gap:6px; align-items:center; justify-content:center;
+    width:fit-content; margin:14px auto 0; background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px 34px;
+    box-shadow:0 16px 34px -22px rgba(0,0,0,.28); font-size:28px; color:var(--blue-dark);}
+  .formula-card .f-label{font-weight:700; text-align:right;}
+  .formula-card .f-eq{font-weight:700; color:var(--gold);}
+  .formula-card .f-expr{display:flex; align-items:center; gap:12px;}
+  .formula-card .frac{display:inline-flex; flex-direction:column; align-items:center; text-align:center;}
+  .formula-card .frac .n{padding:0 10px 4px; border-bottom:2px solid var(--blue-dark); font-weight:600;}
+  .formula-card .frac .d{padding:4px 10px 0; font-weight:600;}
+  .formula-card .times{font-weight:600;}
+  .viz-card .src.fit{width:0; min-width:100%;}
+  .grp.orange{color:var(--orange);}
+  .split-media.goldin .col-text{width:600px;}
+  .split-media.goldin .col-photo{flex:1; min-width:0;}
+
+  /* ================= LECTURE 16 COMPONENTS ================= */
+  /* Say's law: Say portrait beside two stacked quotes */
+  .say-quotes{flex:1; max-width:760px; display:flex; flex-direction:column; gap:16px;}
+  .say-quotes .quote-box{margin:0; padding:18px 26px;}
+  .say-quotes .quote-box p{font-size:27px; line-height:1.42; font-style:italic; color:var(--blue-dark);}
+  .say-quotes .quote-box .attr{font-size:18px; margin-top:10px;}
+  .say-quotes .quote-box .hl{color:var(--orange);}
+  .quote-box.centered .attr{text-align:center;}
+  .quote-box.centered .hl{color:var(--orange); font-style:normal; font-weight:600;}
+  .data-table.sum{max-width:900px;}
+  .data-table.sum td + td{text-align:center;}
+  .data-table.sum td:first-child{font-weight:600; color:var(--blue-dark);}
+</style>
+<style>
+  /* ================= LECTURES 13 & 14 COMPONENTS ================= */
+  .sr-only{position:absolute !important; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
+  h2.title.sm{font-size:38px;}
+  sup,sub{line-height:0;}
+
+  /* typeset equations */
+  .eq-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px 36px; width:fit-content; margin:16px auto 0;
+    box-shadow:0 16px 34px -22px rgba(0,0,0,.28); font-size:46px; color:var(--blue-dark); text-align:center; line-height:1.25;}
+  .eq-card i{font-style:italic;}
+  .eq-card .eqsign{color:var(--gold); font-weight:700; margin:0 14px;}
+  .eq-card sub{font-size:.55em;}
+  .eq-card.sm{font-size:34px; padding:16px 30px;}
+  .frac{display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle; text-align:center;}
+  .frac .n{padding:0 10px 4px; border-bottom:2px solid var(--blue-dark);}
+  .frac .d{padding:4px 10px 0;}
+  .where{display:grid; grid-template-columns:auto 1fr; column-gap:18px; row-gap:6px; margin:16px auto 0; width:fit-content; font-size:25px; color:var(--ink); line-height:1.4;}
+  .where .sym{text-align:right; font-style:italic; color:var(--blue-dark); font-weight:600;}
+  .where .sym sub{font-size:.65em;}
+  .where-label{font-size:25px; color:var(--sub); margin:14px 0 0; font-style:italic;}
+  .bar-over{border-top:2.5px solid currentColor; padding-top:1px;}
+  .stk{display:inline-flex; flex-direction:column; align-items:center; line-height:1;}
+  .stk .arr{font-size:.62em; color:var(--orange); font-weight:700; line-height:1; margin-bottom:2px;}
+  .eq-card .up{position:relative; display:inline-block;}
+  .eq-card .up::before{content:'\2191'; position:absolute; left:50%; transform:translateX(-50%); top:-.78em; font-size:.62em; color:var(--orange); font-style:normal; font-weight:700;}
+  .eq-card .ov{text-decoration:overline; text-decoration-thickness:3px; text-underline-offset:0;}
+  .nutshell-h{font-size:27px; font-weight:700; color:var(--blue); margin:22px 0 0; text-align:center;}
+  .nutshell-p{font-size:25px; color:var(--ink); text-align:center; margin:6px 0 0; line-height:1.5;}
+
+  /* tables */
+  .data-table.l13{max-width:1000px;}
+  .data-table.l13 th{font-size:15px;}
+  .data-table.l13 td{font-size:21px;}
+  .data-table.num td.r, .data-table.num th.r{text-align:right;}
+  .data-table.world{max-width:600px; margin:0;}
+  .data-table.world td{padding:6px 14px; font-size:20px;}
+  .data-table.world th{padding:8px 14px;}
+  .data-table.world tr.hl td{color:var(--orange);}
+  .split-world{display:flex; gap:34px; align-items:center; margin-top:12px;}
+  .split-world .col-t{flex:none;}
+  .split-world .col-x{flex:1;}
+  .split-world ul.bullets{margin-top:0;}
+  .data-table.gas{max-width:520px; margin:12px auto 0;}
+  .data-table.gas td, .data-table.gas th{text-align:center; font-size:22px;}
+  .data-table.gas td:first-child, .data-table.gas th:first-child{text-align:left;}
+  .data-table.gas th{font-size:15px;}
+  .data-table.redis td{font-size:22px; vertical-align:middle;}
+  .data-table.redis th{font-size:16px; text-align:center; padding:14px;}
+  .data-table.redis th span{display:block; text-transform:none; letter-spacing:0; font-size:21px; font-weight:600; margin-top:4px; color:var(--gold-light);}
+  .data-table.redis td{text-align:center; font-weight:500;}
+  .data-table.redis td:first-child{font-weight:500; color:var(--ink);}
+  .data-table.redis td b{color:var(--blue-dark);}
+
+  /* picture-only slides */
+  .slide.chart-only .viz-card img{max-height:590px; width:auto; max-width:100%;}
+  .slide.photo{padding:30px 66px 44px;}
+  .slide.photo .viz-card{margin-top:14px;}
+  .slide.photo .viz-card img{max-height:500px; width:auto; max-width:100%;}
+  .slide.photo h2.title{text-align:center;}
+  .viz-card .src a{color:inherit;}
+
+  /* Friedman */
+  .fr-wrap{display:flex; gap:44px; align-items:center; justify-content:center; margin-top:10px;}
+  .fr-photo{flex:none; width:290px; text-align:center;}
+  .fr-photo img{display:block; width:290px; height:auto; border-radius:10px; box-shadow:0 18px 38px -22px rgba(0,0,0,.45); border:1px solid var(--line);}
+  .fr-photo .who{font-size:21px; font-weight:700; color:var(--blue-dark); margin-top:12px; line-height:1.3;}
+  .fr-photo .whosub{font-size:17px; color:var(--sub); margin-top:3px; line-height:1.35;}
+  .fr-photo .src{font-size:12.5px; color:#9aa39c; margin-top:7px; line-height:1.35;}
+  .fr-quote{flex:1; max-width:700px;}
+  .fr-quote .quote-box{margin:0;}
+  .fr-quote .quote-box p{font-size:40px; line-height:1.3; font-style:italic; color:var(--blue-dark);}
+  .fr-quote .quote-box .attr{font-size:20px; margin-top:16px;}
+  .fr-quote .quote-box .hl{color:var(--orange);}
+
+  /* $100 purchasing power */
+  .dv-grid{display:flex; flex-direction:column; gap:20px; margin-top:22px; align-items:center;}
+  .dv-row{display:flex; align-items:center; justify-content:center; gap:20px;}
+  .dv-box{background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px 24px; text-align:center; width:380px; box-shadow:0 16px 34px -22px rgba(0,0,0,.28);}
+  .dv-box .num{font-size:60px; font-weight:700; color:var(--blue); line-height:1.05;}
+  .dv-box .lab{font-size:23px; color:var(--sub); margin-top:6px; font-weight:600;}
+  .dv-box.gold{border-left:5px solid var(--gold);}
+  .dv-box.orange .num{color:var(--orange);}
+  .dv-op{font-size:56px; font-weight:700; color:var(--gold); line-height:1;}
+  .src-note.c{text-align:center;}
+  .bars-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 20px 8px; margin:12px auto 0; width:fit-content; max-width:100%; box-shadow:0 16px 34px -22px rgba(0,0,0,.28);}
+  .bars-card svg{display:block;}
+  .bars-card .src{font-size:13px; color:#8f978f; margin-top:6px; line-height:1.4; max-width:960px;}
+  .dv-legend{display:flex; gap:22px; justify-content:center; font-size:17px; color:var(--sub); margin-top:4px;}
+  .dv-legend span{display:inline-flex; align-items:center; gap:7px;}
+  .dv-legend i{width:14px; height:14px; border-radius:3px; display:inline-block;}
+  .big-q.sm{font-size:56px !important;}
+  .def-stack .def-box{margin-top:0;}
+  .callout.center{text-align:center;}
+
+  /* ---- What is money? section ---- */
+  .money-def .def-box p{margin:0;}
+  .hist-row{display:flex; gap:16px; justify-content:center; align-items:stretch; margin-top:20px;}
+  .hist-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 10px 10px; box-shadow:0 14px 30px -22px rgba(0,0,0,.3); text-align:center; display:flex; flex-direction:column; align-items:center;}
+  .hist-card img{display:block; height:178px; width:auto; max-width:262px; border-radius:6px;}
+  .hist-card .nm{font-size:21px; font-weight:700; color:var(--blue-dark); margin-top:8px; line-height:1.2;}
+  .hist-card .wh{font-size:16px; color:var(--sub); margin-top:2px; line-height:1.3;}
+  .hist-src{font-size:13px; color:#8f978f; margin-top:10px; text-align:center; line-height:1.4;}
+  .data-table.ms{max-width:1060px; margin-top:16px;}
+  .data-table.ms th{font-size:15px; vertical-align:bottom;}
+  .data-table.ms td{font-size:22px; padding:10px 14px;}
+  .data-table.ms td:first-child{font-weight:600; white-space:nowrap;}
+  .data-table.ms td.r, .data-table.ms th.r{text-align:right;}
+  .data-table.ms .res{color:#9aa39c;}
+  .data-table.ms th.res{color:#c9cfd9;}
+  .data-table.ms td.tot{font-weight:700; color:var(--blue-dark);}
+  .data-table.ms tr.up td.tot{color:var(--orange);}
+  .mm-m2{border:2px solid var(--gold); border-radius:14px; padding:16px 22px 18px; margin-top:18px; background:#fffdf7;}
+  .mm-head{font-size:27px; font-weight:700; color:var(--blue-dark); margin-bottom:12px;}
+  .mm-head span{color:var(--sub); font-weight:500; font-size:21px; margin-left:8px;}
+  .mm-row{display:flex; gap:20px; align-items:stretch;}
+  .mm-m1{flex:1.5; background:#fff; border:2px solid var(--blue); border-radius:12px; padding:14px 18px;}
+  .mm-extra{flex:1; display:flex; flex-direction:column; justify-content:center; gap:10px;}
+  .mm-item{display:flex; justify-content:space-between; gap:14px; font-size:22px; line-height:1.35; padding:7px 0; border-top:1px solid var(--line);}
+  .mm-item:first-of-type{border-top:none;}
+  .mm-item b{color:var(--blue-dark); white-space:nowrap;}
+  .mm-extra .mm-item{border:1px solid var(--line); border-radius:9px; background:#fff; padding:10px 14px;}
+  .mm-plus{font-size:17px; text-transform:uppercase; letter-spacing:.06em; font-weight:700; color:var(--gold);}
+</style>
+
+
+<style>
+  /* ================= LECTURE 15/16 COMPONENTS ================= */
+  /* vector arrow over a growth-rate symbol: M, v, P, Y with an arrow above */
+  .vec{position:relative; display:inline-block; font-style:italic; line-height:1;}
+  .vec::before{content:""; position:absolute; left:.04em; right:.02em; top:-.08em; height:.22em;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 8' preserveAspectRatio='none'><path d='M0 4H22M17.5 .8L22 4L17.5 7.2' fill='none' stroke='%23d9642c' stroke-width='1.5'/></svg>") no-repeat center / 100% 100%;}
+  .where .sym .vec::before{top:-.1em;}
+  .eq-card.growth{font-size:54px; padding:24px 44px 18px; margin-top:26px;}
+  .eq-card.growth .vec::before{top:-.1em;}
+  .eq-card.plain{font-size:50px;}
+  .eq-card .nominal{font-size:.45em; color:var(--sub); display:block; margin-top:2px; letter-spacing:.02em;}
+  .where.l15{grid-template-columns:auto auto; column-gap:22px;}
+  .where.l15 .sym{font-size:30px;}
+  .where.l15 .sym .vec{margin-right:2px;}
+  .where.l15 .def{font-size:25px;}
+  .where.l15 .def b{color:var(--blue-dark);}
+  .eq-note{font-size:22px; color:var(--sub); text-align:center; margin:12px 0 0;}
+  .eq-note b{color:var(--blue-dark);}
+  .lead-in{font-size:25px; color:var(--ink); margin:18px 0 0; text-align:center;}
+
+  /* chart / diagram cards */
+  .data-card.l15 svg{max-width:100%; height:auto;}
+  .data-card.l15 img.fred-img{display:block; width:100%; height:auto;}
+  .curve-card.big{padding:14px 18px;}
+  .curve-card.big svg{display:block; max-width:100%; height:auto;}
+  .split-curve.l15 .col-text{width:500px;}
+  .split-curve.l15 ul.bullets li{margin-bottom:13px;}
+  .split-curve.l15 .col-chart .curve-card{padding:12px 14px;}
+  .split-curve.l15.wide-text .col-text{width:560px;}
+  .split-curve.l15 .callout{margin-top:0;}
+  .slide.l15-diag{padding:36px 66px 40px;}
+  .slide.l15-diag .curve-card{margin-top:8px;}
+  .slide.l15-chart .data-card{margin-top:8px;}
+  .chart-note{font-size:23px; color:var(--sub); margin:2px 0 4px; line-height:1.25;}
+  .chart-note b{color:var(--blue-dark);}
+
+  /* two-column "shocks" tables: header cells are real <th> */
+  .data-table.l15{max-width:1040px; margin-top:18px;}
+  .data-table.l15 th{font-size:19px; text-transform:none; letter-spacing:0; text-align:center; padding:14px 18px; line-height:1.3;}
+  .data-table.l15 th span{display:block; font-weight:500; font-size:17px; color:var(--gold-light); margin-top:3px;}
+  .data-table.l15 td{font-size:24px; padding:11px 20px; line-height:1.35;}
+  .data-table.l15 td:first-child{font-weight:500; color:var(--ink);}
+  .data-table.l15 td + td{border-left:1px solid var(--line);}
+  .data-table.l15.up th:first-child{border-bottom:4px solid #1a7a4a;}
+  .data-table.l15.up th:last-child{border-bottom:4px solid var(--orange);}
+  .slide.l15-table{padding:36px 66px 40px;}
+  .grp-note{font-size:25px; color:var(--sub); margin:14px 0 0; font-style:italic;}
+</style>
+
+<style>
+  /* ================= LECTURE 16 ================= */
+  .split-curve.l15.wide-text .col-text{width:520px;}
+  .split-curve.l15 .callout{font-size:25px;}
+  ol.bullets.num-inner{margin:8px 0 0;}
+  ol.bullets.num-inner li{font-size:25px;}
+</style>
+
+<style>
+  .data-table.sum .sr{font-size:19px; font-weight:500; color:var(--sub);}
+  /* reasons-for-shifts tables */
+  .data-table.why{max-width:1148px; margin-top:10px;}
+  .data-table.why th{font-size:20px; padding:8px 16px;}
+  .data-table.why td{font-size:22px; line-height:1.27; padding:8px 16px; vertical-align:top; text-align:left;}
+  .data-table.why td:first-child{font-weight:700; color:var(--blue-dark); width:104px;}
+  .data-table.why ul{margin:0; padding-left:20px;}
+  .data-table.why li{margin:0 0 1px;}
+  .data-table.why li::marker{color:var(--gold);}
+  .data-table.why.sras td{font-size:24px; padding:13px 20px;}
+  .data-table.why.sras td:first-child{width:190px;}
+</style>
+<style>
+  /* ================= LECTURE 17 ================= */
+  .data-table.cmp{max-width:1148px; margin-top:22px;}
+  .data-table.cmp th{font-size:21px; padding:12px 16px;}
+  .data-table.cmp td{font-size:25px; line-height:1.3; padding:16px 18px; vertical-align:middle; text-align:left;}
+  .data-table.cmp td:first-child{font-weight:700; color:var(--blue-dark); width:200px;}
+  .data-table.cmp td:nth-child(3){text-align:center; width:150px;}
+</style>
+</head>
+<body>
+
+<div id="viewport">
+  <div id="stage">
+
+    <section class="slide" id="s0">
+      <div class="slide-inner">
+        <h1><span style="color:var(--gold-light);">Different Schools of Thought</span></h1>
+        <div class="rule"></div>
+        <div class="meta">ECON 104 &middot; <b>Lecture 17</b> &middot; <b>October 27, 2026</b></div>
+      </div>
+    </section>
+    <section class="slide" id="s-question">
+      <div class="slide-inner"><h2 class="title">Why Do Economies Fluctuate?</h2>
+  <ul class="bullets"><li class="step">In the AD&ndash;AS model, real GDP growth fluctuates when AD shifts, when LRAS shifts, or when SRAS adjusts.</li><li class="step">Economists disagree about which of these matters most.</li><li class="step">Three schools of thought: <b>monetarists</b>, <b>Keynesians</b>, and <b>real business cycle theorists</b>.</li></ul></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">2</div>
+    </section>
+    <section class="slide" id="s-mon-1">
+      <div class="slide-inner"><h2 class="title">Monetarists: Money Drives the Cycle</h2>
+  <ul class="bullets"><li class="step">Associated with Milton Friedman (University of Chicago).</li><li class="step">Fluctuations in real GDP growth come mainly from changes in the growth rate of the money supply.</li><li class="step">Faster money growth shifts AD right; slower money growth shifts AD left.</li><li class="step">In the long run, money is neutral. In the short run, sticky wages and prices let money growth move real GDP growth.</li></ul></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">3</div>
+    </section>
+    <section class="slide" id="s-mon-2">
+      <div class="slide-inner"><h2 class="title">Monetarists: The Great Depression</h2>
+  <ul class="bullets"><li class="step">Friedman and Schwartz, <i>A Monetary History of the United States</i>: the Great Depression was caused by a collapse in the money supply.</li><li class="step">From 1929 to 1933 the U.S. money supply fell by about one-third as banks failed and the Federal Reserve did not offset it.</li><li class="step">Less money &rarr; lower AD &rarr; deep recession.</li><li class="step">Policy: a steady, predictable rate of money growth, set by a rule rather than by discretion.</li></ul></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">4</div>
+    </section>
+    <section class="slide l15-diag" id="s-mon-chart">
+      <div class="slide-inner"><h2 class="title">Monetarists: A Fall in Money Growth</h2>
+  <div class="curve-card big"><svg viewBox="0 0 780 560" width="780" height="560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram of a monetarist recession: a fall in money growth. A vertical green LRAS line stands at 3 percent growth. A blue AD curve, money growth of 10 percent, crosses it at point a, 3 percent growth and 7 percent inflation, on the upward-sloping SRAS curve with expected inflation of 7 percent. A fall in money growth shifts AD to the lower left, an orange AD curve with money growth of 5 percent. In the short run the economy moves from a to b, minus 1 percent growth and 6 percent inflation: a recession, because wages and prices are sticky. In the long run, once expectations and wages adjust, the SRAS curve shifts down and the economy settles at c, 3 percent growth and 2 percent inflation, directly below a on the LRAS line.">
+<line x1="78.0" y1="58.0" x2="78.0" y2="476.0" stroke="#1c2321" stroke-width="2.2"/>
+<line x1="78.0" y1="476.0" x2="620.0" y2="476.0" stroke="#1c2321" stroke-width="2.2"/>
+<path d="M72,68 L78,54 L84,68" fill="#1c2321"/>
+<path d="M614,470 L628,476 L614,482" fill="#1c2321"/>
+<text x="92.0" y="42.0" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Inflation rate (π)</text>
+<text x="610.0" y="538.0" font-size="22" fill="#1c2321" text-anchor="end" font-weight="700" font-family="EB Garamond, Georgia, serif">Real GDP growth rate</text>
+<line x1="331.3" y1="86.5" x2="331.3" y2="476.0" stroke="#1a7a4a" stroke-width="6" stroke-linecap="round"/>
+<text x="345.3" y="94.5" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">LRAS</text>
+<line x1="194.5" y1="112.2" x2="610.0" y2="419.8" stroke="#002060" stroke-width="4.5" stroke-linecap="round"/>
+<line x1="78.0" y1="213.5" x2="432.7" y2="476.0" stroke="#d9642c" stroke-width="4.5" stroke-linecap="round"/>
+<polyline fill="none" stroke="#002060" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round" points="78.0,252.9 84.4,252.7 90.8,252.5 97.2,252.3 103.7,252.1 110.1,251.8 116.5,251.5 123.0,251.2 129.4,250.9 135.8,250.6 142.2,250.2 148.7,249.8 155.1,249.4 161.5,249.0 167.9,248.5 174.4,248.0 180.8,247.4 187.2,246.8 193.7,246.2 200.1,245.5 206.5,244.8 212.9,244.0 219.4,243.1 225.8,242.2 232.2,241.3 238.7,240.2 245.1,239.1 251.5,237.9 257.9,236.6 264.4,235.3 270.8,233.8 277.2,232.2 283.6,230.5 290.1,228.7 296.5,226.8 302.9,224.7 309.4,222.4 315.8,220.0 322.2,217.5 328.6,214.7 335.1,211.7 341.5,208.6 347.9,205.2 354.3,201.5 360.8,197.6 367.2,193.4 373.6,188.9 380.1,184.1 386.5,178.9 392.9,173.4 399.3,167.5 405.8,161.1 412.2,154.3 418.6,146.9 425.1,139.1 431.5,130.7 437.9,121.6 444.3,112.0 450.8,101.6 457.2,90.4 463.6,78.5"/>
+<text x="68.0" y="220.5" font-size="20" fill="#5b6560" text-anchor="end" font-weight="400" font-family="EB Garamond, Georgia, serif">7%</text>
+<line x1="78.0" y1="213.5" x2="331.3" y2="213.5" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="68.0" y="258.0" font-size="20" fill="#5b6560" text-anchor="end" font-weight="400" font-family="EB Garamond, Georgia, serif">6%</text>
+<line x1="78.0" y1="251.0" x2="128.6" y2="251.0" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="128.6" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">-1%</text>
+<line x1="128.6" y1="251.0" x2="128.6" y2="476.0" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="179.3" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">0%</text>
+<text x="331.3" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">3%</text>
+<circle cx="331.3" cy="213.5" r="7" fill="#1a7a4a" stroke="#002060" stroke-width="2"/>
+<text x="305.3" y="237.5" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">a</text>
+<circle cx="128.6" cy="251.0" r="7" fill="#e8b74d" stroke="#002060" stroke-width="2"/>
+<text x="134.6" y="279.0" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">b</text>
+<circle cx="331.3" cy="401.0" r="7" fill="#d9642c" stroke="#002060" stroke-width="2"/>
+<text x="343.3" y="429.0" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">c</text>
+<text x="475.3" y="70.8" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">SRAS</text>
+<text x="475.3" y="92.8" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">E[π] = 7%</text>
+<text x="620.0" y="404.8" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">AD (money</text>
+<text x="620.0" y="426.8" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">growth = 10%)</text>
+<text x="405.8" y="419.8" font-size="19" fill="#d9642c" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">AD (money</text>
+<text x="405.8" y="441.8" font-size="19" fill="#d9642c" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">growth = 5%)</text>
+<line x1="387.1" y1="356.1" x2="360.4" y2="375.9" stroke="#1c2321" stroke-width="2.8"/>
+<path d="M351.6,382.4 L357.5,371.8 L363.4,379.9Z" fill="#1c2321"/>
+<text x="397.2" y="363.6" font-size="20" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">A fall in</text>
+<text x="397.2" y="385.6" font-size="20" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">money growth</text>
+<line x1="326.3" y1="526.0" x2="220.7" y2="526.0" stroke="#1c2321" stroke-width="2.8"/>
+<path d="M209.7,526.0 L220.7,521.0 L220.7,531.0Z" fill="#1c2321"/>
+<text x="268.0" y="550.0" font-size="20" fill="#1c2321" text-anchor="middle" font-weight="600" font-family="EB Garamond, Georgia, serif">Short run</text>
+</svg></div></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">5</div>
+    </section>
+    <section class="slide" id="s-key-1">
+      <div class="slide-inner"><h2 class="title">Keynesians: Demand Drives the Cycle</h2>
+  <ul class="bullets"><li class="step">Based on John Maynard Keynes&rsquo;s <i>General Theory</i> (1936), written during the Great Depression.</li><li class="step">Fluctuations come mainly from swings in AD: consumption, investment, government spending, and net exports.</li><li class="step">Investment depends on confidence &mdash; what Keynes called &ldquo;animal spirits.&rdquo;</li><li class="step">Because wages and prices are sticky, a fall in demand is corrected slowly and the economy can stay below potential.</li></ul></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">6</div>
+    </section>
+    <section class="slide" id="s-key-2">
+      <div class="slide-inner"><h2 class="title">Keynesians: Fighting Recessions</h2>
+  <ul class="bullets"><li class="step">The economy does not quickly fix a demand shortfall by itself, so policy should offset it.</li><li class="step">Fiscal policy: more government spending or lower taxes raise AD.</li><li class="step">Monetary policy: faster money growth and lower interest rates raise AD.</li><li class="step">Example: the COVID-19 stimulus (Lecture 16).</li></ul></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">7</div>
+    </section>
+    <section class="slide l15-diag" id="s-key-chart">
+      <div class="slide-inner"><h2 class="title">Keynesians: A Fall in Confidence and Stimulus</h2>
+  <div class="curve-card big"><svg viewBox="0 0 780 560" width="780" height="560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram of a Keynesian recession and stimulus. A vertical green LRAS line stands at 3 percent growth. A blue AD curve, spending growth of 10 percent, crosses it at point a, 3 percent growth and 7 percent inflation, on the upward-sloping SRAS curve with expected inflation of 7 percent. A fall in confidence cuts spending and shifts AD to the lower left, an orange AD curve with spending growth of 5 percent. Because wages and prices are sticky, the economy moves from a to b, minus 1 percent growth and 6 percent inflation: a recession. A dashed arrow shows stimulus from fiscal or monetary policy shifting AD back to the blue curve, returning the economy toward a.">
+<line x1="78.0" y1="58.0" x2="78.0" y2="476.0" stroke="#1c2321" stroke-width="2.2"/>
+<line x1="78.0" y1="476.0" x2="620.0" y2="476.0" stroke="#1c2321" stroke-width="2.2"/>
+<path d="M72,68 L78,54 L84,68" fill="#1c2321"/>
+<path d="M614,470 L628,476 L614,482" fill="#1c2321"/>
+<text x="92.0" y="42.0" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Inflation rate (π)</text>
+<text x="610.0" y="538.0" font-size="22" fill="#1c2321" text-anchor="end" font-weight="700" font-family="EB Garamond, Georgia, serif">Real GDP growth rate</text>
+<line x1="331.3" y1="86.5" x2="331.3" y2="476.0" stroke="#1a7a4a" stroke-width="6" stroke-linecap="round"/>
+<text x="345.3" y="94.5" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">LRAS</text>
+<line x1="194.5" y1="112.2" x2="610.0" y2="419.8" stroke="#002060" stroke-width="4.5" stroke-linecap="round"/>
+<line x1="78.0" y1="213.5" x2="432.7" y2="476.0" stroke="#d9642c" stroke-width="4.5" stroke-linecap="round"/>
+<polyline fill="none" stroke="#002060" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round" points="78.0,252.9 84.4,252.7 90.8,252.5 97.2,252.3 103.7,252.1 110.1,251.8 116.5,251.5 123.0,251.2 129.4,250.9 135.8,250.6 142.2,250.2 148.7,249.8 155.1,249.4 161.5,249.0 167.9,248.5 174.4,248.0 180.8,247.4 187.2,246.8 193.7,246.2 200.1,245.5 206.5,244.8 212.9,244.0 219.4,243.1 225.8,242.2 232.2,241.3 238.7,240.2 245.1,239.1 251.5,237.9 257.9,236.6 264.4,235.3 270.8,233.8 277.2,232.2 283.6,230.5 290.1,228.7 296.5,226.8 302.9,224.7 309.4,222.4 315.8,220.0 322.2,217.5 328.6,214.7 335.1,211.7 341.5,208.6 347.9,205.2 354.3,201.5 360.8,197.6 367.2,193.4 373.6,188.9 380.1,184.1 386.5,178.9 392.9,173.4 399.3,167.5 405.8,161.1 412.2,154.3 418.6,146.9 425.1,139.1 431.5,130.7 437.9,121.6 444.3,112.0 450.8,101.6 457.2,90.4 463.6,78.5"/>
+<text x="68.0" y="220.5" font-size="20" fill="#5b6560" text-anchor="end" font-weight="400" font-family="EB Garamond, Georgia, serif">7%</text>
+<line x1="78.0" y1="213.5" x2="331.3" y2="213.5" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="68.0" y="258.0" font-size="20" fill="#5b6560" text-anchor="end" font-weight="400" font-family="EB Garamond, Georgia, serif">6%</text>
+<line x1="78.0" y1="251.0" x2="128.6" y2="251.0" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="128.6" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">-1%</text>
+<line x1="128.6" y1="251.0" x2="128.6" y2="476.0" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="179.3" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">0%</text>
+<text x="331.3" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">3%</text>
+<circle cx="331.3" cy="213.5" r="7" fill="#1a7a4a" stroke="#002060" stroke-width="2"/>
+<text x="305.3" y="237.5" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">a</text>
+<circle cx="128.6" cy="251.0" r="7" fill="#e8b74d" stroke="#002060" stroke-width="2"/>
+<text x="134.6" y="279.0" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">b</text>
+<text x="475.3" y="70.8" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">SRAS</text>
+<text x="475.3" y="92.8" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">E[π] = 7%</text>
+<text x="620.0" y="404.8" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">AD (spending</text>
+<text x="620.0" y="426.8" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">growth = 10%)</text>
+<text x="142.0" y="372.0" font-size="19" fill="#d9642c" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">AD (spending</text>
+<text x="142.0" y="394.0" font-size="19" fill="#d9642c" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">growth = 5%)</text>
+<line x1="387.1" y1="356.1" x2="360.4" y2="375.9" stroke="#1c2321" stroke-width="2.8"/>
+<path d="M351.6,382.4 L357.5,371.8 L363.4,379.9Z" fill="#1c2321"/>
+<text x="397.2" y="363.6" font-size="20" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">A fall in</text>
+<text x="397.2" y="385.6" font-size="20" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">confidence</text>
+<line x1="417.4" y1="464.8" x2="535.3" y2="377.5" stroke="#1c2321" stroke-width="2.8" stroke-dasharray="7 5"/>
+<path d="M544.1,371.0 L538.3,381.6 L532.3,373.5Z" fill="#1c2321"/>
+<text x="505.0" y="440.0" font-size="20" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">Stimulus:</text>
+<text x="505.0" y="462.0" font-size="20" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">AD shifts back</text>
+<line x1="326.3" y1="526.0" x2="220.7" y2="526.0" stroke="#1c2321" stroke-width="2.8"/>
+<path d="M209.7,526.0 L220.7,521.0 L220.7,531.0Z" fill="#1c2321"/>
+<text x="268.0" y="550.0" font-size="20" fill="#1c2321" text-anchor="middle" font-weight="600" font-family="EB Garamond, Georgia, serif">Short run</text>
+</svg></div></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">8</div>
+    </section>
+    <section class="slide" id="s-rbc-1">
+      <div class="slide-inner"><h2 class="title">Real Business Cycle Theory: Real Shocks</h2>
+  <ul class="bullets"><li class="step">Developed by Finn Kydland and Edward Prescott (Nobel Prize, 2004).</li><li class="step">Fluctuations come from real shocks: productivity and technology, energy prices, weather, disasters &mdash; not from money or demand.</li><li class="step">Real shocks shift LRAS, so the economy&rsquo;s growth rate itself rises and falls.</li><li class="step">Wages and prices adjust quickly, so sticky prices are not needed to explain the cycle.</li></ul></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">9</div>
+    </section>
+    <section class="slide" id="s-rbc-2">
+      <div class="slide-inner"><h2 class="title">Real Business Cycle Theory: Recessions as Responses</h2>
+  <ul class="bullets"><li class="step">After a negative productivity shock, working and investing pay less, so households and firms rationally cut back.</li><li class="step">Shocks spread: the 2011 earthquake and tsunami in Japan disrupted sectors far from where it struck.</li><li class="step">Policy: the economy is already responding efficiently, so stabilization policy has little to offer.</li><li class="step">Critics: sticky wages and prices are real, and it is hard to find the shock behind the 2008 financial crisis.</li></ul></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">10</div>
+    </section>
+    <section class="slide l15-diag" id="s-rbc-chart">
+      <div class="slide-inner"><h2 class="title">Real Business Cycle: A Negative Real Shock</h2>
+  <div class="curve-card big"><svg viewBox="0 0 780 560" width="780" height="560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram of a negative real shock in real business cycle theory. Two vertical LRAS lines: a dotted old LRAS at 3 percent growth and a solid green new LRAS at 1 percent growth. An arrow pointing left shows the negative real shock, such as a productivity slump, moving LRAS from 3 percent to 1 percent. A single blue AD curve, spending growth of 10 percent, does not move. The economy moves along AD from point a, 3 percent growth and 7 percent inflation, to point b on the new LRAS, 1 percent growth and 9 percent inflation. The upward-sloping SRAS curve, with expected inflation of 9 percent, passes through b. Real GDP growth falls and inflation rises.">
+<line x1="78.0" y1="58.0" x2="78.0" y2="476.0" stroke="#1c2321" stroke-width="2.2"/>
+<line x1="78.0" y1="476.0" x2="620.0" y2="476.0" stroke="#1c2321" stroke-width="2.2"/>
+<path d="M72,68 L78,54 L84,68" fill="#1c2321"/>
+<path d="M614,470 L628,476 L614,482" fill="#1c2321"/>
+<text x="92.0" y="42.0" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Inflation rate (π)</text>
+<text x="610.0" y="538.0" font-size="22" fill="#1c2321" text-anchor="end" font-weight="700" font-family="EB Garamond, Georgia, serif">Real GDP growth rate</text>
+<line x1="331.3" y1="112.0" x2="331.3" y2="476.0" stroke="#1a7a4a" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 11"/>
+<line x1="230.0" y1="86.5" x2="230.0" y2="476.0" stroke="#1a7a4a" stroke-width="6" stroke-linecap="round"/>
+<text x="345.3" y="134.0" font-size="20" fill="#5b6560" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">Old LRAS</text>
+<text x="216.0" y="94.5" font-size="22" fill="#1c2321" text-anchor="end" font-weight="700" font-family="EB Garamond, Georgia, serif">New LRAS</text>
+<line x1="194.5" y1="112.2" x2="610.0" y2="419.8" stroke="#002060" stroke-width="4.5" stroke-linecap="round"/>
+<polyline fill="none" stroke="#002060" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round" points="78.0,172.5 81.9,172.2 85.7,171.8 89.6,171.4 93.5,171.0 97.4,170.6 101.3,170.2 105.2,169.8 109.1,169.3 113.0,168.8 116.9,168.3 120.8,167.7 124.7,167.2 128.6,166.6 132.5,166.0 136.4,165.4 140.3,164.7 144.1,164.0 148.0,163.3 151.9,162.6 155.8,161.8 159.7,161.0 163.6,160.1 167.5,159.2 171.4,158.3 175.3,157.4 179.2,156.4 183.1,155.3 187.0,154.2 190.9,153.1 194.8,151.9 198.6,150.6 202.5,149.3 206.4,148.0 210.3,146.6 214.2,145.1 218.1,143.6 222.0,142.0 225.9,140.3 229.8,138.6 233.7,136.8 237.6,134.9 241.5,132.9 245.4,130.8 249.3,128.7 253.2,126.4 257.0,124.1 260.9,121.7 264.8,119.1 268.7,116.5 272.6,113.7 276.5,110.8 280.4,107.8 284.3,104.7 288.2,101.4 292.1,98.0 296.0,94.4 299.9,90.7 303.8,86.8 307.7,82.7 311.6,78.5"/>
+<text x="68.0" y="220.5" font-size="20" fill="#5b6560" text-anchor="end" font-weight="400" font-family="EB Garamond, Georgia, serif">7%</text>
+<line x1="78.0" y1="213.5" x2="331.3" y2="213.5" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="68.0" y="145.5" font-size="20" fill="#5b6560" text-anchor="end" font-weight="400" font-family="EB Garamond, Georgia, serif">9%</text>
+<line x1="78.0" y1="138.5" x2="230.0" y2="138.5" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="230.0" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">1%</text>
+<line x1="230.0" y1="138.5" x2="230.0" y2="476.0" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="331.3" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">3%</text>
+<text x="179.3" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">0%</text>
+<circle cx="331.3" cy="213.5" r="7" fill="#1a7a4a" stroke="#002060" stroke-width="2"/>
+<text x="345.3" y="243.5" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">a</text>
+<circle cx="230.0" cy="138.5" r="7" fill="#e8b74d" stroke="#002060" stroke-width="2"/>
+<text x="200.0" y="172.5" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">b</text>
+<text x="318.0" y="62.0" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">SRAS</text>
+<text x="318.0" y="84.0" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">E[π] = 9%</text>
+<text x="620.0" y="404.8" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">AD (spending</text>
+<text x="620.0" y="426.8" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">growth = 10%)</text>
+<line x1="323.3" y1="335.0" x2="249.0" y2="335.0" stroke="#1c2321" stroke-width="2.8"/>
+<path d="M238.0,335.0 L249.0,330.0 L249.0,340.0Z" fill="#1c2321"/>
+<text x="272.6" y="290.0" font-size="20" fill="#1c2321" text-anchor="middle" font-weight="600" font-family="EB Garamond, Georgia, serif">Negative</text>
+<text x="272.6" y="312.0" font-size="20" fill="#1c2321" text-anchor="middle" font-weight="600" font-family="EB Garamond, Georgia, serif">real shock</text>
+<text x="389.6" y="172.2" font-size="20" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">Spending unchanged:</text>
+<text x="389.6" y="196.2" font-size="20" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">growth falls,</text>
+<text x="389.6" y="220.2" font-size="20" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">inflation rises</text>
+<line x1="323.3" y1="526.0" x2="249.0" y2="526.0" stroke="#1c2321" stroke-width="2.8"/>
+<path d="M238.0,526.0 L249.0,521.0 L249.0,531.0Z" fill="#1c2321"/>
+<text x="280.6" y="550.0" font-size="20" fill="#1c2321" text-anchor="middle" font-weight="600" font-family="EB Garamond, Georgia, serif">Immediate</text>
+</svg></div></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">11</div>
+    </section>
+    <section class="slide l15-table" id="s-compare">
+      <div class="slide-inner"><h2 class="title">Three Schools Compared</h2>
+  <table class="data-table l15 why cmp"><thead><tr><th>School</th><th>Look first at&hellip;</th><th>Curve that shifts</th><th>Policy response</th></tr></thead><tbody>
+  <tr><td>Monetarists</td><td>Changes in money growth</td><td><span style="color:#d9642c;font-weight:700;">AD</span></td><td>Steady, rule-based money growth</td></tr>
+  <tr><td>Keynesians</td><td>Swings in spending and confidence</td><td><span style="color:#d9642c;font-weight:700;">AD</span></td><td>Active fiscal and monetary policy</td></tr>
+  <tr><td>Real business cycle</td><td>Real shocks to productivity</td><td><span style="color:#d9642c;font-weight:700;">LRAS</span></td><td>Little role for stabilization policy</td></tr></tbody></table></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">12</div>
+    </section>
+    <section class="slide" id="s-takeaway">
+      <div class="slide-inner"><h2 class="title">Takeaway</h2>
+  <ul class="bullets"><li class="step">Monetarists look to money growth and Keynesians look to spending and confidence: both see shifts in AD, with sticky wages and prices turning them into real GDP fluctuations.</li><li class="step">Real business cycle theorists look to real shocks that shift LRAS.</li><li class="step">Each school gives a different answer to &ldquo;if real GDP falls, where should we look?&rdquo; The AD&ndash;AS model lets us compare them.</li></ul></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">13</div>
+    </section>
+
+
+</div>
+</div>
+
+<div id="progress"></div>
+<button id="prevBtn" class="navbtn" aria-label="Previous slide">&#8249;</button>
+<button id="nextBtn" class="navbtn" aria-label="Next slide">&#8250;</button>
+<button id="fsBtn" aria-label="Toggle fullscreen">&#9974;</button>
+<div id="dots"></div>
+<div class="navhint">&#8592; &#8594; or click to navigate</div>
+
+<script>
+// ---------- STAGE SCALING (keeps 16:9 always, no overflow) ----------
+const stage = document.getElementById('stage');
+function fitStage(){
+  const availW = window.innerWidth - 24;
+  const availH = window.innerHeight - 24;
+  const scale = Math.min(availW/1280, availH/720);
+  // CSS zoom (not transform) so embedded OWID charts render crisply at the projected size
+  stage.style.zoom = scale;
+}
+window.addEventListener('resize', fitStage);
+fitStage();
+
+// ---------- SLIDE NAV ----------
+const slides = Array.from(document.querySelectorAll('.slide'));
+const dotsWrap = document.getElementById('dots');
+slides.forEach((s,i)=>{
+  const b = document.createElement('button');
+  b.title = s.id;
+  b.addEventListener('click', ()=> goTo(i));
+  dotsWrap.appendChild(b);
+});
+const dots = Array.from(dotsWrap.children);
+let current = 0;
+let revealIndex = 0;
+
+function resetSteps(slide){
+  revealIndex = 0;
+  slide.querySelectorAll('.step').forEach(el=> el.classList.remove('shown'));
+}
+
+function advance(){
+  const steps = slides[current].querySelectorAll('.step');
+  if(revealIndex < steps.length){
+    steps[revealIndex].classList.add('shown');
+    revealIndex++;
+  } else {
+    goTo(current+1);
+  }
+}
+
+function fitSlideContent(slide){
+  const inner = slide.querySelector('.slide-inner');
+  if(!inner) return;
+  inner.style.transform = 'scale(1)';
+  const cs = getComputedStyle(slide);
+  const avail = 720 - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+  const needed = inner.scrollHeight;
+  if(needed > avail){
+    inner.style.transform = `scale(${(avail/needed).toFixed(4)})`;
+  }
+}
+
+function goTo(i){
+  current = Math.max(0, Math.min(slides.length-1, i));
+  slides.forEach((s,idx)=> s.classList.toggle('active', idx===current));
+  dots.forEach((d,idx)=> d.classList.toggle('active', idx===current));
+  document.getElementById('progress').style.width = (current/(slides.length-1)*100) + '%';
+  resetSteps(slides[current]);
+  requestAnimationFrame(()=> fitSlideContent(slides[current]));
+}
+
+document.getElementById('prevBtn').addEventListener('click', ()=> goTo(current-1));
+document.getElementById('nextBtn').addEventListener('click', ()=> advance());
+
+// ---------- FULLSCREEN ----------
+const fsBtn = document.getElementById('fsBtn');
+fsBtn.addEventListener('click', ()=>{
+  if(typeof document.documentElement.requestFullscreen === 'function'){
+    if(!document.fullscreenElement){
+      document.documentElement.requestFullscreen().catch(()=>{});
+    } else {
+      document.exitFullscreen();
+    }
+  }
+});
+document.addEventListener('fullscreenchange', ()=>{
+  fsBtn.innerHTML = document.fullscreenElement ? '&#10064;' : '&#9974;';
+});
+
+document.addEventListener('keydown', (e)=>{
+  const fwd = ['ArrowRight','ArrowDown','PageDown',' '];
+  const back = ['ArrowLeft','ArrowUp','PageUp','Backspace'];
+  const tag = (e.target && e.target.tagName) || '';
+  if(tag === 'INPUT' || tag === 'TEXTAREA') return;
+  if(fwd.includes(e.key)){ e.preventDefault(); advance(); }
+  else if(back.includes(e.key)){ e.preventDefault(); goTo(current-1); }
+});
+
+goTo(0);
+// re-check fit once web fonts finish loading (sizes can shift slightly)
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(()=>{ slides.forEach(fitSlideContent); });
+}
+window.addEventListener('resize', ()=> fitSlideContent(slides[current]));
+</script>
+
+</body>
+</html>

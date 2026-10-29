@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECON 104 &mdash; Module 2 Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --blue:#002060;
+    --blue-dark:#001744;
+    --gold:#e8b74d;
+    --gold-light:#f6d98a;
+    --cream:#faf7f1;
+    --ink:#1c2321;
+    --sub:#5b6560;
+    --line:#e2ddd0;
+    --card:#ffffff;
+    --orange:#d9642c;
+    --purple:#6d5ea8;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; height:100%; overflow:hidden;
+    font-family:'EB Garamond',Georgia,serif; color:var(--ink);
+    background:#14181a;
+  }
+  h1,h2,h3{font-family:'EB Garamond',Georgia,serif; margin:0;}
+
+  /* ---------- VIEWPORT / STAGE (16:9 canvas) ---------- */
+  #viewport{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:#14181a;}
+  #stage{
+    position:relative; width:1280px; height:720px; flex:none;
+    transform-origin:center center;
+    background:var(--cream);
+    border-radius:8px; overflow:hidden;
+    box-shadow:0 40px 100px -30px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.04);
+  }
+  .slide{
+    position:absolute; inset:0; width:1280px; height:720px;
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    padding:46px 66px 44px;
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity .45s ease;
+  }
+  .slide.active{opacity:1; visibility:visible; pointer-events:auto;}
+  .slide-inner{width:100%; max-width:1148px; transform-origin:center center;}
+
+  .kicker{
+    text-transform:uppercase; letter-spacing:.12em; font-size:16px; font-weight:700;
+    color:var(--blue); margin-bottom:10px; display:flex; align-items:center; gap:9px;
+  }
+  .kicker::before{content:""; width:24px; height:3px; background:var(--gold); display:inline-block; flex:none;}
+  h2.title{font-size:36px; line-height:1.22; color:var(--blue-dark); font-weight:700;}
+  p.lede{font-size:25px; line-height:1.5; color:var(--sub); margin:10px 0 0;}
+  .footer-tag{
+    position:absolute; bottom:18px; left:66px;
+    font-size:11.5px; letter-spacing:.07em; text-transform:uppercase; color:#9aa39c; font-weight:600;
+  }
+  .slide-num{
+    position:absolute; bottom:18px; right:66px;
+    font-size:11.5px; color:#9aa39c; font-weight:600; letter-spacing:.05em;
+  }
+
+  /* ---------- HUD (outside stage, fixed to real viewport) ---------- */
+  #progress{position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,var(--blue),var(--gold)); z-index:90; width:0%; transition:width .25s;}
+  .navbtn{
+    position:fixed; top:50%; transform:translateY(-50%); width:42px; height:42px; border-radius:50%;
+    border:none; background:rgba(20,24,26,.5); color:#fff; font-size:19px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; z-index:85; transition:background .2s;
+  }
+  .navbtn:hover{background:rgba(20,24,26,.82);}
+  #prevBtn{left:16px;}
+  #nextBtn{right:16px;}
+  #fsBtn{position:fixed; top:16px; right:16px; width:38px; height:38px; border-radius:50%;
+    border:none; background:rgba(20,24,26,.5); color:#fff; font-size:16px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; z-index:85; transition:background .2s;}
+  #fsBtn:hover{background:rgba(20,24,26,.82);}
+  #dots{
+    position:fixed; bottom:14px; left:50%; transform:translateX(-50%); display:flex; gap:7px;
+    z-index:85; background:rgba(20,24,26,.4); padding:7px 11px; border-radius:20px;
+  }
+  #dots button{width:6.5px; height:6.5px; border-radius:50%; border:none; background:rgba(255,255,255,.4); cursor:pointer; padding:0; transition:all .2s;}
+  #dots button.active{background:#fff; transform:scale(1.5);}
+
+  /* ---------- TITLE SLIDE ---------- */
+  #s0{background:linear-gradient(160deg,var(--blue-dark) 0%, var(--blue) 62%, #0b3078 100%); color:#fff;}
+  #s0 .kicker{color:var(--gold-light);}
+  #s0 .kicker::before{background:var(--gold-light);}
+  #s0 h1{font-size:66px; font-weight:800; line-height:1.08;}
+
+  /* ---------- IFRAME CARD ---------- */
+  .chart-card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+    box-shadow:0 16px 34px -20px rgba(0,60,42,.28); margin:16px auto 0; max-width:860px;
+  }
+  .chart-card iframe{display:block; width:100%; height:420px; border:0;}
+  .stat-row{display:flex; gap:16px; margin-top:14px;}
+  .stat{background:#fff; border:1px solid var(--line); border-radius:9px; padding:10px 18px; box-shadow:0 8px 18px -14px rgba(0,0,0,.25); flex:1;}
+  .stat .num{font-family:'EB Garamond',Georgia,serif; font-size:24px; font-weight:700; color:var(--blue); line-height:1.1;}
+  .stat .lab{font-size:13px; color:var(--sub); margin-top:2px; font-weight:500;}
+  .stat.gold .num{color:var(--orange);}
+  .caption{margin-top:10px; font-size:15px; color:var(--sub); font-style:italic;}
+
+  /* ---------- TRANSITION SLIDES ---------- */
+  .transition{background:var(--blue-dark); color:#fff;}
+  .transition .kicker{color:var(--gold-light);}
+  .transition .kicker::before{background:var(--gold-light);}
+  .transition h2.title{color:#fff; font-size:38px;}
+  .transition p.lede{color:#cfd7e6; font-size:21px;}
+
+  /* ---------- CHART VISUALS (source images) ---------- */
+  .viz-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 20px 12px; margin:14px auto 0; width:fit-content; max-width:100%; box-shadow:0 16px 34px -20px rgba(0,0,0,.28); text-align:center;}
+  .viz-card img{display:block; margin:0 auto; border-radius:6px;}
+  .viz-card .src{font-size:14px; color:#a2a89e; margin-top:10px; line-height:1.4; text-align:left;}
+
+  /* ---------- NEWS-HEADLINE CARD (text-only "clipping") ---------- */
+  .headline-card{background:#fff; border:1px solid var(--line); border-left:4px solid var(--gold); border-radius:10px; padding:16px 18px; margin-top:0; width:320px; max-width:100%; box-shadow:0 14px 30px -20px rgba(0,0,0,.28); text-align:left;}
+  .headline-card .hl{font-size:16.5px; font-weight:700; color:var(--blue-dark); line-height:1.4;}
+  .headline-card .src{font-size:13px; color:#a2a89e; margin-top:10px; line-height:1.4;}
+
+  /* ---------- VIDEO ---------- */
+  .video-link{display:block; text-decoration:none; margin:14px auto 0; max-width:660px;}
+  .video-wrap{position:relative; padding-bottom:56.25%; height:0; border-radius:12px; overflow:hidden; box-shadow:0 16px 34px -20px rgba(0,60,42,.3); border:1px solid var(--line); background:#111;}
+  .video-wrap img{position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;}
+  .play-overlay{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; transition:transform .2s;}
+  .video-link:hover .play-overlay{transform:scale(1.08);}
+  .video-caption{margin-top:8px; font-size:15px; color:var(--sub); font-weight:600; text-align:center;}
+
+  /* ---------- TIME-PRICE SLIDES (light+paper / food) ---------- */
+  .light-note{margin-top:14px; font-size:16px; color:var(--sub); max-width:960px; line-height:1.55; text-align:center; margin-left:auto; margin-right:auto;}
+  .light-note a{color:var(--blue);}
+
+  /* pictogram: N icons = amount bought per hour of work */
+  .pf-panels{display:flex; gap:18px; margin-top:18px;}
+  .pf-panel{flex:1; background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 20px; box-shadow:0 12px 26px -20px rgba(0,0,0,.25);}
+  .pf-panel h3{font-size:16px; text-transform:uppercase; letter-spacing:.07em; color:var(--blue); margin:0 0 12px; font-weight:700;}
+  .pf-row-wrap{margin-bottom:12px;}
+  .pf-row-wrap:last-child{margin-bottom:0;}
+  .pf-row-label{font-size:16px; color:var(--sub); font-weight:600; margin-bottom:5px; display:flex; justify-content:space-between; gap:10px;}
+  .pf-row-label .val{color:var(--ink); font-weight:700; flex:none;}
+  .pf-row{display:flex; flex-wrap:wrap; gap:3px; align-items:flex-end; min-height:20px;}
+  .pf-more{font-size:14px; color:var(--sub); align-self:center; margin-left:4px;}
+  .pf-icon{position:relative; width:13px; height:19px; flex:none;}
+  .pf-icon .pf-bg, .pf-icon .pf-fg{position:absolute; inset:0;}
+  .pf-icon .pf-fg{overflow:hidden;}
+  .pf-icon .pf-fg > .pf-shape{position:absolute; top:0; left:0; width:13px; height:19px;}
+  .pf-shape.bulb .pf-globe{position:absolute; width:82%; height:62%; border-radius:50%; top:0; left:9%;}
+  .pf-shape.bulb .pf-base{position:absolute; width:38%; height:22%; bottom:0; left:31%; border-radius:2px;}
+  .pf-shape.sheet .pf-body{position:absolute; inset:0; border-radius:2px 6px 2px 2px;}
+  .pf-shape.egg .pf-body{position:absolute; width:78%; height:100%; left:11%; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;}
+  .pf-shape.sack .pf-body{position:absolute; inset:0; border-radius:3px 3px 6px 6px;}
+  .pf-shape.cube .pf-body{position:absolute; width:70%; height:70%; top:15%; left:15%; transform:rotate(45deg);}
+  .pf-bg .pf-shape *{background:var(--line);}
+  .pf-fg .pf-shape *{background:var(--gold);}
+
+  /* ---------- THREE THEMES ---------- */
+  .theme-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:20px;}
+  .theme-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px 18px; box-shadow:0 12px 26px -20px rgba(0,0,0,.25);}
+  .theme-card h3{font-size:24px; color:var(--blue-dark); font-weight:700;}
+  .theme-card p{font-size:19px; color:var(--sub); line-height:1.45; margin-top:8px;}
+  .theme-card .n{font-family:'EB Garamond',Georgia,serif; font-size:17px; color:var(--gold); font-weight:700; margin-bottom:6px;}
+  .theme-card .tag{text-transform:uppercase; letter-spacing:.07em; font-size:13px; font-weight:700; color:#9aa39c; margin-top:10px;}
+  .theme-card .headline{font-style:italic; font-size:18px; color:var(--ink); border-left:3px solid var(--line); padding-left:9px; margin:4px 0 2px; line-height:1.42;}
+
+  /* ---------- DEFINITION SLIDE ---------- */
+  .def-box{
+    background:linear-gradient(180deg,#fff, #fbf8f1); border:1px solid var(--line); border-left:5px solid var(--blue);
+    border-radius:9px; padding:22px 26px; margin-top:16px; box-shadow:0 16px 34px -22px rgba(0,0,0,.28);
+  }
+  .def-box .term{font-family:'EB Garamond',Georgia,serif; font-weight:700; font-size:25px; color:var(--blue-dark); margin-bottom:10px;}
+  .def-box p{font-size:25px; line-height:1.6; color:#333; margin:0 0 10px;}
+  .q-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:14px;}
+  .q-card{background:#fff; border:1px solid var(--line); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; font-size:25px; color:var(--blue-dark); font-weight:600; line-height:1.42; box-shadow:0 8px 18px -14px rgba(0,0,0,.2);}
+  .q-answer{margin-top:10px; padding-top:9px; border-top:1px dashed var(--line); font-size:19px; font-weight:700; color:var(--orange); line-height:1.4;}
+  .closer{margin-top:14px; font-size:25px; line-height:1.5; color:#333;}
+
+  /* --- generic bullet list --- */
+  ul.bullets{margin:14px 0 0; padding:0; list-style:none;}
+  ul.bullets li{
+    position:relative; padding-left:26px; margin-bottom:15px;
+    font-size:25px; line-height:1.5; color:var(--ink);
+  }
+  ul.bullets li::before{
+    content:""; position:absolute; left:0; top:9px; width:11px; height:11px;
+    border-radius:50%; background:var(--gold); border:2px solid var(--blue);
+  }
+  ul.bullets li b{color:var(--blue-dark);}
+  ul.bullets.tight li{font-size:25px; margin-bottom:12px;}
+
+  /* --- callout strip --- */
+  .callout{
+    background:#fff; border:1px solid var(--line); border-left:4px solid var(--gold);
+    border-radius:8px; padding:14px 18px; font-size:25px; line-height:1.5; color:var(--ink);
+    margin-top:16px;
+  }
+  .callout b{color:var(--blue-dark);}
+
+  /* --- date strip (reused here as a row of price chips) --- */
+  .date-strip{display:flex; gap:12px; margin-top:16px;}
+  .date-chip{
+    flex:1; background:#fff; border:1px solid var(--line); border-radius:9px; padding:11px 15px;
+    box-shadow:0 8px 18px -15px rgba(0,0,0,.3); text-align:center;
+  }
+  .date-chip .d{font-size:26px; font-weight:700; color:var(--blue-dark);}
+  .date-chip .e{font-size:13px; color:var(--sub); text-transform:uppercase; letter-spacing:.06em;
+    font-weight:600; margin-top:2px;}
+  .date-chip.exam{border-left:4px solid var(--orange);}
+
+  /* ================= V4: no kickers, bigger titles ================= */
+  h2.title{font-size:44px; margin-top:4px;}
+  .transition h2.title{font-size:46px;}
+  #s0 h1{font-size:64px;}
+
+  /* ================= V8 REVISIONS ================= */
+  ul.bullets{list-style:disc; padding-left:22px;}
+  ul.bullets li{position:static; padding-left:0;}
+  ul.bullets li::before{content:none; display:none;}
+  ul.bullets li::marker{color:var(--gold); font-size:1.15em;}
+  ul.bullets.tight{padding-left:20px;}
+  ul.bullets ul.bullets{margin-top:8px;}
+  ol.bullets{list-style:decimal; padding-left:26px; margin:14px 0 0;}
+  ol.bullets li{margin-bottom:15px; font-size:25px; line-height:1.5; color:var(--ink);}
+  ol.bullets li::marker{color:var(--blue-dark); font-weight:700;}
+  ol.bullets li b{color:var(--blue-dark);}
+
+  /* ================= LECTURE 1 COMPONENTS ================= */
+  .split-media{display:flex; gap:34px; align-items:center; margin-top:14px;}
+  .split-media .col-text{flex:none; width:460px;}
+  .split-media .col-photo{flex:1; display:flex; justify-content:center;}
+  .split-media .col-photo .viz-card{margin-top:0;}
+
+  .step{opacity:0; transition:opacity .35s ease;}
+  .step.shown{opacity:1;}
+
+  /* ================= LECTURE 4 COMPONENTS ================= */
+  .curve-card{
+    background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 20px;
+    margin:14px auto 0; width:fit-content; max-width:100%;
+    box-shadow:0 16px 34px -20px rgba(0,0,0,.28);
+  }
+  .curve-card svg{display:block;}
+  .curve-hint{margin-top:8px; font-size:14px; color:var(--sub); text-align:center; font-style:italic;}
+
+  .curve-grid{display:flex; gap:20px; margin-top:14px; justify-content:center;}
+  .curve-grid .curve-card{margin-top:0;}
+  .curve-grid-label{text-align:center; font-size:16px; font-weight:700; color:var(--blue-dark); margin-bottom:8px;}
+
+  /* ================= LECTURE 7 REVIEW SLIDE (4-up shift recap) ================= */
+  .shift-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:6px 28px; margin-top:14px;}
+  .shift-cell{text-align:center;}
+  .shift-cell .curve-card{margin:6px auto 0; padding:8px 12px;}
+
+  /* ================= LECTURE 7 PRICE-SIGNAL SLIDE ================= */
+  .signal-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:26px; margin-top:22px;}
+  .signal-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:22px 26px; box-shadow:0 16px 34px -22px rgba(0,0,0,.28);}
+  .signal-card.up{border-left:6px solid #1a7a4a;}
+  .signal-card.down{border-left:6px solid var(--orange);}
+  .signal-head{font-size:27px; font-weight:700; color:var(--blue-dark); display:flex; align-items:center; gap:9px;}
+  .signal-arrow{font-size:29px; font-weight:800;}
+  .signal-card.up .signal-arrow{color:#1a7a4a;}
+  .signal-card.down .signal-arrow{color:var(--orange);}
+  .signal-cause{margin:10px 0 0; font-size:19px; font-weight:600; color:var(--sub); font-style:italic;}
+  .signal-card ul.bullets{margin-top:14px;}
+  .signal-card ul.bullets li{font-size:22px; margin-bottom:12px;}
+
+  .split-curve{display:flex; gap:34px; align-items:center; margin-top:16px;}
+  .split-curve .col-text{flex:none; width:480px;}
+  .split-curve .col-chart{flex:1; display:flex; justify-content:center;}
+  .split-curve .curve-card{margin-top:0;}
+
+  /* ================= LECTURE 5 COMPONENTS ================= */
+  /* --- interactive poll: price/quantity input form beside a live chart --- */
+  .poll-layout{display:flex; gap:30px; align-items:center; justify-content:center; margin-top:10px;}
+  .poll-form{display:flex; flex-direction:column; gap:9px; background:#fff; border:1px solid var(--line);
+    border-radius:12px; padding:18px 20px; box-shadow:0 16px 34px -20px rgba(0,0,0,.28); flex:none; width:250px;}
+  .poll-row{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .poll-row label{font-size:18px; color:var(--ink); font-weight:600;}
+  .poll-row input{width:64px; font-size:17px; font-family:'EB Garamond',Georgia,serif; padding:4px 7px;
+    border:1px solid var(--line); border-radius:6px; text-align:right; color:var(--blue-dark);}
+  .poll-btn{margin-top:4px; background:var(--blue); color:#fff; border:none; border-radius:8px;
+    padding:10px 14px; font-size:17px; font-family:'EB Garamond',Georgia,serif; font-weight:700; cursor:pointer;}
+  .poll-btn:hover{background:var(--blue-dark);}
+  .poll-layout .curve-card{margin-top:0;}
+
+  #s0 .rule{width:110px; height:4px; background:var(--gold); margin:22px 0 20px; border-radius:2px;}
+  #s0 .meta{font-size:21px; line-height:1.62; color:#d8dfec;}
+  #s0 .meta b{color:#fff; font-weight:600;}
+
+
+  /* ================= LECTURE 6 COMPONENTS ================= */
+  .data-table{width:100%; max-width:760px; margin:16px auto 0; border-collapse:collapse; background:#fff;
+    border:1px solid var(--line); border-radius:10px; overflow:hidden; box-shadow:0 12px 28px -20px rgba(0,0,0,.3);}
+  .data-table th{background:var(--blue-dark); color:#fff; font-size:13px; letter-spacing:.04em; text-transform:uppercase;
+    padding:11px 14px; font-weight:700; text-align:left; line-height:1.28; vertical-align:top;}
+  .data-table td{padding:12px 14px; font-size:18px; border-top:1px solid var(--line); color:var(--ink);
+    vertical-align:top; line-height:1.38;}
+  .data-table td:first-child{font-weight:700; color:var(--blue-dark);}
+  #s-comp-table .data-table{max-width:1140px;}
+  #s-comp-table .data-table td{font-size:17px;}
+
+  .chart-legend{display:flex; gap:22px; justify-content:center; flex-wrap:wrap; margin-top:10px;
+    font-size:16px; color:var(--sub);}
+  .chart-legend span{display:inline-flex; align-items:center; gap:7px;}
+  .chart-legend i{width:15px; height:15px; border-radius:3px; display:inline-block; flex:none;}
+
+  .eqm-caption{margin-top:12px; font-size:19px; text-align:center; color:var(--blue-dark);
+    font-weight:600; line-height:1.42; max-width:900px; margin-left:auto; margin-right:auto;}
+  .eqm-caption .up{color:#1a7a4a;}
+  .eqm-caption .down{color:var(--orange);}
+
+  .quote-box{background:#fff; border-left:5px solid var(--gold); border-radius:4px 10px 10px 4px;
+    padding:20px 28px; margin:16px 0; box-shadow:0 12px 26px -20px rgba(0,0,0,.3);}
+  .quote-box p{font-size:24px; font-style:italic; line-height:1.48; color:var(--ink); margin:0;}
+  .quote-box .attr{display:block; font-size:17px; font-style:normal; color:var(--sub); margin-top:9px; text-align:right;}
+  .quote-box .hl{color:#b3261e; font-style:normal; font-weight:600;}
+  .quote-box.blue{border-left-color:var(--blue);}
+  .quote-stack{display:flex; flex-direction:column; gap:10px; margin-top:8px;}
+  .quote-box.centered{text-align:center; border-left:none; border-top:5px solid var(--gold); border-radius:10px;}
+  .quote-box.centered p{font-size:28px;}
+
+  .concl-head{margin-bottom:12px; padding-bottom:10px; border-bottom:2px solid var(--line);}
+  .concl-head .t{font-family:'EB Garamond',Georgia,serif; font-size:27px; font-weight:700; color:var(--blue-dark); display:block;}
+  .concl-head .s{display:block; font-size:18px; color:var(--ink); font-weight:500; margin-top:4px;}
+  .concl-grid{align-items:flex-start;}
+  .concl-col{flex:1; max-width:560px;}
+  .concl-row{display:flex; gap:22px; align-items:flex-start; margin-top:4px;}
+  .concl-row ol.bullets{flex:1; margin-top:0;}
+  .concl-row .curve-card{flex:none; margin:0;}
+
+  /* ================= LECTURE 9 COMPONENTS ================= */
+  /* --- colored-term phrase (Introduction slide) --- */
+  .term-a{color:var(--orange); font-weight:700;}
+  .term-b{color:var(--blue); font-weight:700;}
+  .term-c{color:var(--purple); font-weight:700;}
+
+  /* --- stacked definition cards (two .def-box in a column) --- */
+  .def-stack{display:flex; flex-direction:column; gap:14px; margin-top:16px;}
+  .def-stack .def-box{margin-top:0;}
+
+  /* --- worked-calculation card: labeled equation lines --- */
+  .calc-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:22px 30px;
+    margin:18px auto 0; max-width:840px; box-shadow:0 16px 34px -22px rgba(0,0,0,.28); text-align:left;}
+  .calc-row{margin-bottom:16px;}
+  .calc-row:last-child{margin-bottom:0;}
+  .calc-label{font-size:15px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--blue); margin-bottom:5px;}
+  .calc-eq{font-size:24px; color:var(--ink); line-height:1.4;}
+  .calc-eq b{color:var(--blue-dark);}
+  .calc-eq .res{color:var(--orange); font-weight:700;}
+  .calc-eq sub{font-size:15px;}
+
+  /* --- expenditure waterfall bar chart --- */
+  .bar-chart-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px 34px 14px;
+    margin:14px auto 0; width:fit-content; max-width:100%; box-shadow:0 16px 34px -22px rgba(0,0,0,.28);}
+  .bar-legend{display:flex; gap:18px; justify-content:center; margin-top:10px; font-size:15px; color:var(--sub); flex-wrap:wrap;}
+  .bar-legend span{display:inline-flex; align-items:center; gap:7px;}
+  .bar-legend i{width:14px; height:14px; border-radius:3px; display:inline-block; flex:none;}
+  .bar-legend b{color:var(--ink);}
+
+
+  /* ================= LECTURE 9 (ECONOMIC GROWTH) COMPONENTS ================= */
+  /* --- nested lettered sub-lists inside ol.bullets --- */
+  ol.bullets ol.alpha{list-style:lower-alpha; padding-left:30px; margin:8px 0 0;}
+  ol.bullets ol.alpha li{margin-bottom:8px;}
+  ol.bullets ol.alpha li::marker{color:var(--gold); font-weight:700;}
+
+  /* --- two-column numbered list (long lists of short items) --- */
+  ol.bullets.two-col{columns:2; column-gap:56px;}
+  ol.bullets.two-col li{break-inside:avoid; margin-bottom:12px;}
+  .closer.center{text-align:center; margin-top:18px;}
+
+  /* --- live OWID chart height, tuned so title + chart fit without scaling --- */
+  .chart-card iframe.owid{height:555px;}
+  #s-fact2 .chart-card iframe.owid{height:500px;}
+  /* chart-only slides: no slide title; the OWID frame fills the slide.
+     930px wide keeps OWID from opening its country side-panel (it appears once the frame is wider than ~940px) */
+  .slide.chart-only{padding:22px 66px 40px;}
+  .slide.chart-only .chart-card{max-width:930px; margin-top:0;}
+  .slide.chart-only .chart-card iframe.owid{height:654px;}
+
+  /* --- small source/footnote line under a component --- */
+  .src-note{font-size:15px; color:#8f978f; margin-top:10px; line-height:1.4;}
+  .src-note a{color:var(--blue);}
+
+  /* --- click-to-play video (thumbnail swaps to embedded player) --- */
+  .video-link{cursor:pointer; max-width:840px;}
+  .video-wrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .video-caption a{color:var(--blue);}
+
+
+  /* ================= LECTURE 11 COMPONENTS ================= */
+  .grp{font-size:27px; font-weight:700; color:var(--blue); margin:14px 0 0; line-height:1.2;}
+  .grp + ul.bullets{margin-top:6px;}
+  .grp:first-of-type{margin-top:8px;}
+
+  /* text column + photo column(s) */
+  .split-media.l11 .col-text{width:640px;}
+  .split-media.l11.wide .col-text{width:700px;}
+  .split-media.l11 .col-photo{flex-direction:column; align-items:center; gap:14px;}
+  .viz-card.ph{padding:10px 12px 8px; margin:0;}
+  .viz-card.ph img{width:100%; height:auto; border-radius:6px;}
+  .viz-card.ph .src{font-size:13px; margin-top:7px; max-width:100%;}
+  .viz-card.ph.crop img{object-fit:cover;}
+
+  /* bonds / stocks: image under bullets */
+  .bond-card{padding:12px 16px 8px;}
+  .bond-card img{width:auto; max-height:290px;}
+
+  /* curve + bullets side by side */
+  .split-curve.l11 .col-text{width:430px;}
+  .split-curve.l11 .col-text ul.bullets li{margin-bottom:12px;}
+  .split-curve.l11 .curve-card{padding:12px 14px;}
+
+  /* ================= LECTURE 12 COMPONENTS ================= */
+  /* opening question slide */
+  .big-q{font-size:64px !important; line-height:1.2; text-align:center; max-width:1000px; margin:0 auto;}
+
+  /* labor-force equation: boxes joined by + / = / ÷ */
+  .lf-eq{display:flex; align-items:center; justify-content:center; gap:14px; margin-top:34px;}
+  .lf-grp{display:flex; align-items:center; gap:14px;}
+  .lf-box{background:#fff; border:1px solid var(--line); border-radius:12px; padding:22px 26px; text-align:center;
+    min-width:250px; box-shadow:0 16px 34px -22px rgba(0,0,0,.28);}
+  .lf-box .num{font-size:56px; font-weight:700; color:var(--blue); line-height:1.05;}
+  .lf-box .lab{font-size:24px; color:var(--sub); margin-top:6px; font-weight:600;}
+  .lf-box.un .num{color:var(--orange);}
+  .lf-box.tot{border-left:5px solid var(--gold);}
+  .lf-op{font-size:52px; font-weight:700; color:var(--gold); line-height:1;}
+
+  /* formula image */
+  .viz-card.formula{padding:14px 22px; margin-top:12px;}
+  .viz-card.formula img{width:520px; height:auto;}
+
+  /* chart cards drawn in SVG from FRED / BLS data */
+  .data-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 18px 10px;
+    margin:12px auto 0; width:fit-content; max-width:100%; box-shadow:0 16px 34px -22px rgba(0,0,0,.28);}
+  .data-card svg{display:block;}
+  .data-card .src{font-size:13px; color:#8f978f; margin-top:6px; line-height:1.4; max-width:940px;}
+  .data-card .src b{font-weight:600;}
+  .stat-row.two{max-width:760px; margin-left:auto; margin-right:auto;}
+  .stat-row .stat .num{font-size:30px;}
+  .stat-row .stat .lab{font-size:16px;}
+
+  /* "jobs created" headline clippings */
+  .hl-row{display:flex; gap:22px; margin-top:24px; justify-content:center; align-items:stretch;}
+  .hl-row .headline-card{width:520px; padding:22px 26px;}
+  .hl-row .headline-card .hl{font-size:25px;}
+  .hl-row .headline-card .quote{font-size:21px; font-style:italic; color:var(--sub); margin-top:12px; line-height:1.45;}
+  .hl-row .headline-card .src{font-size:15px; margin-top:14px;}
+
+  /* chart-only slide holding an image (textbook figure) */
+  .slide.chart-only .viz-card{margin-top:0;}
+  .slide.chart-only .viz-card img{width:auto;}
+
+  /* typeset formulas (replace the textbook formula images) */
+  .formula-card{display:grid; grid-template-columns:auto auto auto; column-gap:18px; row-gap:6px; align-items:center; justify-content:center;
+    width:fit-content; margin:14px auto 0; background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px 34px;
+    box-shadow:0 16px 34px -22px rgba(0,0,0,.28); font-size:28px; color:var(--blue-dark);}
+  .formula-card .f-label{font-weight:700; text-align:right;}
+  .formula-card .f-eq{font-weight:700; color:var(--gold);}
+  .formula-card .f-expr{display:flex; align-items:center; gap:12px;}
+  .formula-card .frac{display:inline-flex; flex-direction:column; align-items:center; text-align:center;}
+  .formula-card .frac .n{padding:0 10px 4px; border-bottom:2px solid var(--blue-dark); font-weight:600;}
+  .formula-card .frac .d{padding:4px 10px 0; font-weight:600;}
+  .formula-card .times{font-weight:600;}
+  .viz-card .src.fit{width:0; min-width:100%;}
+  .grp.orange{color:var(--orange);}
+  .split-media.goldin .col-text{width:600px;}
+  .split-media.goldin .col-photo{flex:1; min-width:0;}
+
+  /* ================= LECTURE 16 COMPONENTS ================= */
+  /* Say's law: Say portrait beside two stacked quotes */
+  .say-quotes{flex:1; max-width:760px; display:flex; flex-direction:column; gap:16px;}
+  .say-quotes .quote-box{margin:0; padding:18px 26px;}
+  .say-quotes .quote-box p{font-size:27px; line-height:1.42; font-style:italic; color:var(--blue-dark);}
+  .say-quotes .quote-box .attr{font-size:18px; margin-top:10px;}
+  .say-quotes .quote-box .hl{color:var(--orange);}
+  .quote-box.centered .attr{text-align:center;}
+  .quote-box.centered .hl{color:var(--orange); font-style:normal; font-weight:600;}
+  .data-table.sum{max-width:900px;}
+  .data-table.sum td + td{text-align:center;}
+  .data-table.sum td:first-child{font-weight:600; color:var(--blue-dark);}
+</style>
+<style>
+  /* ================= LECTURES 13 & 14 COMPONENTS ================= */
+  .sr-only{position:absolute !important; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
+  h2.title.sm{font-size:38px;}
+  sup,sub{line-height:0;}
+
+  /* typeset equations */
+  .eq-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px 36px; width:fit-content; margin:16px auto 0;
+    box-shadow:0 16px 34px -22px rgba(0,0,0,.28); font-size:46px; color:var(--blue-dark); text-align:center; line-height:1.25;}
+  .eq-card i{font-style:italic;}
+  .eq-card .eqsign{color:var(--gold); font-weight:700; margin:0 14px;}
+  .eq-card sub{font-size:.55em;}
+  .eq-card.sm{font-size:34px; padding:16px 30px;}
+  .frac{display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle; text-align:center;}
+  .frac .n{padding:0 10px 4px; border-bottom:2px solid var(--blue-dark);}
+  .frac .d{padding:4px 10px 0;}
+  .where{display:grid; grid-template-columns:auto 1fr; column-gap:18px; row-gap:6px; margin:16px auto 0; width:fit-content; font-size:25px; color:var(--ink); line-height:1.4;}
+  .where .sym{text-align:right; font-style:italic; color:var(--blue-dark); font-weight:600;}
+  .where .sym sub{font-size:.65em;}
+  .where-label{font-size:25px; color:var(--sub); margin:14px 0 0; font-style:italic;}
+  .bar-over{border-top:2.5px solid currentColor; padding-top:1px;}
+  .stk{display:inline-flex; flex-direction:column; align-items:center; line-height:1;}
+  .stk .arr{font-size:.62em; color:var(--orange); font-weight:700; line-height:1; margin-bottom:2px;}
+  .eq-card .up{position:relative; display:inline-block;}
+  .eq-card .up::before{content:'\2191'; position:absolute; left:50%; transform:translateX(-50%); top:-.78em; font-size:.62em; color:var(--orange); font-style:normal; font-weight:700;}
+  .eq-card .ov{text-decoration:overline; text-decoration-thickness:3px; text-underline-offset:0;}
+  .nutshell-h{font-size:27px; font-weight:700; color:var(--blue); margin:22px 0 0; text-align:center;}
+  .nutshell-p{font-size:25px; color:var(--ink); text-align:center; margin:6px 0 0; line-height:1.5;}
+
+  /* tables */
+  .data-table.l13{max-width:1000px;}
+  .data-table.l13 th{font-size:15px;}
+  .data-table.l13 td{font-size:21px;}
+  .data-table.num td.r, .data-table.num th.r{text-align:right;}
+  .data-table.world{max-width:600px; margin:0;}
+  .data-table.world td{padding:6px 14px; font-size:20px;}
+  .data-table.world th{padding:8px 14px;}
+  .data-table.world tr.hl td{color:var(--orange);}
+  .split-world{display:flex; gap:34px; align-items:center; margin-top:12px;}
+  .split-world .col-t{flex:none;}
+  .split-world .col-x{flex:1;}
+  .split-world ul.bullets{margin-top:0;}
+  .data-table.gas{max-width:520px; margin:12px auto 0;}
+  .data-table.gas td, .data-table.gas th{text-align:center; font-size:22px;}
+  .data-table.gas td:first-child, .data-table.gas th:first-child{text-align:left;}
+  .data-table.gas th{font-size:15px;}
+  .data-table.redis td{font-size:22px; vertical-align:middle;}
+  .data-table.redis th{font-size:16px; text-align:center; padding:14px;}
+  .data-table.redis th span{display:block; text-transform:none; letter-spacing:0; font-size:21px; font-weight:600; margin-top:4px; color:var(--gold-light);}
+  .data-table.redis td{text-align:center; font-weight:500;}
+  .data-table.redis td:first-child{font-weight:500; color:var(--ink);}
+  .data-table.redis td b{color:var(--blue-dark);}
+
+  /* picture-only slides */
+  .slide.chart-only .viz-card img{max-height:590px; width:auto; max-width:100%;}
+  .slide.photo{padding:30px 66px 44px;}
+  .slide.photo .viz-card{margin-top:14px;}
+  .slide.photo .viz-card img{max-height:500px; width:auto; max-width:100%;}
+  .slide.photo h2.title{text-align:center;}
+  .viz-card .src a{color:inherit;}
+
+  /* Friedman */
+  .fr-wrap{display:flex; gap:44px; align-items:center; justify-content:center; margin-top:10px;}
+  .fr-photo{flex:none; width:290px; text-align:center;}
+  .fr-photo img{display:block; width:290px; height:auto; border-radius:10px; box-shadow:0 18px 38px -22px rgba(0,0,0,.45); border:1px solid var(--line);}
+  .fr-photo .who{font-size:21px; font-weight:700; color:var(--blue-dark); margin-top:12px; line-height:1.3;}
+  .fr-photo .whosub{font-size:17px; color:var(--sub); margin-top:3px; line-height:1.35;}
+  .fr-photo .src{font-size:12.5px; color:#9aa39c; margin-top:7px; line-height:1.35;}
+  .fr-quote{flex:1; max-width:700px;}
+  .fr-quote .quote-box{margin:0;}
+  .fr-quote .quote-box p{font-size:40px; line-height:1.3; font-style:italic; color:var(--blue-dark);}
+  .fr-quote .quote-box .attr{font-size:20px; margin-top:16px;}
+  .fr-quote .quote-box .hl{color:var(--orange);}
+
+  /* $100 purchasing power */
+  .dv-grid{display:flex; flex-direction:column; gap:20px; margin-top:22px; align-items:center;}
+  .dv-row{display:flex; align-items:center; justify-content:center; gap:20px;}
+  .dv-box{background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px 24px; text-align:center; width:380px; box-shadow:0 16px 34px -22px rgba(0,0,0,.28);}
+  .dv-box .num{font-size:60px; font-weight:700; color:var(--blue); line-height:1.05;}
+  .dv-box .lab{font-size:23px; color:var(--sub); margin-top:6px; font-weight:600;}
+  .dv-box.gold{border-left:5px solid var(--gold);}
+  .dv-box.orange .num{color:var(--orange);}
+  .dv-op{font-size:56px; font-weight:700; color:var(--gold); line-height:1;}
+  .src-note.c{text-align:center;}
+  .bars-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 20px 8px; margin:12px auto 0; width:fit-content; max-width:100%; box-shadow:0 16px 34px -22px rgba(0,0,0,.28);}
+  .bars-card svg{display:block;}
+  .bars-card .src{font-size:13px; color:#8f978f; margin-top:6px; line-height:1.4; max-width:960px;}
+  .dv-legend{display:flex; gap:22px; justify-content:center; font-size:17px; color:var(--sub); margin-top:4px;}
+  .dv-legend span{display:inline-flex; align-items:center; gap:7px;}
+  .dv-legend i{width:14px; height:14px; border-radius:3px; display:inline-block;}
+  .big-q.sm{font-size:56px !important;}
+  .def-stack .def-box{margin-top:0;}
+  .callout.center{text-align:center;}
+
+  /* ---- What is money? section ---- */
+  .money-def .def-box p{margin:0;}
+  .hist-row{display:flex; gap:16px; justify-content:center; align-items:stretch; margin-top:20px;}
+  .hist-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 10px 10px; box-shadow:0 14px 30px -22px rgba(0,0,0,.3); text-align:center; display:flex; flex-direction:column; align-items:center;}
+  .hist-card img{display:block; height:178px; width:auto; max-width:262px; border-radius:6px;}
+  .hist-card .nm{font-size:21px; font-weight:700; color:var(--blue-dark); margin-top:8px; line-height:1.2;}
+  .hist-card .wh{font-size:16px; color:var(--sub); margin-top:2px; line-height:1.3;}
+  .hist-src{font-size:13px; color:#8f978f; margin-top:10px; text-align:center; line-height:1.4;}
+  .data-table.ms{max-width:1060px; margin-top:16px;}
+  .data-table.ms th{font-size:15px; vertical-align:bottom;}
+  .data-table.ms td{font-size:22px; padding:10px 14px;}
+  .data-table.ms td:first-child{font-weight:600; white-space:nowrap;}
+  .data-table.ms td.r, .data-table.ms th.r{text-align:right;}
+  .data-table.ms .res{color:#9aa39c;}
+  .data-table.ms th.res{color:#c9cfd9;}
+  .data-table.ms td.tot{font-weight:700; color:var(--blue-dark);}
+  .data-table.ms tr.up td.tot{color:var(--orange);}
+  .mm-m2{border:2px solid var(--gold); border-radius:14px; padding:16px 22px 18px; margin-top:18px; background:#fffdf7;}
+  .mm-head{font-size:27px; font-weight:700; color:var(--blue-dark); margin-bottom:12px;}
+  .mm-head span{color:var(--sub); font-weight:500; font-size:21px; margin-left:8px;}
+  .mm-row{display:flex; gap:20px; align-items:stretch;}
+  .mm-m1{flex:1.5; background:#fff; border:2px solid var(--blue); border-radius:12px; padding:14px 18px;}
+  .mm-extra{flex:1; display:flex; flex-direction:column; justify-content:center; gap:10px;}
+  .mm-item{display:flex; justify-content:space-between; gap:14px; font-size:22px; line-height:1.35; padding:7px 0; border-top:1px solid var(--line);}
+  .mm-item:first-of-type{border-top:none;}
+  .mm-item b{color:var(--blue-dark); white-space:nowrap;}
+  .mm-extra .mm-item{border:1px solid var(--line); border-radius:9px; background:#fff; padding:10px 14px;}
+  .mm-plus{font-size:17px; text-transform:uppercase; letter-spacing:.06em; font-weight:700; color:var(--gold);}
+</style>
+
+
+<style>
+  /* ================= LECTURE 15/16 COMPONENTS ================= */
+  /* vector arrow over a growth-rate symbol: M, v, P, Y with an arrow above */
+  .vec{position:relative; display:inline-block; font-style:italic; line-height:1;}
+  .vec::before{content:""; position:absolute; left:.04em; right:.02em; top:-.08em; height:.22em;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 8' preserveAspectRatio='none'><path d='M0 4H22M17.5 .8L22 4L17.5 7.2' fill='none' stroke='%23d9642c' stroke-width='1.5'/></svg>") no-repeat center / 100% 100%;}
+  .where .sym .vec::before{top:-.1em;}
+  .eq-card.growth{font-size:54px; padding:24px 44px 18px; margin-top:26px;}
+  .eq-card.growth .vec::before{top:-.1em;}
+  .eq-card.plain{font-size:50px;}
+  .eq-card .nominal{font-size:.45em; color:var(--sub); display:block; margin-top:2px; letter-spacing:.02em;}
+  .where.l15{grid-template-columns:auto auto; column-gap:22px;}
+  .where.l15 .sym{font-size:30px;}
+  .where.l15 .sym .vec{margin-right:2px;}
+  .where.l15 .def{font-size:25px;}
+  .where.l15 .def b{color:var(--blue-dark);}
+  .eq-note{font-size:22px; color:var(--sub); text-align:center; margin:12px 0 0;}
+  .eq-note b{color:var(--blue-dark);}
+  .lead-in{font-size:25px; color:var(--ink); margin:18px 0 0; text-align:center;}
+
+  /* chart / diagram cards */
+  .data-card.l15 svg{max-width:100%; height:auto;}
+  .data-card.l15 img.fred-img{display:block; width:100%; height:auto;}
+  .curve-card.big{padding:14px 18px;}
+  .curve-card.big svg{display:block; max-width:100%; height:auto;}
+  .split-curve.l15 .col-text{width:500px;}
+  .split-curve.l15 ul.bullets li{margin-bottom:13px;}
+  .split-curve.l15 .col-chart .curve-card{padding:12px 14px;}
+  .split-curve.l15.wide-text .col-text{width:560px;}
+  .split-curve.l15 .callout{margin-top:0;}
+  .slide.l15-diag{padding:36px 66px 40px;}
+  .slide.l15-diag .curve-card{margin-top:8px;}
+  .slide.l15-chart .data-card{margin-top:8px;}
+  .chart-note{font-size:23px; color:var(--sub); margin:2px 0 4px; line-height:1.25;}
+  .chart-note b{color:var(--blue-dark);}
+
+  /* two-column "shocks" tables: header cells are real <th> */
+  .data-table.l15{max-width:1040px; margin-top:18px;}
+  .data-table.l15 th{font-size:19px; text-transform:none; letter-spacing:0; text-align:center; padding:14px 18px; line-height:1.3;}
+  .data-table.l15 th span{display:block; font-weight:500; font-size:17px; color:var(--gold-light); margin-top:3px;}
+  .data-table.l15 td{font-size:24px; padding:11px 20px; line-height:1.35;}
+  .data-table.l15 td:first-child{font-weight:500; color:var(--ink);}
+  .data-table.l15 td + td{border-left:1px solid var(--line);}
+  .data-table.l15.up th:first-child{border-bottom:4px solid #1a7a4a;}
+  .data-table.l15.up th:last-child{border-bottom:4px solid var(--orange);}
+  .slide.l15-table{padding:36px 66px 40px;}
+  .grp-note{font-size:25px; color:var(--sub); margin:14px 0 0; font-style:italic;}
+</style>
+
+<style>
+  /* ================= LECTURE 16 ================= */
+  .split-curve.l15.wide-text .col-text{width:520px;}
+  .split-curve.l15 .callout{font-size:25px;}
+  ol.bullets.num-inner{margin:8px 0 0;}
+  ol.bullets.num-inner li{font-size:25px;}
+</style>
+
+<style>
+  .data-table.sum .sr{font-size:19px; font-weight:500; color:var(--sub);}
+  /* reasons-for-shifts tables */
+  .data-table.why{max-width:1148px; margin-top:10px;}
+  .data-table.why th{font-size:20px; padding:8px 16px;}
+  .data-table.why td{font-size:22px; line-height:1.27; padding:8px 16px; vertical-align:top; text-align:left;}
+  .data-table.why td:first-child{font-weight:700; color:var(--blue-dark); width:104px;}
+  .data-table.why ul{margin:0; padding-left:20px;}
+  .data-table.why li{margin:0 0 1px;}
+  .data-table.why li::marker{color:var(--gold);}
+  .data-table.why.sras td{font-size:24px; padding:13px 20px;}
+  .data-table.why.sras td:first-child{width:190px;}
+</style>
+<style>
+  /* ================= MODULE 2 REVIEW ================= */
+  .split-curve.rev .col-text{width:452px;}
+  .split-curve.rev .col-chart{justify-content:flex-end;}
+  .split-curve.rev ul.bullets li{font-size:24px; margin-bottom:12px;}
+  .split-curve.rev .callout{font-size:23px; margin-top:6px;}
+  .split-curve.rev .curve-card{padding:10px 12px;}
+  .split-curve.rev .curve-card svg{max-width:100%; height:auto;}
+  .slide.l15-chart .stat-row{margin-top:10px;}
+  .slide.l15-chart .stat-row .stat{padding:6px 14px;}
+  .slide.l15-chart .stat-row .stat .num{font-size:30px;}
+  .slide.l15-chart .calc-card{max-width:900px; margin-top:12px; padding:14px 26px;}
+  .slide.l15-chart .def-box{margin-top:8px; padding:16px 24px;}
+  .slide.l15-chart .def-box p{font-size:25px; line-height:1.4; margin:0;}
+  .slide.l15-chart ul.bullets{margin-top:10px;}
+  .slide.l15-chart ul.bullets li{margin-bottom:6px;}
+  .slide.l15-chart .callout{margin-top:10px; padding:10px 18px;}
+  .data-table.types{max-width:1148px;}
+  .data-table.types td{font-size:23px; line-height:1.3; padding:14px 18px; vertical-align:top; text-align:left;}
+  .data-table.types td:first-child{font-weight:700; color:var(--blue-dark); width:150px;}
+  .data-table.types th{text-align:left;}
+  #s-causes .theme-card{padding:14px 18px;}
+  .stat-row.three{max-width:900px; margin-left:auto; margin-right:auto;}
+  .slide.l15-chart .stat-row.three .stat .num{font-size:34px;}
+  .lras-pair{display:flex; gap:22px; justify-content:center; margin-top:6px;}
+  .lras-col{width:556px;}
+  .lras-h{font-size:24px; font-weight:700; color:var(--blue-dark); text-align:center; margin-bottom:6px;}
+  .lras-h .o{color:var(--orange);}
+  .lras-col .curve-card{margin:0 auto; padding:8px 10px;}
+  .lras-col .curve-card svg{width:516px; height:auto;}
+  .lras-cap{font-size:22px; line-height:1.35; color:var(--ink); margin:8px 4px 0;}
+  .lras-cap b{color:var(--blue-dark);}
+</style>
+</head>
+<body>
+
+<div id="viewport">
+  <div id="stage">
+
+    <section class="slide" id="s0">
+      <div class="slide-inner">
+        <h1><span style="color:var(--gold-light);">Module 2 Review</span></h1>
+        <div class="rule"></div>
+        <div class="meta">ECON 104 &middot; <b>Review session</b> &middot; <b>October 29, 2026</b><br>Growth, saving and investment, GDP, unemployment, money and prices, business fluctuations</div>
+      </div>
+    </section>
+    <section class="slide" id="s-overview">
+      <div class="slide-inner"><h2 class="title">Overview</h2>
+  <ol class="bullets"><li><b>Economic growth</b> (Lectures 9&ndash;10)</li><li><b>Saving, investment, and the financial system</b> (Lecture 11)</li><li><b>GDP</b> (Lecture 8)</li><li><b>Unemployment</b> (Lecture 12)</li><li><b>Money and prices:</b> inflation and the quantity theory of money (Lectures 13&ndash;14)</li><li><b>Business fluctuations:</b> aggregate demand and aggregate supply (Lectures 15&ndash;16)</li></ol><p class="lede">Every graph today uses current data (FRED, BEA, BLS), retrieved October 29, 2026.</p></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">2</div>
+    </section>
+    <section class="slide" id="s-growth">
+      <div class="slide-inner"><h2 class="title">Economic Growth: Miracles and Disasters</h2>
+  <div class="split-curve l15 rev"><div class="col-text"><ul class="bullets"><li>Everyone used to be poor.</li><li>GDP per capita varies enormously across nations.</li><li>There are growth miracles and growth disasters.</li><li>Japan and South Korea grew fast. Nigeria has barely grown.</li></ul></div><div class="col-chart"><div class="curve-card big"><svg viewBox="0 0 640 420" width="640" height="420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Line chart on a logarithmic scale of real GDP per capita, in constant 2015 U.S. dollars, from 1960 to 2025 for five countries. The United States rises steadily from about 19,000 to about 68,000 dollars. South Korea rises from about 1,000 to about 37,000 and Japan from about 6,500 to about 39,000, the growth miracles. Argentina rises only from about 7,400 to about 13,000 and Nigeria from about 1,400 to about 2,400, the growth disasters.">
+<line x1="70" y1="364.3" x2="516" y2="364.3" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="61.0" y="370.3" font-size="17" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">$1k</text>
+<line x1="70" y1="286.9" x2="516" y2="286.9" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="61.0" y="292.9" font-size="17" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">$3k</text>
+<line x1="70" y1="202.1" x2="516" y2="202.1" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="61.0" y="208.1" font-size="17" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">$10k</text>
+<line x1="70" y1="124.8" x2="516" y2="124.8" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="61.0" y="130.8" font-size="17" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">$30k</text>
+<line x1="70" y1="40.0" x2="516" y2="40.0" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="61.0" y="46.0" font-size="17" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">$100k</text>
+<line x1="70.0" y1="380" x2="70.0" y2="386" stroke="#8f978f" stroke-width="1.4"/>
+<text x="70.0" y="407.0" font-size="17" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">1960</text>
+<line x1="207.2" y1="380" x2="207.2" y2="386" stroke="#8f978f" stroke-width="1.4"/>
+<text x="207.2" y="407.0" font-size="17" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">1980</text>
+<line x1="344.5" y1="380" x2="344.5" y2="386" stroke="#8f978f" stroke-width="1.4"/>
+<text x="344.5" y="407.0" font-size="17" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2000</text>
+<line x1="481.7" y1="380" x2="481.7" y2="386" stroke="#8f978f" stroke-width="1.4"/>
+<text x="481.7" y="407.0" font-size="17" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2020</text>
+<line x1="70" y1="380" x2="516" y2="380" stroke="#8f978f" stroke-width="1.6"/>
+<text x="8.0" y="22.0" font-size="18" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Real GDP per capita (constant 2015 US$, log scale)</text>
+<polyline fill="none" stroke="#002060" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round" points="70.0,157.0 76.9,156.5 83.7,153.4 90.6,151.4 97.4,148.4 104.3,144.9 111.2,141.4 118.0,140.4 124.9,137.8 131.8,136.3 138.6,137.0 145.5,135.6 152.3,132.7 159.2,129.5 166.1,130.6 172.9,131.4 179.8,128.4 186.6,125.9 193.5,122.9 200.4,121.4 207.2,122.3 214.1,121.2 221.0,123.2 227.8,120.7 234.7,116.3 241.5,114.1 248.4,112.4 255.3,110.6 262.1,108.3 269.0,106.5 275.8,105.9 282.7,107.0 289.6,105.5 296.4,104.5 303.3,102.6 310.2,101.6 317.0,99.8 323.9,97.6 330.7,95.3 337.6,92.8 344.5,90.8 351.3,90.8 358.2,90.3 365.0,88.9 371.9,86.9 378.8,85.2 385.6,83.9 392.5,83.2 399.4,83.8 406.2,86.2 413.1,85.0 419.9,84.4 426.8,83.4 433.7,82.4 440.5,81.2 447.4,79.8 454.2,79.1 461.1,77.8 468.0,76.2 474.8,74.7 481.7,76.5 488.6,72.4 495.4,71.1 502.3,69.6 509.1,68.3 516.0,67.2"/>
+<polyline fill="none" stroke="#b07d12" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round" points="70.0,232.7 76.9,225.3 83.7,219.9 90.6,214.9 97.4,207.9 104.3,204.7 111.2,198.2 118.0,191.5 124.9,183.8 131.8,176.3 138.6,176.9 145.5,175.2 152.3,170.5 159.2,166.0 166.1,167.8 172.9,166.6 179.8,164.6 186.6,162.3 193.5,159.3 200.4,156.1 207.2,154.7 214.1,152.3 221.0,150.5 227.8,148.6 234.7,145.9 241.5,142.8 248.4,140.8 255.3,137.9 262.1,133.6 269.0,130.5 275.8,127.4 282.7,125.3 289.6,125.0 296.4,125.6 303.3,125.1 310.2,123.6 317.0,121.6 323.9,120.9 330.7,122.3 337.6,122.7 344.5,120.7 351.3,120.7 358.2,120.8 365.0,120.0 371.9,118.5 378.8,117.2 385.6,116.2 392.5,115.1 399.4,115.9 406.2,120.3 413.1,117.4 419.9,117.4 426.8,116.2 433.7,114.7 440.5,113.9 447.4,112.6 454.2,112.1 461.1,110.9 468.0,110.2 474.8,110.3 481.7,113.2 488.6,110.4 495.4,109.2 502.3,108.3 509.1,108.2 516.0,107.0"/>
+<polyline fill="none" stroke="#1a7a4a" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round" points="70.0,361.5 76.9,358.9 83.7,358.2 90.6,354.4 97.4,349.7 104.3,346.4 111.2,340.6 118.0,335.7 124.9,328.6 131.8,320.6 138.6,315.5 145.5,309.7 152.3,305.9 159.2,297.5 166.1,292.3 172.9,287.9 179.8,280.4 186.6,273.3 193.5,266.8 200.4,262.1 207.2,264.2 214.1,260.3 221.0,255.6 227.8,247.8 234.7,241.6 241.5,236.8 248.4,229.9 255.3,222.0 262.1,214.7 269.0,210.5 275.8,204.5 282.7,197.9 289.6,194.3 296.4,190.2 303.3,184.7 310.2,178.9 317.0,174.1 323.9,170.5 330.7,174.5 337.6,167.3 344.5,161.7 351.3,159.0 358.2,154.1 365.0,152.4 371.9,149.1 378.8,146.2 385.6,143.0 392.5,139.4 399.4,137.8 406.2,137.6 413.1,133.2 419.9,131.2 426.8,129.8 433.7,127.8 440.5,126.0 447.4,124.4 454.2,122.4 461.1,120.3 468.0,118.4 474.8,117.0 481.7,117.6 488.6,114.4 495.4,112.3 502.3,111.3 509.1,109.9 516.0,109.1"/>
+<polyline fill="none" stroke="#d9642c" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round" points="70.0,223.3 76.9,220.8 83.7,222.6 90.6,227.6 97.4,221.9 104.3,215.9 111.2,217.5 118.0,216.4 124.9,214.1 131.8,208.7 138.6,207.7 145.5,204.9 152.3,204.9 159.2,204.1 166.1,201.4 172.9,202.6 179.8,205.2 186.6,201.5 193.5,205.9 200.4,200.2 207.2,200.2 214.1,205.1 221.0,206.7 227.8,204.9 234.7,204.9 241.5,209.8 248.4,206.7 255.3,205.9 262.1,207.7 269.0,214.0 275.8,216.8 282.7,211.7 289.6,207.3 296.4,202.7 303.3,199.7 310.2,202.6 317.0,199.7 323.9,195.0 330.7,193.2 337.6,196.5 344.5,197.8 351.3,201.8 358.2,210.7 365.0,205.4 371.9,200.1 378.8,194.8 385.6,190.1 392.5,184.7 399.4,182.6 406.2,187.6 413.1,181.6 419.9,178.2 426.8,179.7 433.7,178.7 440.5,181.2 447.4,180.1 454.2,182.2 461.1,180.9 468.0,183.3 474.8,185.3 481.7,193.0 488.6,186.1 495.4,182.2 502.3,183.7 509.1,184.9 516.0,182.1"/>
+<polyline fill="none" stroke="#8f978f" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round" points="70.0,338.1 76.9,339.1 83.7,337.6 90.6,333.4 97.4,331.6 104.3,329.9 111.2,334.3 118.0,348.0 124.9,350.3 131.8,336.7 138.6,322.5 145.5,314.8 152.3,314.1 159.2,312.4 166.1,306.6 172.9,312.4 179.8,308.4 186.6,306.2 193.5,312.7 200.4,310.1 207.2,309.4 214.1,321.7 221.0,328.6 227.8,338.6 234.7,341.1 241.5,339.1 248.4,341.1 255.3,340.6 262.1,337.6 269.0,338.1 275.8,332.1 282.7,333.9 289.6,332.5 296.4,335.7 303.3,339.1 310.2,340.6 317.0,339.6 323.9,339.6 330.7,339.6 337.6,341.1 344.5,339.6 351.3,337.2 358.2,329.5 365.0,326.1 371.9,322.1 378.8,319.5 385.6,317.3 392.5,314.8 399.4,312.0 406.2,308.8 413.1,305.0 419.9,303.5 426.8,302.6 433.7,299.8 440.5,297.5 447.4,297.3 454.2,300.3 461.1,301.5 468.0,301.8 474.8,301.8 481.7,307.8 488.6,308.4 495.4,307.2 502.3,306.2 509.1,305.0 516.0,303.5"/>
+<text x="524.0" y="73.2" font-size="18" fill="#002060" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">United States</text>
+<text x="524.0" y="104.0" font-size="18" fill="#b07d12" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Japan</text>
+<text x="524.0" y="126.1" font-size="18" fill="#1a7a4a" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">South Korea</text>
+<text x="524.0" y="188.1" font-size="18" fill="#d9642c" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Argentina</text>
+<text x="524.0" y="309.5" font-size="18" fill="#8f978f" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Nigeria</text>
+</svg></div></div></div><div class="src-note">Source: World Bank, GDP per capita (constant 2015 US$), annual, 1960 &ndash; 2025. Vertical axis is a logarithmic scale: equal vertical distances are equal percentage changes.</div></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">3</div>
+    </section>
+    <section class="slide" id="s-causes">
+      <div class="slide-inner"><h2 class="title">Causes of Economic Growth</h2>
+  <ul class="bullets"><li><b>Present:</b> consume less (saving). <b>Invest:</b> capital formation. <b>Future:</b> consume more!</li><li>Capital increases labor productivity! Capital can be physical capital, human capital, and technological knowledge.</li><li>Why do some countries have more capital and more productive labor? <b>Good institutions!</b></li></ul><div class="theme-grid"><div class="theme-card"><div class="n">1</div><h3>Property Rights</h3></div><div class="theme-card"><div class="n">2</div><h3>Prices</h3></div><div class="theme-card"><div class="n">3</div><h3>Profits (and losses)</h3></div></div></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">4</div>
+    </section>
+    <section class="slide" id="s-loanable">
+      <div class="slide-inner"><h2 class="title">Saving, Investment, and the Market for Loanable Funds</h2>
+  <div class="split-curve l15 rev"><div class="col-text"><ul class="bullets"><li>The interest rate is the price of funds.</li><li>Saving creates the supply of loanable funds. Borrowing is the demand for loanable funds.</li><li>At the equilibrium interest rate, the quantity supplied equals the quantity demanded.</li><li>Banks, bonds, and stocks connect savers and borrowers. A bond makes you a lender. A stock makes you a part owner.</li></ul></div><div class="col-chart"><div class="curve-card big"><svg viewBox="0 0 700 470" width="700" height="470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Supply and demand diagram for the market for loanable funds. The vertical axis is the interest rate and the horizontal axis is the quantity of loanable funds in dollars. The supply curve, saving, slopes upward and the demand curve, borrowing, slopes downward. They cross at the equilibrium interest rate r star and quantity Q star.">
+<line x1="90.0" y1="60.0" x2="90.0" y2="410.0" stroke="#1c2321" stroke-width="2.2"/>
+<line x1="90.0" y1="410.0" x2="598.0" y2="410.0" stroke="#1c2321" stroke-width="2.2"/>
+<path d="M84,72 L90,58 L96,72" fill="#1c2321"/>
+<path d="M586,404 L600,410 L586,416" fill="#1c2321"/>
+<text x="102.0" y="36.0" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Interest rate</text>
+<text x="596.0" y="464.0" font-size="22" fill="#1c2321" text-anchor="end" font-weight="700" font-family="EB Garamond, Georgia, serif">Quantity of loanable funds ($)</text>
+<line x1="130.0" y1="330.0" x2="550.0" y2="120.0" stroke="#002060" stroke-width="4.5" stroke-linecap="round"/>
+<line x1="130.0" y1="120.0" x2="550.0" y2="330.0" stroke="#d9642c" stroke-width="4.5" stroke-linecap="round"/>
+<circle cx="340.0" cy="225.0" r="8" fill="#e8b74d" stroke="#002060" stroke-width="2.5"/>
+<line x1="90.0" y1="225.0" x2="340.0" y2="225.0" stroke="#7b837e" stroke-width="1.6" stroke-dasharray="6 5"/>
+<line x1="340.0" y1="225.0" x2="340.0" y2="410.0" stroke="#7b837e" stroke-width="1.6" stroke-dasharray="6 5"/>
+<text x="80.0" y="232.0" font-size="24" fill="#1c2321" text-anchor="end" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">r*</text>
+<text x="340.0" y="438.0" font-size="24" fill="#1c2321" text-anchor="middle" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">Q*</text>
+<text x="556.0" y="112.0" font-size="22" fill="#002060" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Supply</text>
+<text x="556.0" y="144.0" font-size="19" fill="#002060" text-anchor="start" font-weight="500" font-family="EB Garamond, Georgia, serif">(saving)</text>
+<text x="556.0" y="346.0" font-size="22" fill="#d9642c" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Demand</text>
+<text x="556.0" y="370.0" font-size="19" fill="#d9642c" text-anchor="start" font-weight="500" font-family="EB Garamond, Georgia, serif">(borrowing)</text>
+<text x="362.0" y="265.0" font-size="20" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">Equilibrium</text>
+</svg></div></div></div></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">5</div>
+    </section>
+    <section class="slide l15-chart" id="s-gdp">
+      <div class="slide-inner"><h2 class="title">GDP: Where We Are Now</h2>
+  <div class="def-box"><div class="term">Gross Domestic Product (GDP)</div><p>The market value of all finished goods and services produced within a country in a year. GDP per capita is GDP divided by population.</p></div><div class="stat-row "><div class="stat"><div class="num">$32.6T</div><div class="lab">Nominal GDP, 2026 Q2 (annual rate)</div></div><div class="stat"><div class="num">$24.4T</div><div class="lab">Real GDP (2017 dollars)</div></div><div class="stat"><div class="num">$71,212</div><div class="lab">Real GDP per capita (2017 dollars)</div></div><div class="stat"><div class="num">2.2%</div><div class="lab">Real GDP growth, 2026 Q2 (annual rate)</div></div></div><div class="calc-card"><div class="calc-row"><div class="calc-label">Growth rate of real GDP, year to 2026 Q2</div><div class="calc-eq">[ (GDP<sub>2026 Q2</sub> &minus; GDP<sub>2025 Q2</sub>) / GDP<sub>2025 Q2</sub> ] &times; 100<br>[ ($24,408B &minus; $23,885B) / $23,885B ] &times; 100 = <span class="res">2.2%</span></div></div></div><div class="src-note">Source: U.S. Bureau of Economic Analysis, GDP (GDP), Real GDP (GDPC1) and Real GDP per capita (A939RX0Q048SBEA), via FRED, Federal Reserve Bank of St. Louis. Retrieved October 29, 2026.</div></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">6</div>
+    </section>
+    <section class="slide l15-chart" id="s-realnom">
+      <div class="slide-inner"><h2 class="title">Nominal vs. Real GDP</h2>
+  <p class="chart-note">Real GDP uses the same set of prices in all periods. In 2025, nominal GDP grew <b>5.00%</b>, but real GDP grew only <b>2.12%</b>: the rest was inflation.</p><div class="data-card l15"><svg viewBox="0 0 1044 330" width="1044" height="330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Line chart of U.S. nominal GDP, in orange, and real GDP in chained 2017 dollars, in blue, quarterly at annual rates from 2000 to 2026, with recessions shaded. Both rise. Nominal GDP climbs from about 10 trillion dollars to 32.6 trillion in the second quarter of 2026, while real GDP climbs from about 16 trillion to 24.4 trillion. The lines cross in 2017, the base year for real GDP, and the widening gap after that is the effect of rising prices.">
+<rect x="113.6" y="16" width="20.1" height="276" fill="#c9cdd3" opacity="0.55"/>
+<rect x="316.6" y="16" width="45.1" height="276" fill="#c9cdd3" opacity="0.55"/>
+<rect x="682.6" y="16" width="4.8" height="276" fill="#c9cdd3" opacity="0.55"/>
+<line x1="76" y1="292.0" x2="894" y2="292.0" stroke="#1c2321" stroke-width="1.6"/>
+<text x="67.0" y="298.0" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">0</text>
+<line x1="76" y1="215.3" x2="894" y2="215.3" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="67.0" y="221.3" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">$10T</text>
+<line x1="76" y1="138.7" x2="894" y2="138.7" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="67.0" y="144.7" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">$20T</text>
+<line x1="76" y1="62.0" x2="894" y2="62.0" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="67.0" y="68.0" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">$30T</text>
+<line x1="76.0" y1="292" x2="76.0" y2="298" stroke="#8f978f" stroke-width="1.4"/>
+<text x="76.0" y="319.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2000</text>
+<line x1="226.4" y1="292" x2="226.4" y2="298" stroke="#8f978f" stroke-width="1.4"/>
+<text x="226.4" y="319.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2005</text>
+<line x1="376.7" y1="292" x2="376.7" y2="298" stroke="#8f978f" stroke-width="1.4"/>
+<text x="376.7" y="319.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2010</text>
+<line x1="527.1" y1="292" x2="527.1" y2="298" stroke="#8f978f" stroke-width="1.4"/>
+<text x="527.1" y="319.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2015</text>
+<line x1="677.5" y1="292" x2="677.5" y2="298" stroke="#8f978f" stroke-width="1.4"/>
+<text x="677.5" y="319.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2020</text>
+<line x1="827.8" y1="292" x2="827.8" y2="298" stroke="#8f978f" stroke-width="1.4"/>
+<text x="827.8" y="319.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2025</text>
+<line x1="76" y1="292" x2="894" y2="292" stroke="#8f978f" stroke-width="1.6"/>
+<polyline fill="none" stroke="#d9642c" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round" points="76.0,215.3 83.5,213.4 91.0,212.9 98.6,212.0 106.1,211.7 113.6,210.7 121.1,210.7 128.6,210.3 136.1,209.3 143.7,208.5 151.2,207.8 158.7,207.2 166.2,206.3 173.7,205.3 181.3,203.3 188.8,201.7 196.3,200.6 203.8,199.1 211.3,197.7 218.8,196.0 226.4,194.1 233.9,192.9 241.4,191.2 248.9,189.8 256.4,187.7 264.0,186.6 271.5,185.7 279.0,184.4 286.5,183.0 294.0,181.6 301.6,180.3 309.1,179.2 316.6,179.2 324.1,178.0 331.6,177.8 339.1,180.0 346.7,181.4 354.2,181.7 361.7,181.2 369.2,179.7 376.7,178.8 384.3,177.2 391.8,175.9 399.3,174.6 406.8,174.3 414.3,172.7 421.8,172.0 429.4,170.5 436.9,168.8 444.4,167.7 451.9,166.9 459.4,166.1 467.0,164.4 474.5,163.7 482.0,162.0 489.5,160.2 497.0,160.1 504.5,157.7 512.1,155.5 519.6,154.7 527.1,153.5 534.6,151.9 542.1,150.9 549.7,150.7 557.2,150.0 564.7,148.5 572.2,147.2 579.7,145.7 587.2,144.2 594.8,143.0 602.3,141.0 609.8,138.4 617.3,136.1 624.8,134.2 632.4,132.5 639.9,131.6 647.4,130.1 654.9,127.9 662.4,125.5 670.0,123.8 677.5,125.2 685.0,139.0 692.5,125.6 700.0,122.7 707.5,117.9 715.1,112.2 722.6,108.0 730.1,101.7 737.6,98.3 745.1,93.7 752.7,90.1 760.2,86.7 767.7,83.2 775.2,80.9 782.7,76.8 790.2,73.8 797.8,71.3 805.3,67.9 812.8,65.3 820.3,62.5 827.8,60.7 835.4,57.2 842.9,53.0 850.4,50.8 857.9,47.4 865.4,42.4"/>
+<polyline fill="none" stroke="#002060" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round" points="76.0,185.6 83.5,183.7 91.0,183.6 98.6,182.9 106.1,183.3 113.6,182.6 121.1,183.0 128.6,182.7 136.1,181.8 143.7,181.1 151.2,180.7 158.7,180.5 166.2,180.0 173.7,179.0 181.3,177.1 188.8,175.8 196.3,175.1 203.8,174.2 211.3,173.1 218.8,171.9 226.4,170.5 233.9,169.9 241.4,169.0 248.9,168.3 256.4,166.6 264.0,166.3 271.5,166.1 279.0,165.0 286.5,164.6 294.0,163.9 301.6,163.1 309.1,162.3 316.6,162.9 324.1,162.1 331.6,162.8 339.1,165.6 346.7,167.0 354.2,167.3 361.7,166.8 369.2,165.5 376.7,164.9 384.3,163.6 391.8,162.6 399.3,162.0 406.8,162.3 414.3,161.4 421.8,161.4 429.4,160.0 436.9,158.9 444.4,158.3 451.9,158.1 459.4,157.9 467.0,156.6 474.5,156.2 482.0,155.1 489.5,153.9 497.0,154.4 504.5,152.6 512.1,150.9 519.6,150.2 527.1,148.9 534.6,148.0 542.1,147.4 549.7,147.2 557.2,146.3 564.7,145.9 572.2,144.8 579.7,144.0 587.2,143.3 594.8,142.4 602.3,141.3 609.8,139.6 617.3,138.3 624.8,137.5 632.4,136.6 639.9,136.3 647.4,135.4 654.9,134.1 662.4,132.2 670.0,131.1 677.5,133.2 685.0,145.7 692.5,134.4 700.0,132.6 707.5,130.2 715.1,127.4 722.6,126.1 730.1,123.3 737.6,123.7 745.1,123.5 752.7,122.4 760.2,121.2 767.7,119.8 775.2,118.9 782.7,117.0 790.2,115.4 797.8,114.8 805.3,113.2 812.8,111.8 820.3,110.7 827.8,110.7 835.4,108.9 842.9,107.1 850.4,107.0 857.9,105.9 865.4,104.9"/>
+<circle cx="865.4" cy="42.4" r="5.5" fill="#d9642c" stroke="#fff" stroke-width="2"/>
+<circle cx="865.4" cy="104.9" r="5.5" fill="#002060" stroke="#fff" stroke-width="2"/>
+<text x="877.4" y="38.4" font-size="20" fill="#d9642c" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Nominal</text>
+<text x="877.4" y="60.4" font-size="20" fill="#d9642c" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">$32.6T</text>
+<text x="877.4" y="106.9" font-size="20" fill="#002060" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Real</text>
+<text x="877.4" y="128.9" font-size="20" fill="#002060" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">$24.4T</text>
+<text x="573.2" y="82.2" font-size="19" fill="#1c2321" text-anchor="end" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">Lines cross in 2017: real GDP uses 2017 prices</text>
+<line x1="577.2" y1="90.2" x2="587.2" y2="138.2" stroke="#1c2321" stroke-width="1.6"/>
+<text x="755.7" y="170.7" font-size="19" fill="#1c2321" text-anchor="end" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">Gap = rising prices</text>
+</svg><div class="src">Source: U.S. Bureau of Economic Analysis, GDP (GDP) and Real GDP (GDPC1), via FRED, Federal Reserve Bank of St. Louis. Billions of dollars, quarterly, seasonally adjusted annual rate; 2000 Q1 &ndash; 2026 Q2. Shaded areas are U.S. recessions (NBER).</div></div></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">7</div>
+    </section>
+    <section class="slide l15-chart" id="s-expend">
+      <div class="slide-inner"><h2 class="title">The Expenditure Approach</h2>
+  <p class="chart-note">U.S. GDP in 2026 Q2, by spending component: <b>Y = C + I + G + NX</b>.</p><div class="data-card l15"><svg viewBox="0 0 1044 300" width="1044" height="300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Horizontal bar chart of U.S. GDP by spending component, second quarter of 2026, annual rate. Consumption is 22.0 trillion dollars, 67.5 percent of GDP. Investment is 5.8 trillion, 17.9 percent. Government purchases are 5.6 trillion, 17.3 percent. Net exports are negative 0.9 trillion, negative 2.7 percent. Together they sum to nominal GDP of 32.6 trillion dollars.">
+<text x="24.0" y="52.0" font-size="28" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif"><tspan font-weight="700">C</tspan></text>
+<text x="76.0" y="51.0" font-size="24" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">Consumption</text>
+<rect x="400.0" y="22" width="439.9" height="40" rx="3" fill="#002060"/>
+<text x="851.9" y="51.0" font-size="23" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">$22.0T  (67.5%)</text>
+<text x="24.0" y="112.0" font-size="28" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif"><tspan font-weight="700">I</tspan></text>
+<text x="76.0" y="111.0" font-size="24" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">Investment</text>
+<rect x="400.0" y="82" width="116.5" height="40" rx="3" fill="#1a7a4a"/>
+<text x="528.5" y="111.0" font-size="23" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">$5.8T  (17.9%)</text>
+<text x="24.0" y="172.0" font-size="28" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif"><tspan font-weight="700">G</tspan></text>
+<text x="76.0" y="171.0" font-size="24" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">Government purchases</text>
+<rect x="400.0" y="142" width="112.5" height="40" rx="3" fill="#b07d12"/>
+<text x="524.5" y="171.0" font-size="23" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">$5.6T  (17.3%)</text>
+<text x="24.0" y="232.0" font-size="28" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif"><tspan font-weight="700">NX</tspan></text>
+<text x="76.0" y="231.0" font-size="24" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">Net exports</text>
+<rect x="382.4" y="202" width="17.6" height="40" rx="3" fill="#d9642c"/>
+<text x="414.0" y="231.0" font-size="23" fill="#d9642c" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">−$0.9T  (−2.7%)</text>
+<line x1="400.0" y1="8.0" x2="400.0" y2="250.0" stroke="#1c2321" stroke-width="1.8"/>
+<text x="24.0" y="288.0" font-size="26" fill="#002060" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Y = C + I + G + NX</text>
+<text x="404.0" y="288.0" font-size="24" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">= $32.6 trillion (nominal GDP, 2026 Q2, annual rate)</text>
+</svg><div class="src">Source: U.S. Bureau of Economic Analysis, NIPA Table 1.1.5 (PCEC, GPDI, GCE, NETEXP), via FRED, Federal Reserve Bank of St. Louis. Billions of dollars, seasonally adjusted annual rate, 2026 Q2.</div></div><ul class="bullets"><li>Factor income approach: Y = Employee compensation + Rent + Interest + Profit. Two sides of the same economy.</li></ul></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">8</div>
+    </section>
+    <section class="slide l15-chart" id="s-unrate">
+      <div class="slide-inner"><h2 class="title">The Unemployment Rate</h2>
+  <p class="chart-note">Unemployment rate = Unemployed &divide; Labor force &times; 100 = 7.109 &divide; 170.262 &times; 100 &asymp; <b>4.2%</b></p><div class="data-card l15"><svg viewBox="0 0 1044 310" width="1044" height="310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Line chart of the U.S. unemployment rate, quarterly average, from 1960 to 2026, with recessions shaded. The rate rises in every recession: about 10 percent in 1982, about 9 percent in 2009 and 13 percent in 2020 at COVID-19. In September 2026 it is 4.2 percent.">
+<rect x="60.2" y="14" width="10.7" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="183.6" y="14" width="11.7" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="233.7" y="14" width="17.0" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="312.3" y="14" width="6.4" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="331.5" y="14" width="17.1" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="446.3" y="14" width="8.6" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="582.5" y="14" width="8.6" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="668.7" y="14" width="19.1" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="824.1" y="14" width="2.0" height="260" fill="#c9cdd3" opacity="0.55"/>
+<line x1="56" y1="274.0" x2="924" y2="274.0" stroke="#1c2321" stroke-width="1.6"/>
+<text x="47.0" y="280.0" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">0%</text>
+<line x1="56" y1="209.0" x2="924" y2="209.0" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="47.0" y="215.0" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">4%</text>
+<line x1="56" y1="144.0" x2="924" y2="144.0" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="47.0" y="150.0" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">8%</text>
+<line x1="56" y1="79.0" x2="924" y2="79.0" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="47.0" y="85.0" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">12%</text>
+<line x1="56" y1="14.0" x2="924" y2="14.0" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="47.0" y="20.0" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">16%</text>
+<line x1="56.0" y1="274" x2="56.0" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="56.0" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">1960</text>
+<line x1="183.6" y1="274" x2="183.6" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="183.6" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">1970</text>
+<line x1="311.3" y1="274" x2="311.3" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="311.3" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">1980</text>
+<line x1="438.9" y1="274" x2="438.9" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="438.9" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">1990</text>
+<line x1="566.6" y1="274" x2="566.6" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="566.6" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2000</text>
+<line x1="694.2" y1="274" x2="694.2" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="694.2" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2010</text>
+<line x1="821.9" y1="274" x2="821.9" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="821.9" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2020</text>
+<line x1="56" y1="274" x2="924" y2="274" stroke="#8f978f" stroke-width="1.6"/>
+<polyline fill="none" stroke="#002060" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round" points="56.0,191.1 59.2,189.5 62.4,184.6 65.6,171.6 68.8,163.5 72.0,160.2 75.1,163.5 78.3,173.2 81.5,183.0 84.7,184.6 87.9,183.0 91.1,184.6 94.3,179.8 97.5,181.4 100.7,184.6 103.9,183.0 107.1,184.6 110.2,189.5 113.4,192.8 116.6,192.8 119.8,194.4 123.0,197.6 126.2,202.5 129.4,207.4 132.6,210.6 135.8,212.2 139.0,212.2 142.2,213.9 145.4,212.2 148.5,212.2 151.7,212.2 154.9,210.6 158.1,213.9 161.3,215.5 164.5,217.1 167.7,218.8 170.9,218.8 174.1,218.8 177.3,215.5 180.5,215.5 183.6,205.8 186.8,196.0 190.0,189.5 193.2,179.8 196.4,178.1 199.6,178.1 202.8,176.5 206.0,178.1 209.2,179.8 212.4,181.4 215.6,183.0 218.8,186.2 221.9,194.4 225.1,194.4 228.3,196.0 231.5,196.0 234.7,191.1 237.9,189.5 241.1,183.0 244.3,166.8 247.5,139.1 250.7,129.4 253.9,135.9 257.0,139.1 260.2,148.9 263.4,150.5 266.6,148.9 269.8,147.2 273.0,152.1 276.2,158.6 279.4,161.9 282.6,165.1 285.8,171.6 289.0,176.5 292.1,176.5 295.3,178.1 298.5,178.1 301.7,181.4 304.9,178.1 308.1,176.5 311.3,171.6 314.5,155.4 317.7,148.9 320.9,153.8 324.1,153.8 327.2,153.8 330.4,153.8 333.6,140.8 336.8,131.0 340.0,121.2 343.2,113.1 346.4,100.1 349.6,105.0 352.8,109.9 356.0,121.2 359.2,135.9 362.4,145.6 365.5,153.8 368.7,153.8 371.9,155.4 375.1,157.0 378.3,155.4 381.5,157.0 384.7,160.2 387.9,160.2 391.1,157.0 394.3,160.2 397.5,163.5 400.6,166.8 403.8,171.6 407.0,176.5 410.2,179.8 413.4,181.4 416.6,184.6 419.8,184.6 423.0,187.9 426.2,189.5 429.4,189.5 432.6,189.5 435.8,186.2 438.9,187.9 442.1,187.9 445.3,181.4 448.5,174.9 451.7,166.8 454.9,163.5 458.1,161.9 461.3,158.6 464.5,153.8 467.7,150.5 470.9,150.5 474.0,153.8 477.2,158.6 480.4,158.6 483.6,163.5 486.8,166.8 490.0,166.8 493.2,173.2 496.4,176.5 499.6,183.0 502.8,184.6 506.0,181.4 509.1,181.4 512.3,183.0 515.5,184.6 518.7,184.6 521.9,187.9 525.1,187.9 528.3,189.5 531.5,192.8 534.7,194.4 537.9,197.6 541.1,199.2 544.2,202.5 547.4,200.9 550.6,202.5 553.8,204.1 557.0,204.1 560.2,205.8 563.4,207.4 566.6,209.0 569.8,210.6 573.0,209.0 576.2,210.6 579.4,205.8 582.5,202.5 585.7,196.0 588.9,184.6 592.1,181.4 595.3,179.8 598.5,181.4 601.7,178.1 604.9,178.1 608.1,174.9 611.3,174.9 614.5,179.8 617.6,181.4 620.8,183.0 624.0,186.2 627.2,186.2 630.4,187.9 633.6,191.1 636.8,192.8 640.0,192.8 643.2,197.6 646.4,199.2 649.6,199.2 652.8,202.5 655.9,200.9 659.1,200.9 662.3,197.6 665.5,196.0 668.7,192.8 671.9,187.9 675.1,176.5 678.3,161.9 681.5,139.1 684.7,122.9 687.9,118.0 691.0,113.1 694.2,114.8 697.4,118.0 700.6,119.6 703.8,119.6 707.0,127.8 710.2,126.1 713.4,127.8 716.6,134.2 719.8,139.1 723.0,140.8 726.1,144.0 729.3,147.2 732.5,148.9 735.7,152.1 738.9,157.0 742.1,161.9 745.3,165.1 748.5,173.2 751.7,174.9 754.9,181.4 758.1,184.6 761.2,186.2 764.4,191.1 767.6,192.8 770.8,194.4 774.0,194.4 777.2,194.4 780.4,196.0 783.6,199.2 786.8,202.5 790.0,204.1 793.2,205.8 796.4,209.0 799.5,210.6 802.7,212.2 805.9,212.2 809.1,210.6 812.3,215.5 815.5,215.5 818.7,215.5 821.9,212.2 825.1,62.8 828.3,131.0 831.5,163.5 834.6,173.2 837.8,178.1 841.0,191.1 844.2,205.8 847.4,210.6 850.6,215.5 853.8,217.1 857.0,215.5 860.2,217.1 863.4,217.1 866.6,215.5 869.8,212.2 872.9,212.2 876.1,209.0 879.3,205.8 882.5,207.4 885.7,207.4 888.9,205.8 892.1,204.1 895.3,200.9 898.5,204.1 901.7,204.1 904.9,207.4"/>
+<circle cx="904.9" cy="207.4" r="6.5" fill="#d9642c" stroke="#fff" stroke-width="2"/>
+<text x="916.9" y="203.4" font-size="20" fill="#d9642c" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Sep 2026</text>
+<text x="916.9" y="227.4" font-size="20" fill="#d9642c" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">4.2%</text>
+<text x="839.6" y="65.1" font-size="19" fill="#1c2321" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">COVID-19: 13%</text>
+</svg><div class="src">Source: U.S. Bureau of Labor Statistics (UNRATE), via FRED, Federal Reserve Bank of St. Louis. Quarterly average, 1960 &ndash; 2026; latest value is September 2026. Shaded areas are U.S. recessions (NBER).</div></div><div class="stat-row "><div class="stat"><div class="num">163.2M</div><div class="lab">Employed</div></div><div class="stat"><div class="num">7.1M</div><div class="lab">Unemployed</div></div><div class="stat"><div class="num">170.3M</div><div class="lab">Labor force</div></div><div class="stat"><div class="num">61.8%</div><div class="lab">Labor force participation rate</div></div></div></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">9</div>
+    </section>
+    <section class="slide l15-table" id="s-types">
+      <div class="slide-inner"><h2 class="title">Types of Unemployment</h2>
+  <p class="lede">Natural unemployment rate = frictional + structural. True unemployment varies around this natural rate.</p><table class="data-table l15 why types"><thead><tr><th>Type</th><th>What it is</th><th>Causes</th></tr></thead><tbody>
+  <tr><td>Frictional</td><td>Short-term unemployment caused by the difficulty of matching employee to employer.</td><td>Costly information; new workers entering the workforce; changing careers. <b>Not necessarily bad.</b></td></tr>
+  <tr><td>Structural</td><td>Persistent, long-term unemployment.</td><td>Mismatch between skills workers have and skills employers want; unemployment benefits, minimum wage, unions, hiring and firing costs.</td></tr>
+  <tr><td>Cyclical</td><td>Unemployment correlated with the ups and downs of the business cycle.</td><td>When GDP is falling, firms tend to lay off workers; wages are &ldquo;sticky.&rdquo;</td></tr></tbody></table></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">10</div>
+    </section>
+    <section class="slide" id="s-cyclical">
+      <div class="slide-inner"><h2 class="title">Cyclical Unemployment</h2>
+  <div class="split-curve l15 rev"><div class="col-text"><ul class="bullets"><li>During recessions, unemployment increases dramatically.</li><li>Unemployment is higher when real GDP growth is below average and lower when it is above average.</li><li>Wages are &ldquo;sticky&rdquo;: the price level is too low and the wage rate is too high.</li></ul></div><div class="col-chart"><div class="curve-card big"><svg viewBox="0 0 620 430" width="620" height="430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Scatter plot of annual U.S. data from 1961 to 2024. The horizontal axis is real GDP growth in percent and the vertical axis is the change in the unemployment rate in percentage points. The points slope downward, with a correlation of about negative 0.8: when growth is low or negative the unemployment rate rises, as in 1982, 2009 and 2020, and when growth is high it falls.">
+<line x1="66" y1="344.3" x2="602" y2="344.3" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="57.0" y="350.3" font-size="17" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">-2</text>
+<line x1="66" y1="257.3" x2="602" y2="257.3" stroke="#1c2321" stroke-width="1.6"/>
+<text x="57.0" y="263.3" font-size="17" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">0</text>
+<line x1="66" y1="170.4" x2="602" y2="170.4" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="57.0" y="176.4" font-size="17" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">2</text>
+<line x1="66" y1="83.5" x2="602" y2="83.5" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="57.0" y="89.5" font-size="17" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">4</text>
+<line x1="114.7" y1="366" x2="114.7" y2="372" stroke="#8f978f" stroke-width="1.4"/>
+<text x="114.7" y="393.0" font-size="17" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">-2</text>
+<line x1="212.2" y1="366" x2="212.2" y2="372" stroke="#8f978f" stroke-width="1.4"/>
+<text x="212.2" y="393.0" font-size="17" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">0</text>
+<line x1="309.6" y1="366" x2="309.6" y2="372" stroke="#8f978f" stroke-width="1.4"/>
+<text x="309.6" y="393.0" font-size="17" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2</text>
+<line x1="407.1" y1="366" x2="407.1" y2="372" stroke="#8f978f" stroke-width="1.4"/>
+<text x="407.1" y="393.0" font-size="17" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">4</text>
+<line x1="504.5" y1="366" x2="504.5" y2="372" stroke="#8f978f" stroke-width="1.4"/>
+<text x="504.5" y="393.0" font-size="17" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">6</text>
+<line x1="602.0" y1="366" x2="602.0" y2="372" stroke="#8f978f" stroke-width="1.4"/>
+<text x="602.0" y="393.0" font-size="17" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">8</text>
+<line x1="66" y1="366" x2="602" y2="366" stroke="#8f978f" stroke-width="1.6"/>
+<polyline fill="none" stroke="#d9642c" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="8 6" points="95.2,156.0 563.0,337.1"/>
+<circle cx="338.9" cy="209.5" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="509.4" cy="305.1" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="426.6" cy="253.0" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="494.8" cy="279.1" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="528.9" cy="283.4" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="533.8" cy="287.8" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="343.7" cy="257.3" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="450.9" cy="270.4" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="363.2" cy="261.7" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="221.9" cy="192.1" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="373.0" cy="213.9" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="470.4" cy="270.4" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="485.1" cy="287.8" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="187.8" cy="222.6" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="202.4" cy="135.6" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="475.3" cy="292.1" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="436.3" cy="283.4" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="480.2" cy="300.8" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="368.1" cy="266.0" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="197.6" cy="200.8" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="334.0" cy="239.9" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="124.5" cy="166.1" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="436.3" cy="261.7" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="563.0" cy="348.6" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="416.8" cy="270.4" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="382.7" cy="266.0" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="382.7" cy="292.1" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="416.8" cy="287.8" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="392.5" cy="266.0" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="304.8" cy="239.9" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="207.3" cy="205.2" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="382.7" cy="231.3" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="348.6" cy="283.4" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="407.1" cy="292.1" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="343.7" cy="279.1" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="397.3" cy="266.0" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="426.6" cy="279.1" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="431.5" cy="274.7" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="446.1" cy="270.4" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="412.0" cy="270.4" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="260.9" cy="222.6" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="295.0" cy="213.9" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="348.6" cy="248.6" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="397.3" cy="279.1" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="382.7" cy="279.1" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="348.6" cy="279.1" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="309.6" cy="257.3" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="217.1" cy="205.2" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="85.5" cy="105.2" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="343.7" cy="244.3" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="290.1" cy="287.8" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="324.3" cy="296.5" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="314.5" cy="287.8" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="334.0" cy="309.5" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="353.5" cy="296.5" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="299.9" cy="274.7" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="334.0" cy="279.1" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="358.4" cy="279.1" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="338.9" cy="266.0" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="109.9" cy="66.1" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="519.2" cy="379.0" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="329.1" cy="331.2" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="353.5" cy="257.3" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<circle cx="358.4" cy="239.9" r="5" fill="#002060" fill-opacity="0.72" stroke="#fff" stroke-width="1"/>
+<text x="95.5" y="111.2" font-size="17" fill="#1c2321" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">2009</text>
+<text x="119.9" y="72.1" font-size="17" fill="#1c2321" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">2020</text>
+<text x="134.5" y="160.1" font-size="17" fill="#1c2321" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">1982</text>
+<text x="8.0" y="20.0" font-size="18" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Change in unemployment rate (percentage points)</text>
+<text x="334.0" y="416.0" font-size="20" fill="#1c2321" text-anchor="middle" font-weight="700" font-family="EB Garamond, Georgia, serif">Real GDP growth (% per year)</text>
+<text x="597.1" y="87.8" font-size="19" fill="#d9642c" text-anchor="end" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">Low growth:</text>
+<text x="597.1" y="109.8" font-size="19" fill="#d9642c" text-anchor="end" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">unemployment rises</text>
+<text x="75.7" y="313.8" font-size="19" fill="#d9642c" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">High growth:</text>
+<text x="75.7" y="335.8" font-size="19" fill="#d9642c" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">unemployment falls</text>
+</svg></div></div></div><div class="src-note">Source: U.S. Bureau of Economic Analysis (real GDP) and U.S. Bureau of Labor Statistics (UNRATE), via FRED, Federal Reserve Bank of St. Louis. Annual data, 1961 &ndash; 2024 (2025 omitted: October 2025 data were not published).</div></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">11</div>
+    </section>
+    <section class="slide l15-chart" id="s-inflation">
+      <div class="slide-inner"><h2 class="title">Inflation</h2>
+  <p class="chart-note">Inflation is an increase in the average level of prices. Inflation rate (%) = (P<sub>2</sub> &minus; P<sub>1</sub>) / P<sub>1</sub> &times; 100, measured with the <b>CPI</b>.</p><div class="data-card l15"><svg viewBox="0 0 1044 310" width="1044" height="310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Line chart of U.S. CPI inflation, the percent change from a year earlier, quarterly average, 1960 to 2026, with recessions shaded. Inflation is low in the 1960s, rises through the 1970s to about 13 percent around 1980, falls and stays near 2 to 3 percent for decades, peaks near 9 percent in 2022 after COVID-19, and is 3.7 percent in September 2026.">
+<rect x="60.2" y="14" width="10.7" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="183.6" y="14" width="11.7" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="233.7" y="14" width="17.0" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="312.3" y="14" width="6.4" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="331.5" y="14" width="17.1" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="446.3" y="14" width="8.6" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="582.5" y="14" width="8.6" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="668.7" y="14" width="19.1" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="824.1" y="14" width="2.0" height="260" fill="#c9cdd3" opacity="0.55"/>
+<line x1="56" y1="245.1" x2="924" y2="245.1" stroke="#1c2321" stroke-width="1.6"/>
+<text x="47.0" y="251.1" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">0%</text>
+<line x1="56" y1="187.3" x2="924" y2="187.3" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="47.0" y="193.3" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">4%</text>
+<line x1="56" y1="129.6" x2="924" y2="129.6" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="47.0" y="135.6" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">8%</text>
+<line x1="56" y1="71.8" x2="924" y2="71.8" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="47.0" y="77.8" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">12%</text>
+<line x1="56" y1="14.0" x2="924" y2="14.0" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="47.0" y="20.0" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">16%</text>
+<line x1="56.0" y1="274" x2="56.0" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="56.0" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">1960</text>
+<line x1="183.6" y1="274" x2="183.6" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="183.6" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">1970</text>
+<line x1="311.3" y1="274" x2="311.3" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="311.3" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">1980</text>
+<line x1="438.9" y1="274" x2="438.9" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="438.9" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">1990</text>
+<line x1="566.6" y1="274" x2="566.6" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="566.6" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2000</text>
+<line x1="694.2" y1="274" x2="694.2" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="694.2" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2010</text>
+<line x1="821.9" y1="274" x2="821.9" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="821.9" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2020</text>
+<line x1="56" y1="274" x2="924" y2="274" stroke="#8f978f" stroke-width="1.6"/>
+<polyline fill="none" stroke="#002060" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round" points="56.0,224.9 59.2,219.1 62.4,224.9 65.6,224.9 68.8,223.4 72.0,232.1 75.1,227.8 78.3,235.0 81.5,232.1 84.7,226.3 87.9,227.8 91.1,226.3 94.3,227.8 97.5,230.7 100.7,224.9 103.9,224.9 107.1,223.4 110.2,223.4 113.4,229.2 116.6,226.3 119.8,227.8 123.0,222.0 126.2,220.6 129.4,219.1 132.6,210.4 135.8,206.1 139.0,197.4 142.2,193.1 145.4,203.2 148.5,207.6 151.7,206.1 154.9,201.8 158.1,191.7 161.3,185.9 164.5,180.1 167.7,178.7 170.9,174.3 174.1,165.7 177.3,165.7 180.5,161.3 183.6,155.6 186.8,158.4 190.0,162.8 193.2,164.2 196.4,175.8 199.6,183.0 202.8,183.0 206.0,194.6 209.2,194.6 212.4,198.9 215.6,201.8 218.8,197.4 221.9,185.9 225.1,164.2 228.3,146.9 231.5,123.8 234.7,102.1 237.9,93.4 241.1,79.0 244.3,71.8 247.5,84.8 250.7,107.9 253.9,119.4 257.0,138.2 260.2,154.1 263.4,158.4 266.6,164.2 269.8,170.0 273.0,159.9 276.2,146.9 279.4,149.8 282.6,149.8 285.8,151.2 289.0,144.0 292.1,129.6 295.3,116.6 298.5,103.6 301.7,89.1 304.9,76.1 308.1,63.1 311.3,40.0 314.5,37.1 317.7,58.8 320.9,64.6 324.1,81.9 327.2,102.1 330.4,87.7 333.6,106.4 336.8,135.3 340.0,145.4 343.2,161.3 346.4,181.6 349.6,193.1 352.8,197.4 356.0,209.0 359.2,198.9 362.4,178.7 365.5,181.6 368.7,183.0 371.9,184.4 375.1,193.1 378.3,193.1 381.5,196.0 384.7,194.6 387.9,200.3 391.1,220.6 394.3,220.6 397.5,226.3 400.6,216.2 403.8,191.7 407.0,184.4 410.2,181.6 413.4,187.3 416.6,187.3 419.8,185.9 423.0,183.0 426.2,177.2 429.4,170.0 432.6,177.2 435.8,178.7 438.9,170.0 442.1,178.7 445.3,164.2 448.5,154.1 451.7,168.6 454.9,175.8 458.1,188.8 461.3,201.8 464.5,203.2 467.7,200.3 470.9,200.3 474.0,200.3 477.2,198.9 480.4,200.3 483.6,204.7 486.8,204.7 490.0,209.0 493.2,210.4 496.4,203.2 499.6,207.6 502.8,204.7 506.0,200.3 509.1,206.1 512.3,207.6 515.5,204.7 518.7,204.7 521.9,203.2 525.1,198.9 528.3,203.2 531.5,211.9 534.7,213.3 537.9,217.7 541.1,223.4 544.2,222.0 547.4,222.0 550.6,223.4 553.8,220.6 557.0,214.8 560.2,211.9 563.4,207.6 566.6,197.4 569.8,197.4 573.0,194.6 576.2,196.0 579.4,196.0 582.5,197.4 585.7,206.1 588.9,217.7 592.1,227.8 595.3,226.3 598.5,222.0 601.7,211.9 604.9,201.8 608.1,216.2 611.3,213.3 614.5,216.2 617.6,219.1 620.8,204.7 624.0,206.1 627.2,196.0 630.4,201.8 633.6,203.2 636.8,190.2 640.0,191.7 643.2,191.7 646.4,188.8 649.6,197.4 652.8,216.2 655.9,210.4 659.1,206.1 662.3,211.9 665.5,187.3 668.7,185.9 671.9,183.0 675.1,168.6 678.3,222.0 681.5,248.0 684.7,258.1 687.9,268.2 691.0,223.4 694.2,210.4 697.4,219.1 700.6,227.8 703.8,227.8 707.0,214.8 710.2,197.4 713.4,191.7 716.6,197.4 719.8,204.7 723.0,217.7 726.1,220.6 729.3,217.7 732.5,220.6 735.7,224.9 738.9,223.4 742.1,227.8 745.3,224.9 748.5,214.8 751.7,219.1 754.9,227.8 758.1,246.6 761.2,245.1 764.4,242.2 767.6,239.3 770.8,230.7 774.0,229.2 777.2,227.8 780.4,219.1 783.6,207.6 786.8,217.7 790.0,217.7 793.2,214.8 796.4,213.3 799.5,206.1 802.7,207.6 805.9,213.3 809.1,222.0 812.3,219.1 815.5,220.6 818.7,216.2 821.9,214.8 825.1,239.3 828.3,227.8 831.5,227.8 834.6,217.7 837.8,175.8 841.0,170.0 844.2,146.9 847.4,129.6 850.6,120.9 853.8,125.2 857.0,142.6 860.2,162.8 863.4,185.9 866.6,193.1 869.8,198.9 872.9,198.9 876.1,198.9 879.3,206.1 882.5,206.1 885.7,206.1 888.9,209.0 892.1,203.2 895.3,206.1 898.5,206.1 901.7,190.2 904.9,194.6"/>
+<circle cx="904.9" cy="194.6" r="6.5" fill="#d9642c" stroke="#fff" stroke-width="2"/>
+<text x="916.9" y="190.6" font-size="20" fill="#d9642c" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Sep 2026</text>
+<text x="916.9" y="214.6" font-size="20" fill="#d9642c" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">3.7%</text>
+<text x="303.3" y="34.2" font-size="19" fill="#1c2321" text-anchor="end" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">Great Inflation, 1970s–early 80s</text>
+<text x="839.8" y="109.3" font-size="19" fill="#1c2321" text-anchor="end" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">Post-COVID</text>
+</svg><div class="src">Source: U.S. Bureau of Labor Statistics, CPI for All Urban Consumers (CPIAUCNS), via FRED, Federal Reserve Bank of St. Louis. 12-month percent change, quarterly average, 1960 &ndash; 2026; latest value is September 2026. Shaded areas are U.S. recessions (NBER).</div></div><div class="stat-row two"><div class="stat"><div class="num">3.7%</div><div class="lab">CPI inflation, September 2026</div></div><div class="stat"><div class="num">336.3</div><div class="lab">CPI index, September 2026</div></div></div></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">12</div>
+    </section>
+    <section class="slide l15-chart" id="s-money">
+      <div class="slide-inner"><h2 class="title">What Is Money? The Money Supply Today</h2>
+  <ul class="bullets"><li>Money is a generally accepted medium of exchange. It is what you use to buy other goods.</li><li>Money supply = currency held by the public + deposits. Cash sitting in bank vaults (reserves) is not counted.</li><li>Deposits don&rsquo;t create money; bank loans do: $200 + $60 + $10 = $270.</li></ul><div class="stat-row three"><div class="stat"><div class="num">$2.4T</div><div class="lab">Currency held by the public</div></div><div class="stat"><div class="num">$20.0T</div><div class="lab">M1</div></div><div class="stat"><div class="num">$23.3T</div><div class="lab">M2</div></div></div><div class="src-note">Source: Board of Governors of the Federal Reserve System, H.6 release, via FRED, Federal Reserve Bank of St. Louis (M1SL, M2SL, CURRSL); seasonally adjusted, August 2026. Savings deposits have been counted in M1 since May 2020.</div></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">13</div>
+    </section>
+    <section class="slide l15-chart" id="s-qtm">
+      <div class="slide-inner"><h2 class="title">Money and Inflation: The Quantity Theory</h2>
+  <p class="chart-note"><b>Mv = PY</b>, so in growth rates <b><i class="vec">M</i> + <i class="vec">v</i> = <i class="vec">P</i> + <i class="vec">Y</i></b>. When v and Y are stable, the growth rate of the money supply is approximately equal to the inflation rate.</p><div class="data-card l15"><svg viewBox="0 0 1044 310" width="1044" height="310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Line chart comparing U.S. M2 money supply growth, in green, with CPI inflation, in blue, both as percent change from a year earlier, quarterly from 1960 to 2026, with recessions shaded. The two move together over the long run: both are high in the 1970s and early 1980s and low in the 1990s and 2000s. M2 growth spikes to about 26 percent in 2021, followed by the inflation surge of 2022. In September 2026 M2 growth is 5.7 percent and inflation is 3.7 percent.">
+<rect x="60.2" y="14" width="10.7" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="183.6" y="14" width="11.7" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="233.7" y="14" width="17.0" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="312.3" y="14" width="6.4" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="331.5" y="14" width="17.1" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="446.3" y="14" width="8.6" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="582.5" y="14" width="8.6" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="668.7" y="14" width="19.1" height="260" fill="#c9cdd3" opacity="0.55"/>
+<rect x="824.1" y="14" width="2.0" height="260" fill="#c9cdd3" opacity="0.55"/>
+<line x1="56" y1="241.5" x2="924" y2="241.5" stroke="#1c2321" stroke-width="1.6"/>
+<text x="47.0" y="247.5" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">0%</text>
+<line x1="56" y1="176.5" x2="924" y2="176.5" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="47.0" y="182.5" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">8%</text>
+<line x1="56" y1="111.5" x2="924" y2="111.5" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="47.0" y="117.5" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">16%</text>
+<line x1="56" y1="46.5" x2="924" y2="46.5" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="47.0" y="52.5" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">24%</text>
+<line x1="56.0" y1="274" x2="56.0" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="56.0" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">1960</text>
+<line x1="183.6" y1="274" x2="183.6" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="183.6" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">1970</text>
+<line x1="311.3" y1="274" x2="311.3" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="311.3" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">1980</text>
+<line x1="438.9" y1="274" x2="438.9" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="438.9" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">1990</text>
+<line x1="566.6" y1="274" x2="566.6" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="566.6" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2000</text>
+<line x1="694.2" y1="274" x2="694.2" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="694.2" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2010</text>
+<line x1="821.9" y1="274" x2="821.9" y2="280" stroke="#8f978f" stroke-width="1.4"/>
+<text x="821.9" y="301.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2020</text>
+<line x1="56" y1="274" x2="924" y2="274" stroke="#8f978f" stroke-width="1.6"/>
+<polyline fill="none" stroke="#1a7a4a" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round" points="56.0,210.6 59.2,216.3 62.4,213.1 65.6,204.1 68.8,193.6 72.0,184.6 75.1,185.4 78.3,183.0 81.5,179.8 84.7,177.3 87.9,178.9 91.1,176.5 94.3,175.7 97.5,174.9 100.7,170.8 103.9,171.6 107.1,176.5 110.2,179.8 113.4,178.1 116.6,177.3 119.8,174.1 123.0,174.9 126.2,177.3 129.4,176.5 132.6,176.5 135.8,180.6 139.0,192.8 142.2,202.5 145.4,204.9 148.5,195.2 151.7,176.5 154.9,167.6 158.1,166.8 161.3,173.2 164.5,179.8 167.7,178.1 170.9,178.1 174.1,184.6 177.3,195.2 180.5,208.2 183.6,218.8 186.8,220.4 190.0,207.4 193.2,191.9 196.4,167.6 199.6,139.1 202.8,132.6 206.0,132.6 209.2,134.2 212.4,146.4 215.6,143.2 218.8,137.5 221.9,143.2 225.1,151.3 228.3,168.4 231.5,185.4 234.7,190.3 237.9,193.6 241.1,196.8 244.3,194.4 247.5,194.4 250.7,173.2 253.9,150.5 257.0,143.2 260.2,131.8 263.4,137.5 266.6,146.4 269.8,135.9 273.0,133.4 276.2,135.9 279.4,139.1 282.6,152.9 285.8,166.8 289.0,173.2 292.1,177.3 295.3,178.9 298.5,182.2 301.7,178.1 304.9,174.1 308.1,177.3 311.3,174.9 314.5,182.2 317.7,176.5 320.9,171.6 324.1,171.6 327.2,161.1 330.4,171.6 333.6,167.6 336.8,162.7 340.0,167.6 343.2,169.2 346.4,172.4 349.6,144.0 352.8,139.9 356.0,140.8 359.2,144.8 362.4,173.2 365.5,177.3 368.7,178.9 371.9,175.7 375.1,168.4 378.3,171.6 381.5,165.1 384.7,171.6 387.9,184.6 391.1,177.3 394.3,174.1 397.5,167.6 400.6,166.8 403.8,182.2 407.0,197.6 410.2,207.4 413.4,205.8 416.6,196.8 419.8,193.6 423.0,196.0 426.2,205.8 429.4,216.3 432.6,208.2 435.8,199.2 438.9,191.1 442.1,190.3 445.3,197.6 448.5,207.4 451.7,209.0 454.9,206.6 458.1,213.1 461.3,216.3 464.5,219.6 467.7,228.5 470.9,230.1 474.0,226.9 477.2,236.6 480.4,233.4 483.6,230.9 486.8,231.8 490.0,226.9 493.2,228.5 496.4,231.8 499.6,237.4 502.8,238.2 506.0,231.8 509.1,217.9 512.3,209.8 515.5,200.9 518.7,198.4 521.9,205.8 525.1,202.5 528.3,200.9 531.5,201.7 534.7,196.8 537.9,195.2 541.1,191.1 544.2,184.6 547.4,183.8 550.6,174.9 553.8,174.9 557.0,178.9 560.2,180.6 563.4,191.1 566.6,192.8 569.8,190.3 573.0,193.6 576.2,192.8 579.4,183.0 582.5,175.7 585.7,165.9 588.9,159.4 592.1,166.8 595.3,182.2 598.5,185.4 601.7,187.9 604.9,188.7 608.1,178.1 611.3,177.3 614.5,195.2 617.6,202.5 620.8,201.7 624.0,209.0 627.2,197.6 630.4,199.2 633.6,211.4 636.8,208.2 640.0,208.2 643.2,202.5 646.4,199.2 649.6,198.4 652.8,196.0 655.9,195.2 659.1,189.5 662.3,188.7 665.5,193.6 668.7,189.5 671.9,189.5 675.1,191.9 678.3,174.9 681.5,162.7 684.7,167.6 687.9,174.9 691.0,197.6 694.2,224.4 697.4,226.1 700.6,220.4 703.8,213.9 707.0,203.3 710.2,193.6 713.4,167.6 716.6,163.5 719.8,159.4 723.0,165.9 726.1,183.8 729.3,178.9 732.5,180.6 735.7,184.6 738.9,189.5 742.1,191.9 745.3,191.1 748.5,189.5 751.7,190.3 754.9,194.4 758.1,190.3 761.2,195.2 764.4,196.8 767.6,195.2 770.8,192.8 774.0,186.2 777.2,183.0 780.4,183.8 783.6,190.3 786.8,193.6 790.0,196.8 793.2,201.7 796.4,207.4 799.5,209.8 802.7,210.6 805.9,213.9 809.1,209.0 812.3,206.6 815.5,198.4 818.7,186.2 821.9,177.3 825.1,74.1 828.3,52.2 831.5,45.7 834.6,35.1 837.8,119.6 841.0,135.1 844.2,139.9 847.4,155.4 850.6,188.7 853.8,213.1 857.0,239.9 860.2,262.6 863.4,275.6 866.6,273.2 869.8,265.9 872.9,251.2 876.1,233.4 879.3,225.2 882.5,215.5 885.7,213.9 888.9,209.0 892.1,206.6 895.3,208.2 898.5,205.8 901.7,200.1 904.9,196.0"/>
+<polyline fill="none" stroke="#002060" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round" points="56.0,230.1 59.2,226.9 62.4,230.1 65.6,230.1 68.8,229.3 72.0,234.2 75.1,231.8 78.3,235.8 81.5,234.2 84.7,230.9 87.9,231.8 91.1,230.9 94.3,231.8 97.5,233.4 100.7,230.1 103.9,230.1 107.1,229.3 110.2,229.3 113.4,232.6 116.6,230.9 119.8,231.8 123.0,228.5 126.2,227.7 129.4,226.9 132.6,222.0 135.8,219.6 139.0,214.7 142.2,212.2 145.4,217.9 148.5,220.4 151.7,219.6 154.9,217.1 158.1,211.4 161.3,208.2 164.5,204.9 167.7,204.1 170.9,201.7 174.1,196.8 177.3,196.8 180.5,194.4 183.6,191.1 186.8,192.8 190.0,195.2 193.2,196.0 196.4,202.5 199.6,206.6 202.8,206.6 206.0,213.1 209.2,213.1 212.4,215.5 215.6,217.1 218.8,214.7 221.9,208.2 225.1,196.0 228.3,186.2 231.5,173.2 234.7,161.1 237.9,156.2 241.1,148.1 244.3,144.0 247.5,151.3 250.7,164.3 253.9,170.8 257.0,181.4 260.2,190.3 263.4,192.8 266.6,196.0 269.8,199.2 273.0,193.6 276.2,186.2 279.4,187.9 282.6,187.9 285.8,188.7 289.0,184.6 292.1,176.5 295.3,169.2 298.5,161.9 301.7,153.8 304.9,146.4 308.1,139.1 311.3,126.1 314.5,124.5 317.7,136.7 320.9,139.9 324.1,149.7 327.2,161.1 330.4,152.9 333.6,163.5 336.8,179.8 340.0,185.4 343.2,194.4 346.4,205.8 349.6,212.2 352.8,214.7 356.0,221.2 359.2,215.5 362.4,204.1 365.5,205.8 368.7,206.6 371.9,207.4 375.1,212.2 378.3,212.2 381.5,213.9 384.7,213.1 387.9,216.3 391.1,227.7 394.3,227.7 397.5,230.9 400.6,225.2 403.8,211.4 407.0,207.4 410.2,205.8 413.4,209.0 416.6,209.0 419.8,208.2 423.0,206.6 426.2,203.3 429.4,199.2 432.6,203.3 435.8,204.1 438.9,199.2 442.1,204.1 445.3,196.0 448.5,190.3 451.7,198.4 454.9,202.5 458.1,209.8 461.3,217.1 464.5,217.9 467.7,216.3 470.9,216.3 474.0,216.3 477.2,215.5 480.4,216.3 483.6,218.8 486.8,218.8 490.0,221.2 493.2,222.0 496.4,217.9 499.6,220.4 502.8,218.8 506.0,216.3 509.1,219.6 512.3,220.4 515.5,218.8 518.7,218.8 521.9,217.9 525.1,215.5 528.3,217.9 531.5,222.8 534.7,223.6 537.9,226.1 541.1,229.3 544.2,228.5 547.4,228.5 550.6,229.3 553.8,227.7 557.0,224.4 560.2,222.8 563.4,220.4 566.6,214.7 569.8,214.7 573.0,213.1 576.2,213.9 579.4,213.9 582.5,214.7 585.7,219.6 588.9,226.1 592.1,231.8 595.3,230.9 598.5,228.5 601.7,222.8 604.9,217.1 608.1,225.2 611.3,223.6 614.5,225.2 617.6,226.9 620.8,218.8 624.0,219.6 627.2,213.9 630.4,217.1 633.6,217.9 636.8,210.6 640.0,211.4 643.2,211.4 646.4,209.8 649.6,214.7 652.8,225.2 655.9,222.0 659.1,219.6 662.3,222.8 665.5,209.0 668.7,208.2 671.9,206.6 675.1,198.4 678.3,228.5 681.5,243.1 684.7,248.8 687.9,254.5 691.0,229.3 694.2,222.0 697.4,226.9 700.6,231.8 703.8,231.8 707.0,224.4 710.2,214.7 713.4,211.4 716.6,214.7 719.8,218.8 723.0,226.1 726.1,227.7 729.3,226.1 732.5,227.7 735.7,230.1 738.9,229.3 742.1,231.8 745.3,230.1 748.5,224.4 751.7,226.9 754.9,231.8 758.1,242.3 761.2,241.5 764.4,239.9 767.6,238.2 770.8,233.4 774.0,232.6 777.2,231.8 780.4,226.9 783.6,220.4 786.8,226.1 790.0,226.1 793.2,224.4 796.4,223.6 799.5,219.6 802.7,220.4 805.9,223.6 809.1,228.5 812.3,226.9 815.5,227.7 818.7,225.2 821.9,224.4 825.1,238.2 828.3,231.8 831.5,231.8 834.6,226.1 837.8,202.5 841.0,199.2 844.2,186.2 847.4,176.5 850.6,171.6 853.8,174.1 857.0,183.8 860.2,195.2 863.4,208.2 866.6,212.2 869.8,215.5 872.9,215.5 876.1,215.5 879.3,219.6 882.5,219.6 885.7,219.6 888.9,221.2 892.1,217.9 895.3,219.6 898.5,219.6 901.7,210.6 904.9,213.1"/>
+<circle cx="904.9" cy="196.0" r="5.5" fill="#1a7a4a" stroke="#fff" stroke-width="2"/>
+<circle cx="904.9" cy="213.1" r="5.5" fill="#002060" stroke="#fff" stroke-width="2"/>
+<text x="916.9" y="194.0" font-size="19" fill="#1a7a4a" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">M2 5.7%</text>
+<text x="916.9" y="239.1" font-size="19" fill="#002060" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">CPI 3.7%</text>
+<line x1="81.5" y1="34.3" x2="132.6" y2="34.3" stroke="#1a7a4a" stroke-width="4"/>
+<text x="142.8" y="40.3" font-size="20" fill="#1a7a4a" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Money supply (M2) growth</text>
+<line x1="81.5" y1="74.9" x2="132.6" y2="74.9" stroke="#002060" stroke-width="4"/>
+<text x="142.8" y="80.9" font-size="20" fill="#002060" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Inflation (CPI)</text>
+</svg><div class="src">Source: Board of Governors of the Federal Reserve System, M2 (M2SL), and U.S. Bureau of Labor Statistics, CPI (CPIAUCNS), via FRED, Federal Reserve Bank of St. Louis. 12-month percent change, quarterly average, 1960 &ndash; 2026. Shaded areas are U.S. recessions (NBER).</div></div><div class="callout">Today: M2 growth of 5.7% &asymp; inflation of 3.7% + real growth of 2.2%, so velocity is roughly stable.</div></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">14</div>
+    </section>
+    <section class="slide l15-chart" id="s-bf">
+      <div class="slide-inner"><h2 class="title">Business Fluctuations: Actual vs. Potential Real GDP</h2>
+  <p class="chart-note">Real GDP fluctuates around its long-term trend. In 2026 Q2 it is <b>$24.4T</b>, about 1.4% above potential ($24.1T).</p><div class="data-card l15"><svg viewBox="0 0 1044 300" width="1044" height="300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Line chart of U.S. actual real GDP, a solid blue line, and CBO potential real GDP, a dashed green line, in billions of chained 2017 dollars, quarterly from 2000 to 2026, with recessions shaded. Both rise over time. Actual falls well below potential in the 2008 to 2009 recession and in 2020, the slack, and in the second quarter of 2026 actual real GDP of 24.4 trillion dollars is about 1.4 percent above potential of 24.1 trillion.">
+<rect x="119.3" y="14" width="23.2" height="250" fill="#c9cdd3" opacity="0.55"/>
+<rect x="353.4" y="14" width="52.0" height="250" fill="#c9cdd3" opacity="0.55"/>
+<rect x="775.3" y="14" width="5.5" height="250" fill="#c9cdd3" opacity="0.55"/>
+<line x1="76" y1="264.0" x2="1026" y2="264.0" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="67.0" y="270.0" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">$14T</text>
+<line x1="76" y1="180.7" x2="1026" y2="180.7" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="67.0" y="186.7" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">$18T</text>
+<line x1="76" y1="97.3" x2="1026" y2="97.3" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="67.0" y="103.3" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">$22T</text>
+<line x1="76" y1="14.0" x2="1026" y2="14.0" stroke="#e4e7e3" stroke-width="1.2"/>
+<text x="67.0" y="20.0" font-size="18" fill="#5b6560" text-anchor="end" font-weight="500" font-family="EB Garamond, Georgia, serif">$26T</text>
+<line x1="76.0" y1="264" x2="76.0" y2="270" stroke="#8f978f" stroke-width="1.4"/>
+<text x="76.0" y="291.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2000</text>
+<line x1="249.4" y1="264" x2="249.4" y2="270" stroke="#8f978f" stroke-width="1.4"/>
+<text x="249.4" y="291.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2005</text>
+<line x1="422.7" y1="264" x2="422.7" y2="270" stroke="#8f978f" stroke-width="1.4"/>
+<text x="422.7" y="291.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2010</text>
+<line x1="596.1" y1="264" x2="596.1" y2="270" stroke="#8f978f" stroke-width="1.4"/>
+<text x="596.1" y="291.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2015</text>
+<line x1="769.4" y1="264" x2="769.4" y2="270" stroke="#8f978f" stroke-width="1.4"/>
+<text x="769.4" y="291.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2020</text>
+<line x1="942.8" y1="264" x2="942.8" y2="270" stroke="#8f978f" stroke-width="1.4"/>
+<text x="942.8" y="291.0" font-size="18" fill="#5b6560" text-anchor="middle" font-weight="500" font-family="EB Garamond, Georgia, serif">2025</text>
+<line x1="76" y1="264" x2="1026" y2="264" stroke="#8f978f" stroke-width="1.6"/>
+<polyline fill="none" stroke="#1a7a4a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="9 6" points="76.0,271.3 84.7,268.4 93.3,265.6 102.0,262.9 110.7,260.3 119.3,257.9 128.0,255.6 136.7,253.5 145.3,251.6 154.0,249.7 162.7,247.9 171.3,246.1 180.0,244.3 188.7,242.4 197.4,240.6 206.0,238.7 214.7,236.7 223.4,234.7 232.0,232.6 240.7,230.5 249.4,228.4 258.0,226.4 266.7,224.4 275.4,222.4 284.0,220.4 292.7,218.5 301.4,216.7 310.0,215.0 318.7,213.2 327.4,211.4 336.0,209.7 344.7,207.9 353.4,206.2 362.0,204.5 370.7,203.0 379.4,201.5 388.0,200.2 396.7,198.9 405.4,197.8 414.0,196.7 422.7,195.6 431.4,194.4 440.1,193.2 448.7,191.9 457.4,190.6 466.1,189.2 474.7,187.8 483.4,186.3 492.1,184.8 500.7,183.2 509.4,181.6 518.1,180.0 526.7,178.3 535.4,176.6 544.1,174.9 552.7,173.1 561.4,171.3 570.1,169.5 578.7,167.6 587.4,165.7 596.1,163.8 604.7,161.8 613.4,159.8 622.1,157.8 630.7,155.7 639.4,153.6 648.1,151.6 656.7,149.6 665.4,147.6 674.1,145.5 682.8,143.5 691.4,141.4 700.1,139.4 708.8,137.2 717.4,135.1 726.1,132.9 734.8,130.6 743.4,128.4 752.1,126.1 760.8,123.9 769.4,121.8 778.1,119.7 786.8,117.7 795.4,115.7 804.1,113.6 812.8,111.5 821.4,109.1 830.1,106.6 838.8,104.0 847.4,101.3 856.1,98.5 864.8,95.6 873.4,92.6 882.1,89.5 890.8,86.3 899.4,83.2 908.1,80.1 916.8,76.9 925.5,73.9 934.1,70.8 942.8,67.9 951.5,65.1 960.1,62.3 968.8,59.6 977.5,56.8 986.1,54.2"/>
+<polyline fill="none" stroke="#002060" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round" points="76.0,266.5 84.7,261.3 93.3,261.0 102.0,259.2 110.7,260.2 119.3,258.3 128.0,259.5 136.7,258.7 145.3,256.2 154.0,254.4 162.7,253.2 171.3,252.8 180.0,251.2 188.7,248.5 197.4,243.4 206.0,239.8 214.7,238.0 223.4,235.5 232.0,232.5 240.7,229.2 249.4,225.6 258.0,223.9 266.7,221.3 275.4,219.5 284.0,215.0 292.7,214.1 301.4,213.6 310.0,210.6 318.7,209.6 327.4,207.5 336.0,205.5 344.7,203.3 353.4,204.8 362.0,202.7 370.7,204.5 379.4,212.2 388.0,216.1 396.7,216.7 405.4,215.5 414.0,211.9 422.7,210.2 431.4,206.9 440.1,204.2 448.7,202.3 457.4,203.1 466.1,200.8 474.7,200.9 483.4,196.9 492.1,193.9 500.7,192.2 509.4,191.7 518.1,191.3 526.7,187.7 535.4,186.7 544.1,183.6 552.7,180.3 561.4,181.6 570.1,176.8 578.7,172.2 587.4,170.2 596.1,166.8 604.7,164.4 613.4,162.8 622.1,162.1 630.7,159.8 639.4,158.5 648.1,155.7 656.7,153.5 665.4,151.5 674.1,149.3 682.8,146.1 691.4,141.5 700.1,138.1 708.8,135.9 717.4,133.2 726.1,132.6 734.8,130.0 743.4,126.5 752.1,121.4 760.8,118.5 769.4,124.2 778.1,158.2 786.8,127.4 795.4,122.5 804.1,115.9 812.8,108.3 821.4,104.8 830.1,97.3 838.8,98.5 847.4,97.8 856.1,94.8 864.8,91.6 873.4,87.8 882.1,85.3 890.8,80.1 899.4,75.8 908.1,74.1 916.8,69.8 925.5,66.0 934.1,63.1 942.8,63.0 951.5,58.1 960.1,53.3 968.8,53.1 977.5,50.0 986.1,47.2"/>
+<line x1="396.7" y1="198.9" x2="396.7" y2="216.7" stroke="#d9642c" stroke-width="2.4"/>
+<text x="396.7" y="252.7" font-size="19" fill="#d9642c" text-anchor="middle" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">Slack, 2009</text>
+<line x1="778.1" y1="119.7" x2="778.1" y2="158.2" stroke="#d9642c" stroke-width="2.4"/>
+<text x="768.1" y="168.2" font-size="19" fill="#d9642c" text-anchor="end" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">COVID-19</text>
+<line x1="180.0" y1="59.8" x2="284.0" y2="59.8" stroke="#002060" stroke-width="4"/>
+<text x="301.4" y="65.8" font-size="20" fill="#002060" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Actual real GDP</text>
+<line x1="180.0" y1="101.5" x2="284.0" y2="101.5" stroke="#1a7a4a" stroke-width="3.4" stroke-dasharray="9 6"/>
+<text x="301.4" y="107.5" font-size="20" fill="#1a7a4a" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Potential real GDP (CBO)</text>
+</svg><div class="src">Source: U.S. Bureau of Economic Analysis, Real GDP (GDPC1), and Congressional Budget Office, Real Potential GDP (GDPPOT), via FRED, Federal Reserve Bank of St. Louis. Billions of chained 2017 dollars, quarterly; 2000 Q1 &ndash; 2026 Q2. Shaded areas are U.S. recessions (NBER).</div></div><ul class="bullets"><li>Say&rsquo;s Law: supply creates its own demand. So why do we see slack?</li><li>Money and sticky prices are what break Say&rsquo;s Law in the short run.</li></ul></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">15</div>
+    </section>
+    <section class="slide" id="s-ad">
+      <div class="slide-inner"><h2 class="title">Aggregate Demand and Long-Run Aggregate Supply</h2>
+  <div class="split-curve l15 rev"><div class="col-text"><ul class="bullets"><li><b><i class="vec">M</i> + <i class="vec">v</i> = <i class="vec">P</i> + <i class="vec">Y</i>.</b> Spending growth is split between inflation and real growth.</li><li>AD slopes downward. LRAS is vertical: capital, labor, and technology fix the potential growth rate.</li><li>Spending growth of 10% and LRAS at 3% means inflation of 7%.</li></ul><div class="callout">Today: nominal GDP grew 6.3% over the year to 2026 Q2: 2.2% real growth plus about 4% inflation.</div></div><div class="col-chart"><div class="curve-card big"><svg viewBox="36 22 700 526" width="700" height="526" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AD and LRAS diagram. The horizontal axis is real GDP growth rate and the vertical axis is the inflation rate. A downward-sloping blue AD curve for spending growth of 10 percent crosses a vertical green LRAS line at 3 percent growth, giving an equilibrium with 3 percent real growth and 7 percent inflation.">
+<line x1="78.0" y1="58.0" x2="78.0" y2="476.0" stroke="#1c2321" stroke-width="2.2"/>
+<line x1="78.0" y1="476.0" x2="620.0" y2="476.0" stroke="#1c2321" stroke-width="2.2"/>
+<path d="M72,68 L78,54 L84,68" fill="#1c2321"/>
+<path d="M614,470 L628,476 L614,482" fill="#1c2321"/>
+<text x="92.0" y="42.0" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Inflation rate (π)</text>
+<text x="610.0" y="538.0" font-size="22" fill="#1c2321" text-anchor="end" font-weight="700" font-family="EB Garamond, Georgia, serif">Real GDP growth rate</text>
+<line x1="331.3" y1="86.5" x2="331.3" y2="476.0" stroke="#1a7a4a" stroke-width="6" stroke-linecap="round"/>
+<text x="345.3" y="94.5" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">LRAS</text>
+<line x1="194.5" y1="112.2" x2="610.0" y2="419.8" stroke="#002060" stroke-width="4.5" stroke-linecap="round"/>
+<text x="68.0" y="220.5" font-size="20" fill="#5b6560" text-anchor="end" font-weight="400" font-family="EB Garamond, Georgia, serif">7%</text>
+<line x1="78.0" y1="213.5" x2="331.3" y2="213.5" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="331.3" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">3%</text>
+<line x1="331.3" y1="213.5" x2="331.3" y2="476.0" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="179.3" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">0%</text>
+<circle cx="331.3" cy="213.5" r="8" fill="#e8b74d" stroke="#002060" stroke-width="2.5"/>
+<text x="315.3" y="249.5" font-size="22" fill="#1c2321" text-anchor="end" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">Equilibrium</text>
+<text x="620.0" y="404.8" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">AD (spending</text>
+<text x="620.0" y="426.8" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">growth = 10%)</text>
+</svg></div></div></div></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">16</div>
+    </section>
+    <section class="slide l15-diag" id="s-lras">
+      <div class="slide-inner"><h2 class="title">Real Shocks: Shifts in LRAS</h2>
+  <div class="lras-pair"><div class="lras-col"><div class="lras-h">Positive real shock: LRAS shifts <span class="o">right</span></div><div class="curve-card"><svg viewBox="36 26 690 522" width="690" height="522" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AD and LRAS diagram for a positive real shock. A dotted old LRAS line at 3 percent growth shifts right to a solid green new LRAS line at 5 percent growth. The single blue AD curve, spending growth of 10 percent, does not move. The economy moves along AD from a, 3 percent growth and 7 percent inflation, to b, 5 percent growth and 5 percent inflation. Real GDP growth rises and inflation falls.">
+<line x1="78.0" y1="58.0" x2="78.0" y2="476.0" stroke="#1c2321" stroke-width="2.2"/>
+<line x1="78.0" y1="476.0" x2="620.0" y2="476.0" stroke="#1c2321" stroke-width="2.2"/>
+<path d="M72,68 L78,54 L84,68" fill="#1c2321"/>
+<path d="M614,470 L628,476 L614,482" fill="#1c2321"/>
+<text x="92.0" y="42.0" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Inflation rate (π)</text>
+<text x="610.0" y="538.0" font-size="22" fill="#1c2321" text-anchor="end" font-weight="700" font-family="EB Garamond, Georgia, serif">Real GDP growth rate</text>
+<line x1="331.3" y1="112.0" x2="331.3" y2="476.0" stroke="#1a7a4a" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 11"/>
+<line x1="432.7" y1="86.5" x2="432.7" y2="476.0" stroke="#1a7a4a" stroke-width="6" stroke-linecap="round"/>
+<line x1="194.5" y1="112.2" x2="610.0" y2="419.8" stroke="#002060" stroke-width="4.5" stroke-linecap="round"/>
+<text x="68.0" y="220.5" font-size="20" fill="#5b6560" text-anchor="end" font-weight="400" font-family="EB Garamond, Georgia, serif">7%</text>
+<line x1="78.0" y1="213.5" x2="331.3" y2="213.5" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="68.0" y="295.5" font-size="20" fill="#5b6560" text-anchor="end" font-weight="400" font-family="EB Garamond, Georgia, serif">5%</text>
+<line x1="78.0" y1="288.5" x2="432.7" y2="288.5" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="179.3" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">0%</text>
+<text x="331.3" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">3%</text>
+<text x="432.7" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">5%</text>
+<line x1="432.7" y1="288.5" x2="432.7" y2="476.0" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="317.3" y="452.0" font-size="21" fill="#5b6560" text-anchor="end" font-weight="600" font-family="EB Garamond, Georgia, serif">Old LRAS</text>
+<text x="446.7" y="94.5" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">New LRAS</text>
+<circle cx="331.3" cy="213.5" r="7" fill="#fff" stroke="#002060" stroke-width="2.5"/>
+<circle cx="432.7" cy="288.5" r="8" fill="#e8b74d" stroke="#002060" stroke-width="2.5"/>
+<text x="317.3" y="243.5" font-size="22" fill="#1c2321" text-anchor="end" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">a</text>
+<text x="446.7" y="276.5" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">b</text>
+<text x="620.0" y="404.8" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">AD (spending</text>
+<text x="620.0" y="426.8" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">growth = 10%)</text>
+<line x1="341.3" y1="330.0" x2="411.7" y2="330.0" stroke="#1c2321" stroke-width="2.8"/>
+<path d="M422.7,330.0 L411.7,335.0 L411.7,325.0Z" fill="#1c2321"/>
+<text x="382.0" y="364.0" font-size="20" fill="#1c2321" text-anchor="middle" font-weight="600" font-family="EB Garamond, Georgia, serif">Positive</text>
+<text x="382.0" y="386.0" font-size="20" fill="#1c2321" text-anchor="middle" font-weight="600" font-family="EB Garamond, Georgia, serif">real shock</text>
+</svg></div><p class="lras-cap"><b>Real GDP growth rate rises. Inflation rate falls.</b> The same money spending chases more goods, so prices rise more slowly.</p></div><div class="lras-col"><div class="lras-h">Negative real shock: LRAS shifts <span class="o">left</span></div><div class="curve-card"><svg viewBox="36 26 690 522" width="690" height="522" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AD and LRAS diagram for a negative real shock. A dotted old LRAS line at 3 percent growth shifts left to a solid green new LRAS line at 1 percent growth. The single blue AD curve, spending growth of 10 percent, does not move. The economy moves along AD from a, 3 percent growth and 7 percent inflation, to b, 1 percent growth and 9 percent inflation. Real GDP growth falls and inflation rises.">
+<line x1="78.0" y1="58.0" x2="78.0" y2="476.0" stroke="#1c2321" stroke-width="2.2"/>
+<line x1="78.0" y1="476.0" x2="620.0" y2="476.0" stroke="#1c2321" stroke-width="2.2"/>
+<path d="M72,68 L78,54 L84,68" fill="#1c2321"/>
+<path d="M614,470 L628,476 L614,482" fill="#1c2321"/>
+<text x="92.0" y="42.0" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Inflation rate (π)</text>
+<text x="610.0" y="538.0" font-size="22" fill="#1c2321" text-anchor="end" font-weight="700" font-family="EB Garamond, Georgia, serif">Real GDP growth rate</text>
+<line x1="331.3" y1="112.0" x2="331.3" y2="476.0" stroke="#1a7a4a" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 11"/>
+<line x1="230.0" y1="86.5" x2="230.0" y2="476.0" stroke="#1a7a4a" stroke-width="6" stroke-linecap="round"/>
+<line x1="194.5" y1="112.2" x2="610.0" y2="419.8" stroke="#002060" stroke-width="4.5" stroke-linecap="round"/>
+<text x="68.0" y="220.5" font-size="20" fill="#5b6560" text-anchor="end" font-weight="400" font-family="EB Garamond, Georgia, serif">7%</text>
+<line x1="78.0" y1="213.5" x2="331.3" y2="213.5" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="68.0" y="145.5" font-size="20" fill="#5b6560" text-anchor="end" font-weight="400" font-family="EB Garamond, Georgia, serif">9%</text>
+<line x1="78.0" y1="138.5" x2="230.0" y2="138.5" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="179.3" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">0%</text>
+<text x="331.3" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">3%</text>
+<text x="230.0" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">1%</text>
+<line x1="230.0" y1="138.5" x2="230.0" y2="476.0" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="345.3" y="134.0" font-size="21" fill="#5b6560" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">Old LRAS</text>
+<text x="216.0" y="94.5" font-size="22" fill="#1c2321" text-anchor="end" font-weight="700" font-family="EB Garamond, Georgia, serif">New LRAS</text>
+<circle cx="331.3" cy="213.5" r="7" fill="#fff" stroke="#002060" stroke-width="2.5"/>
+<circle cx="230.0" cy="138.5" r="8" fill="#e8b74d" stroke="#002060" stroke-width="2.5"/>
+<text x="345.3" y="201.5" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">a</text>
+<text x="216.0" y="166.5" font-size="22" fill="#1c2321" text-anchor="end" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">b</text>
+<text x="620.0" y="404.8" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">AD (spending</text>
+<text x="620.0" y="426.8" font-size="19" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">growth = 10%)</text>
+<line x1="321.3" y1="330.0" x2="251.0" y2="330.0" stroke="#1c2321" stroke-width="2.8"/>
+<path d="M240.0,330.0 L251.0,325.0 L251.0,335.0Z" fill="#1c2321"/>
+<text x="280.6" y="364.0" font-size="20" fill="#1c2321" text-anchor="middle" font-weight="600" font-family="EB Garamond, Georgia, serif">Negative</text>
+<text x="280.6" y="386.0" font-size="20" fill="#1c2321" text-anchor="middle" font-weight="600" font-family="EB Garamond, Georgia, serif">real shock</text>
+</svg></div><p class="lras-cap"><b>Real GDP growth rate falls. Inflation rate rises.</b> The same money spending chases fewer goods, so prices rise more quickly.</p></div></div></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">17</div>
+    </section>
+    <section class="slide" id="s-adup">
+      <div class="slide-inner"><h2 class="title">An Increase in Aggregate Demand</h2>
+  <div class="split-curve l15 rev"><div class="col-text"><ul class="bullets"><li>Spending growth rises, and AD shifts right. Wages and prices are sticky, so real growth rises first: <b>a to b</b> (short run).</li><li>Employees demand higher wages, and costs rise. The SRAS curve shifts up and passes through <b>c</b>: <b>b to c</b> (long run).</li><li>In the long run, money is neutral. The increase is reflected entirely in a higher inflation rate.</li></ul></div><div class="col-chart"><div class="curve-card big"><svg viewBox="36 22 700 526" width="700" height="526" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AD, SRAS and LRAS diagram for an increase in aggregate demand, showing the short run and the long run. A vertical green LRAS line is at 3 percent growth. The blue AD curve, spending growth of 5 percent, crosses LRAS at point a, 3 percent growth and 2 percent inflation, on the upward-sloping SRAS curve with expected inflation of 2 percent. An increase in spending growth shifts AD to the right, the orange curve for 10 percent. In the short run the economy moves up along the SRAS curve from a to b, with growth above 3 percent and inflation of 5 percent. In the long run, as wages and prices catch up, the SRAS curve shifts up to a new dashed SRAS curve with expected inflation of 7 percent that passes through point c. The economy moves along the new AD curve from b to c, back at 3 percent growth with 7 percent inflation.">
+<line x1="78.0" y1="58.0" x2="78.0" y2="476.0" stroke="#1c2321" stroke-width="2.2"/>
+<line x1="78.0" y1="476.0" x2="620.0" y2="476.0" stroke="#1c2321" stroke-width="2.2"/>
+<path d="M72,68 L78,54 L84,68" fill="#1c2321"/>
+<path d="M614,470 L628,476 L614,482" fill="#1c2321"/>
+<text x="92.0" y="42.0" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Inflation rate (π)</text>
+<text x="610.0" y="538.0" font-size="22" fill="#1c2321" text-anchor="end" font-weight="700" font-family="EB Garamond, Georgia, serif">Real GDP growth rate</text>
+<line x1="331.3" y1="86.5" x2="331.3" y2="476.0" stroke="#1a7a4a" stroke-width="6" stroke-linecap="round"/>
+<text x="319.3" y="100.0" font-size="22" fill="#1c2321" text-anchor="end" font-weight="700" font-family="EB Garamond, Georgia, serif">LRAS</text>
+<line x1="78.0" y1="213.5" x2="432.7" y2="476.0" stroke="#002060" stroke-width="4.5" stroke-linecap="round"/>
+<line x1="194.5" y1="112.2" x2="610.0" y2="419.8" stroke="#d9642c" stroke-width="4.5" stroke-linecap="round"/>
+<polyline fill="none" stroke="#002060" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round" points="78.0,440.4 85.3,440.2 92.7,440.0 100.1,439.7 107.5,439.4 114.9,439.1 122.3,438.8 129.7,438.4 137.1,438.0 144.4,437.6 151.8,437.1 159.2,436.6 166.6,436.1 174.0,435.5 181.4,434.9 188.8,434.2 196.2,433.4 203.5,432.6 210.9,431.7 218.3,430.8 225.7,429.7 233.1,428.6 240.5,427.4 247.9,426.1 255.3,424.7 262.6,423.1 270.0,421.5 277.4,419.7 284.8,417.7 292.2,415.6 299.6,413.3 307.0,410.8 314.3,408.1 321.7,405.2 329.1,402.0 336.5,398.6 343.9,394.8 351.3,390.8 358.7,386.4 366.1,381.7 373.4,376.6 380.8,371.0 388.2,365.0 395.6,358.5 403.0,351.4 410.4,343.7 417.8,335.4 425.2,326.5 432.5,316.7 439.9,306.2 447.3,294.7 454.7,282.3 462.1,268.9 469.5,254.4 476.9,238.6 484.3,221.5 491.6,203.0 499.0,183.0 506.4,161.3 513.8,137.7 521.2,112.2"/>
+<polyline fill="none" stroke="#002060" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="11 8" points="78.0,252.9 84.1,252.7 90.2,252.6 96.3,252.3 102.4,252.1 108.5,251.9 114.6,251.6 120.7,251.3 126.8,251.1 132.9,250.7 139.0,250.4 145.1,250.0 151.2,249.7 157.3,249.3 163.4,248.8 169.5,248.4 175.6,247.9 181.7,247.3 187.8,246.8 193.9,246.1 200.0,245.5 206.1,244.8 212.2,244.1 218.3,243.3 224.4,242.4 230.5,241.5 236.6,240.6 242.7,239.5 248.8,238.4 254.9,237.2 261.1,236.0 267.2,234.6 273.3,233.2 279.4,231.7 285.5,230.0 291.6,228.3 297.7,226.4 303.8,224.4 309.9,222.2 316.0,220.0 322.1,217.5 328.2,214.9 334.3,212.1 340.4,209.1 346.5,206.0 352.6,202.5 358.7,198.9 364.8,195.0 370.9,190.9 377.0,186.4 383.1,181.7 389.2,176.6 395.3,171.2 401.4,165.5 407.5,159.3 413.6,152.7 419.7,145.6 425.8,138.1 431.9,130.0 438.0,121.4 444.1,112.3"/>
+<text x="68.0" y="408.0" font-size="20" fill="#5b6560" text-anchor="end" font-weight="400" font-family="EB Garamond, Georgia, serif">2%</text>
+<line x1="78.0" y1="401.0" x2="331.3" y2="401.0" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="68.0" y="304.9" font-size="20" fill="#5b6560" text-anchor="end" font-weight="400" font-family="EB Garamond, Georgia, serif">5%</text>
+<line x1="78.0" y1="297.9" x2="445.3" y2="297.9" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="445.3" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">5%</text>
+<line x1="445.3" y1="297.9" x2="445.3" y2="476.0" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="68.0" y="220.5" font-size="20" fill="#5b6560" text-anchor="end" font-weight="400" font-family="EB Garamond, Georgia, serif">7%</text>
+<line x1="78.0" y1="213.5" x2="331.3" y2="213.5" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="179.3" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">0%</text>
+<text x="331.3" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">3%</text>
+<circle cx="331.3" cy="401.0" r="7" fill="#1a7a4a" stroke="#002060" stroke-width="2"/>
+<text x="303.3" y="433.0" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">a</text>
+<circle cx="445.3" cy="297.9" r="7" fill="#e8b74d" stroke="#002060" stroke-width="2"/>
+<text x="457.3" y="305.9" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">b</text>
+<circle cx="331.3" cy="213.5" r="7" fill="#d9642c" stroke="#002060" stroke-width="2"/>
+<text x="303.3" y="247.5" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">c</text>
+<polyline fill="none" stroke="#1c2321" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" points="324.4,387.1 328.6,385.0 332.9,382.8 337.1,380.5 341.4,378.0 345.6,375.5 349.9,372.8 354.1,370.0 358.3,367.1 362.6,364.0 366.8,360.8 371.1,357.4 375.3,353.9 379.6,350.2 383.8,346.4 388.1,342.3 392.3,338.1 396.5,333.6 400.8,329.0 405.0,324.1 409.3,319.0 413.5,313.7 417.8,308.1 422.0,302.3 417.7,308.5"/>
+<path d="M426.3,296.2 L423.5,312.5 L412.0,304.5Z" fill="#1c2321"/>
+<text x="388.8" y="421.2" font-size="21" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif" stroke="#ffffff" stroke-width="5" stroke-linejoin="round" paint-order="stroke">Short run</text>
+<polyline fill="none" stroke="#1c2321" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" points="455.3,275.9 370.8,205.1"/>
+<path d="M359.3,195.5 L375.3,199.8 L366.3,210.5Z" fill="#1c2321"/>
+<text x="427.8" y="224.2" font-size="21" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif" stroke="#ffffff" stroke-width="5" stroke-linejoin="round" paint-order="stroke">Long run</text>
+<polyline fill="none" stroke="#8f978f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5" points="214.8,423.2 214.8,270.7"/>
+<path d="M214.8,255.7 L221.8,270.7 L207.8,270.7Z" fill="#8f978f"/>
+<text x="206.8" y="358.2" font-size="19" fill="#5b6560" text-anchor="end" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif" stroke="#ffffff" stroke-width="5" stroke-linejoin="round" paint-order="stroke">SRAS</text>
+<text x="206.8" y="379.2" font-size="19" fill="#5b6560" text-anchor="end" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif" stroke="#ffffff" stroke-width="5" stroke-linejoin="round" paint-order="stroke">shifts up</text>
+<text x="98.0" y="196.0" font-size="21" fill="#002060" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">AD (5%)</text>
+<text x="618.0" y="432.0" font-size="21" fill="#d9642c" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">AD (10%)</text>
+<text x="441.9" y="80.0" font-size="20" fill="#002060" text-anchor="end" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">New SRAS</text>
+<text x="441.9" y="102.0" font-size="20" fill="#002060" text-anchor="end" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">E[π] = 7%</text>
+<text x="486.7" y="80.0" font-size="20" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">SRAS</text>
+<text x="486.7" y="102.0" font-size="20" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">E[π] = 2%</text>
+<text x="560.0" y="236.0" font-size="19" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">An increase in AD:</text>
+<text x="560.0" y="259.0" font-size="19" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">spending growth</text>
+<text x="560.0" y="282.0" font-size="19" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">rises from 5% to 10%</text>
+</svg></div></div></div></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">18</div>
+    </section>
+    <section class="slide" id="s-addown">
+      <div class="slide-inner"><h2 class="title">A Fall in Aggregate Demand</h2>
+  <div class="split-curve l15 rev"><div class="col-text"><ul class="bullets"><li>Spending declines, but wages are sticky. Shopkeepers cut production and real growth declines: a recession (<b>a to b</b>, short run).</li><li>Eventually wages and costs become unstuck. The SRAS curve shifts down and passes through <b>c</b>: the same growth rate and a lower inflation rate (<b>b to c</b>, long run).</li><li>Examples: the 2008 financial crisis (AD left) and the COVID-19 stimulus (AD right, higher inflation).</li></ul></div><div class="col-chart"><div class="curve-card big"><svg viewBox="36 22 700 526" width="700" height="526" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AD, SRAS and LRAS diagram for a fall in aggregate demand, showing the short run and the long run. A vertical green LRAS line is at 3 percent growth. The blue AD curve, spending growth of 10 percent, crosses LRAS at point a, 3 percent growth and 7 percent inflation, on the SRAS curve with expected inflation of 7 percent. A fall in spending growth shifts AD to the left, the orange curve for 5 percent. In the short run, with sticky wages and prices, the economy moves along the SRAS curve from a to b, where real GDP growth is negative: a recession. In the long run, as wages and costs adjust, the SRAS curve shifts down to a new dashed SRAS curve with expected inflation of 2 percent that passes through point c. The economy moves along the new AD curve from b to c, back at 3 percent growth with a lower inflation rate of 2 percent.">
+<line x1="78.0" y1="58.0" x2="78.0" y2="476.0" stroke="#1c2321" stroke-width="2.2"/>
+<line x1="78.0" y1="476.0" x2="620.0" y2="476.0" stroke="#1c2321" stroke-width="2.2"/>
+<path d="M72,68 L78,54 L84,68" fill="#1c2321"/>
+<path d="M614,470 L628,476 L614,482" fill="#1c2321"/>
+<text x="92.0" y="42.0" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif">Inflation rate (π)</text>
+<text x="610.0" y="538.0" font-size="22" fill="#1c2321" text-anchor="end" font-weight="700" font-family="EB Garamond, Georgia, serif">Real GDP growth rate</text>
+<line x1="331.3" y1="86.5" x2="331.3" y2="476.0" stroke="#1a7a4a" stroke-width="6" stroke-linecap="round"/>
+<text x="319.3" y="100.0" font-size="22" fill="#1c2321" text-anchor="end" font-weight="700" font-family="EB Garamond, Georgia, serif">LRAS</text>
+<line x1="194.5" y1="112.2" x2="610.0" y2="419.8" stroke="#002060" stroke-width="4.5" stroke-linecap="round"/>
+<line x1="78.0" y1="213.5" x2="432.7" y2="476.0" stroke="#d9642c" stroke-width="4.5" stroke-linecap="round"/>
+<polyline fill="none" stroke="#002060" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round" points="78.0,252.9 84.1,252.7 90.2,252.6 96.3,252.3 102.4,252.1 108.5,251.9 114.6,251.6 120.7,251.3 126.8,251.1 132.9,250.7 139.0,250.4 145.1,250.0 151.2,249.7 157.3,249.3 163.4,248.8 169.5,248.4 175.6,247.9 181.7,247.3 187.8,246.8 193.9,246.1 200.0,245.5 206.1,244.8 212.2,244.1 218.3,243.3 224.4,242.4 230.5,241.5 236.6,240.6 242.7,239.5 248.8,238.4 254.9,237.2 261.1,236.0 267.2,234.6 273.3,233.2 279.4,231.7 285.5,230.0 291.6,228.3 297.7,226.4 303.8,224.4 309.9,222.2 316.0,220.0 322.1,217.5 328.2,214.9 334.3,212.1 340.4,209.1 346.5,206.0 352.6,202.5 358.7,198.9 364.8,195.0 370.9,190.9 377.0,186.4 383.1,181.7 389.2,176.6 395.3,171.2 401.4,165.5 407.5,159.3 413.6,152.7 419.7,145.6 425.8,138.1 431.9,130.0 438.0,121.4 444.1,112.3"/>
+<polyline fill="none" stroke="#002060" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="11 8" points="78.0,440.4 85.3,440.2 92.7,440.0 100.1,439.7 107.5,439.4 114.9,439.1 122.3,438.8 129.7,438.4 137.1,438.0 144.4,437.6 151.8,437.1 159.2,436.6 166.6,436.1 174.0,435.5 181.4,434.9 188.8,434.2 196.2,433.4 203.5,432.6 210.9,431.7 218.3,430.8 225.7,429.7 233.1,428.6 240.5,427.4 247.9,426.1 255.3,424.7 262.6,423.1 270.0,421.5 277.4,419.7 284.8,417.7 292.2,415.6 299.6,413.3 307.0,410.8 314.3,408.1 321.7,405.2 329.1,402.0 336.5,398.6 343.9,394.8 351.3,390.8 358.7,386.4 366.1,381.7 373.4,376.6 380.8,371.0 388.2,365.0 395.6,358.5 403.0,351.4 410.4,343.7 417.8,335.4 425.2,326.5 432.5,316.7 439.9,306.2 447.3,294.7 454.7,282.3 462.1,268.9 469.5,254.4 476.9,238.6 484.3,221.5 491.6,203.0 499.0,183.0 506.4,161.3 513.8,137.7 521.2,112.2"/>
+<text x="68.0" y="220.5" font-size="20" fill="#5b6560" text-anchor="end" font-weight="400" font-family="EB Garamond, Georgia, serif">7%</text>
+<line x1="78.0" y1="213.5" x2="331.3" y2="213.5" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="68.0" y="258.0" font-size="20" fill="#5b6560" text-anchor="end" font-weight="400" font-family="EB Garamond, Georgia, serif">6%</text>
+<line x1="78.0" y1="251.0" x2="128.6" y2="251.0" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="128.6" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">-1%</text>
+<line x1="128.6" y1="251.0" x2="128.6" y2="476.0" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="68.0" y="408.0" font-size="20" fill="#5b6560" text-anchor="end" font-weight="400" font-family="EB Garamond, Georgia, serif">2%</text>
+<line x1="78.0" y1="401.0" x2="331.3" y2="401.0" stroke="#7b837e" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="179.3" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">0%</text>
+<text x="331.3" y="504.0" font-size="20" fill="#5b6560" text-anchor="middle" font-weight="400" font-family="EB Garamond, Georgia, serif">3%</text>
+<circle cx="331.3" cy="213.5" r="7" fill="#1a7a4a" stroke="#002060" stroke-width="2"/>
+<text x="345.3" y="249.5" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">a</text>
+<circle cx="128.6" cy="251.0" r="7" fill="#e8b74d" stroke="#002060" stroke-width="2"/>
+<text x="138.6" y="237.0" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">b</text>
+<circle cx="331.3" cy="401.0" r="7" fill="#d9642c" stroke="#002060" stroke-width="2"/>
+<text x="305.3" y="433.0" font-size="22" fill="#1c2321" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">c</text>
+<polyline fill="none" stroke="#1c2321" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" points="323.7,232.8 315.9,236.0 308.1,238.9 300.3,241.6 292.5,244.0 284.6,246.2 276.8,248.3 269.0,250.2 261.2,251.9 253.4,253.5 245.6,255.0 237.8,256.4 229.9,257.6 222.1,258.7 214.3,259.8 206.5,260.8 198.7,261.6 190.9,262.5 183.1,263.2 175.2,263.9 167.4,264.5 159.6,265.1 151.8,265.6 144.0,266.1 151.2,265.7"/>
+<path d="M136.2,266.6 L150.8,258.7 L151.6,272.7Z" fill="#1c2321"/>
+<text x="230.0" y="201.5" font-size="21" fill="#1c2321" text-anchor="middle" font-weight="700" font-family="EB Garamond, Georgia, serif" stroke="#ffffff" stroke-width="5" stroke-linejoin="round" paint-order="stroke">Short run</text>
+<polyline fill="none" stroke="#1c2321" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" points="124.6,247.0 299.1,372.3"/>
+<path d="M311.3,381.0 L295.0,377.9 L303.2,366.6Z" fill="#1c2321"/>
+<text x="164.0" y="368.0" font-size="21" fill="#1c2321" text-anchor="start" font-weight="700" font-family="EB Garamond, Georgia, serif" stroke="#ffffff" stroke-width="5" stroke-linejoin="round" paint-order="stroke">Long run</text>
+<polyline fill="none" stroke="#8f978f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5" points="268.0,242.4 268.0,396.9"/>
+<path d="M268.0,411.9 L261.0,396.9 L275.0,396.9Z" fill="#8f978f"/>
+<text x="278.0" y="277.2" font-size="19" fill="#5b6560" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif" stroke="#ffffff" stroke-width="5" stroke-linejoin="round" paint-order="stroke">SRAS</text>
+<text x="278.0" y="298.2" font-size="19" fill="#5b6560" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif" stroke="#ffffff" stroke-width="5" stroke-linejoin="round" paint-order="stroke">shifts down</text>
+<text x="625.0" y="432.0" font-size="21" fill="#002060" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">AD (10%)</text>
+<text x="444.7" y="462.0" font-size="21" fill="#d9642c" text-anchor="start" font-weight="700" font-style="italic" font-family="EB Garamond, Georgia, serif">AD (5%)</text>
+<text x="441.9" y="80.0" font-size="20" fill="#002060" text-anchor="end" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">SRAS</text>
+<text x="441.9" y="102.0" font-size="20" fill="#002060" text-anchor="end" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">E[π] = 7%</text>
+<text x="486.7" y="80.0" font-size="20" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">New SRAS</text>
+<text x="486.7" y="102.0" font-size="20" fill="#002060" text-anchor="start" font-weight="600" font-style="italic" font-family="EB Garamond, Georgia, serif">E[π] = 2%</text>
+<text x="560.0" y="236.0" font-size="19" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">A fall in AD:</text>
+<text x="560.0" y="259.0" font-size="19" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">spending growth</text>
+<text x="560.0" y="282.0" font-size="19" fill="#1c2321" text-anchor="start" font-weight="600" font-family="EB Garamond, Georgia, serif">falls from 10% to 5%</text>
+</svg></div></div></div></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">19</div>
+    </section>
+    <section class="slide l15-table" id="s-summary">
+      <div class="slide-inner"><h2 class="title">Summary: Effects of AD, SRAS, and LRAS Shifts</h2>
+  <p class="lede">If real GDP falls, where should we look for the reason?</p><table class="data-table l15 sum"><thead><tr><th>Change</th><th>Real GDP Growth Rate</th><th>Inflation Rate</th></tr></thead><tbody><tr><td>Increase in AD</td><td><span style="color:#d9642c;font-weight:700;">&uarr; Rises</span> <span class="sr">(short run only)</span></td><td><span style="color:#d9642c;font-weight:700;">&uarr; Rises</span></td></tr><tr><td>Decrease in AD</td><td><span style="color:#d9642c;font-weight:700;">&darr; Falls</span> <span class="sr">(short run only)</span></td><td><span style="color:#d9642c;font-weight:700;">&darr; Falls</span></td></tr><tr><td>Increase in SRAS</td><td><span style="color:#d9642c;font-weight:700;">&uarr; Rises</span></td><td><span style="color:#d9642c;font-weight:700;">&darr; Falls</span></td></tr><tr><td>Decrease in SRAS</td><td><span style="color:#d9642c;font-weight:700;">&darr; Falls</span></td><td><span style="color:#d9642c;font-weight:700;">&uarr; Rises</span></td></tr><tr><td>Increase in LRAS</td><td><span style="color:#d9642c;font-weight:700;">&uarr; Rises</span></td><td><span style="color:#d9642c;font-weight:700;">&darr; Falls</span></td></tr><tr><td>Decrease in LRAS</td><td><span style="color:#d9642c;font-weight:700;">&darr; Falls</span></td><td><span style="color:#d9642c;font-weight:700;">&uarr; Rises</span></td></tr></tbody></table></div>
+      <div class="footer-tag">ECON 104</div>
+      <div class="slide-num">20</div>
+    </section>
+
+
+</div>
+</div>
+
+<div id="progress"></div>
+<button id="prevBtn" class="navbtn" aria-label="Previous slide">&#8249;</button>
+<button id="nextBtn" class="navbtn" aria-label="Next slide">&#8250;</button>
+<button id="fsBtn" aria-label="Toggle fullscreen">&#9974;</button>
+<div id="dots"></div>
+<div class="navhint">&#8592; &#8594; or click to navigate</div>
+
+<script>
+// ---------- STAGE SCALING (keeps 16:9 always, no overflow) ----------
+const stage = document.getElementById('stage');
+function fitStage(){
+  const availW = window.innerWidth - 24;
+  const availH = window.innerHeight - 24;
+  const scale = Math.min(availW/1280, availH/720);
+  // CSS zoom (not transform) so embedded OWID charts render crisply at the projected size
+  stage.style.zoom = scale;
+}
+window.addEventListener('resize', fitStage);
+fitStage();
+
+// ---------- SLIDE NAV ----------
+const slides = Array.from(document.querySelectorAll('.slide'));
+const dotsWrap = document.getElementById('dots');
+slides.forEach((s,i)=>{
+  const b = document.createElement('button');
+  b.title = s.id;
+  b.addEventListener('click', ()=> goTo(i));
+  dotsWrap.appendChild(b);
+});
+const dots = Array.from(dotsWrap.children);
+let current = 0;
+let revealIndex = 0;
+
+function resetSteps(slide){
+  revealIndex = 0;
+  slide.querySelectorAll('.step').forEach(el=> el.classList.remove('shown'));
+}
+
+function advance(){
+  const steps = slides[current].querySelectorAll('.step');
+  if(revealIndex < steps.length){
+    steps[revealIndex].classList.add('shown');
+    revealIndex++;
+  } else {
+    goTo(current+1);
+  }
+}
+
+function fitSlideContent(slide){
+  const inner = slide.querySelector('.slide-inner');
+  if(!inner) return;
+  inner.style.transform = 'scale(1)';
+  const cs = getComputedStyle(slide);
+  const avail = 720 - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+  const needed = inner.scrollHeight;
+  if(needed > avail){
+    inner.style.transform = `scale(${(avail/needed).toFixed(4)})`;
+  }
+}
+
+function goTo(i){
+  current = Math.max(0, Math.min(slides.length-1, i));
+  slides.forEach((s,idx)=> s.classList.toggle('active', idx===current));
+  dots.forEach((d,idx)=> d.classList.toggle('active', idx===current));
+  document.getElementById('progress').style.width = (current/(slides.length-1)*100) + '%';
+  resetSteps(slides[current]);
+  requestAnimationFrame(()=> fitSlideContent(slides[current]));
+}
+
+document.getElementById('prevBtn').addEventListener('click', ()=> goTo(current-1));
+document.getElementById('nextBtn').addEventListener('click', ()=> advance());
+
+// ---------- FULLSCREEN ----------
+const fsBtn = document.getElementById('fsBtn');
+fsBtn.addEventListener('click', ()=>{
+  if(typeof document.documentElement.requestFullscreen === 'function'){
+    if(!document.fullscreenElement){
+      document.documentElement.requestFullscreen().catch(()=>{});
+    } else {
+      document.exitFullscreen();
+    }
+  }
+});
+document.addEventListener('fullscreenchange', ()=>{
+  fsBtn.innerHTML = document.fullscreenElement ? '&#10064;' : '&#9974;';
+});
+
+document.addEventListener('keydown', (e)=>{
+  const fwd = ['ArrowRight','ArrowDown','PageDown',' '];
+  const back = ['ArrowLeft','ArrowUp','PageUp','Backspace'];
+  const tag = (e.target && e.target.tagName) || '';
+  if(tag === 'INPUT' || tag === 'TEXTAREA') return;
+  if(fwd.includes(e.key)){ e.preventDefault(); advance(); }
+  else if(back.includes(e.key)){ e.preventDefault(); goTo(current-1); }
+});
+
+goTo(0);
+// re-check fit once web fonts finish loading (sizes can shift slightly)
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(()=>{ slides.forEach(fitSlideContent); });
+}
+window.addEventListener('resize', ()=> fitSlideContent(slides[current]));
+</script>
+
+</body>
+</html>

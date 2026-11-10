@@ -247,10 +247,14 @@
                                         : paper.note.text}
                                 </p>
                             ` : ''}
-                            ${paper.abstract ? `
+                            ${paper.date ? `<p class="pub-date">${formatDate(paper.date)}</p>` : ''}
+                            ${paper.pdfUrl || paper.abstract ? `
                                 <div class="pub-actions">
-                                    <button class="abstract-toggle" onclick="toggleAbstract('working-abstract-${index}')">Show Abstract</button>
+                                    ${paper.pdfUrl ? `<a href="${paper.pdfUrl}" target="_blank" class="pdf-link">PDF</a>` : ''}
+                                    ${paper.abstract ? `<button class="abstract-toggle" onclick="toggleAbstract('working-abstract-${index}')">Show Abstract</button>` : ''}
                                 </div>
+                            ` : ''}
+                            ${paper.abstract ? `
                                 <div id="working-abstract-${index}" class="abstract-content" style="display: none;">
                                     <p>${paper.abstract}</p>
                                 </div>

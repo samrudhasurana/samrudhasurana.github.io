@@ -28,7 +28,15 @@
       "date": "2025-06"
     }
   ],
-  "workingPapers": [],
+  "workingPapers": [
+    {
+      "title": "Ideological Change in Indian Economic Policy Discourse 1961-2000",
+      "date": "2026-05",
+      "url": "papers/Surana_IdeologyChangeIndia.pdf",
+      "pdfUrl": "papers/Surana_IdeologyChangeIndia.pdf",
+      "abstract": "I measure ideological change in India's economic policy discourse over the period 1961-2000, the decades spanning India's transition from central planning to market liberalization. Using a large language model (LLM) measurement pipeline, I analyze a sample of 11,523 text documents – 5,000 academic journal articles, 1,633 parliamentary committee reports, and 4,890 Rajya Sabha debate transcripts. I score each document on a five-point scale from strongly pro-state intervention (1) to strongly pro-free market (5) across five specific policy dimensions and one miscellaneous category. All three corpora exhibit a clear and sustained rightward shift over the period, though the timing and magnitude differ substantially by institutional setting. Academic journals maintained relatively higher pro-market scores throughout, while parliamentary and legislative discourse remained strongly pro-state through the 1980s before shifting markedly in the 1990s. The share of documents scoring 4 or 5 (pro-market-leaning) rose from under 1% in the 1960s to 11% in parliamentary reports and 28% in Rajya Sabha debates by 2000. Agriculture and fiscal policy/public sector enterprises show the highest levels of pro-state intervention. Industrial licensing, trade policy, and financial-sector-related documents show the greatest movement toward a pro-free-market stance."
+    }
+  ],
   "worksInProgress": [
     {
       "title": "Choosing Identity: Markets and Political Processes in Society",

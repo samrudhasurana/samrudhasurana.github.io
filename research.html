@@ -159,127 +159,47 @@
             const container = document.getElementById('research-content');
             let html = '';
 
-            // Journal Articles
-            if (data.journalArticles && data.journalArticles.length > 0) {
-                html += '<section class="research-section"><h2 class="section-title">Journal Articles</h2>';
-                data.journalArticles.forEach((paper, index) => {
-                    html += `
-                        <div class="publication-card">
-                            <h3 class="pub-title">
-                                ${paper.url ? `<a href="${paper.url}" target="_blank">${paper.title}</a>` : paper.title}
-                            </h3>
-                            ${paper.authors ? `<p class="pub-authors">${paper.authors}</p>` : ''}
-                            ${paper.venue ? `<p class="pub-venue">${paper.venue}</p>` : ''}
-                            ${paper.date ? `<p class="pub-date">${formatDate(paper.date)}</p>` : ''}
-                            <div class="pub-actions">
-                                ${paper.pdfUrl ? `<a href="${paper.pdfUrl}" target="_blank" class="pdf-link">PDF</a>` : ''}
-                                ${paper.abstract ? `<button class="abstract-toggle" onclick="toggleAbstract('journal-abstract-${index}')">Show Abstract</button>` : ''}
-                            </div>
-                            ${paper.abstract ? `
-                                <div id="journal-abstract-${index}" class="abstract-content" style="display: none;">
-                                    <p>${paper.abstract}</p>
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                });
-                html += '</section>';
+            // Shared renderer: one bulleted entry per item
+            function renderItem(item, key) {
+                const title = item.url
+                    ? `<a href="${item.url}" target="_blank">${item.title}</a>`
+                    : item.title;
+                const meta = [item.authors, item.venue, item.date ? formatDate(item.date) : '']
+                    .filter(Boolean).join(' &middot; ');
+                let note = '';
+                if (item.note) {
+                    note = typeof item.note === 'string' ? item.note
+                        : (item.note.link
+                            ? item.note.text.replace(item.note.link.text, `<a href="${item.note.link.url}" target="_blank">${item.note.link.text}</a>`)
+                            : item.note.text);
+                }
+                const links = [];
+                if (item.pdfUrl) links.push(`<a href="${item.pdfUrl}" target="_blank">PDF</a>`);
+                if (item.abstract) links.push(`<button type="button" class="abstract-toggle" aria-expanded="false" onclick="toggleAbstract('${key}', this)">Abstract <span class="caret">&#9656;</span></button>`);
+                return `
+                    <li class="pub-item">
+                        <span class="pub-title">${title}</span>
+                        ${meta ? `<div class="pub-meta">${meta}</div>` : ''}
+                        ${note ? `<div class="pub-note">${note}</div>` : ''}
+                        ${links.length ? `<div class="pub-links">${links.join('<span class="pub-sep">&middot;</span>')}</div>` : ''}
+                        ${item.abstract ? `<div id="${key}" class="abstract-content" hidden><p>${item.abstract}</p></div>` : ''}
+                    </li>
+                `;
             }
 
-            // Policy Papers
-            if (data.policyPapers && data.policyPapers.length > 0) {
-                html += '<section class="research-section"><h2 class="section-title">Policy Paper</h2>';
-                data.policyPapers.forEach((paper, index) => {
-                    html += `
-                        <div class="publication-card">
-                            <h3 class="pub-title">
-                                <a href="${paper.url}" target="_blank">${paper.title}</a>
-                            </h3>
-                            ${paper.authors ? `<p class="pub-authors">${paper.authors}</p>` : ''}
-                            ${paper.venue ? `<p class="pub-venue">${paper.venue}</p>` : ''}
-                            ${paper.date ? `<p class="pub-date">${formatDate(paper.date)}</p>` : ''}
-                            <div class="pub-actions">
-                                ${paper.pdfUrl ? `<a href="${paper.pdfUrl}" target="_blank" class="pdf-link">PDF</a>` : ''}
-                                ${paper.abstract ? `<button class="abstract-toggle" onclick="toggleAbstract('policy-abstract-${index}')">Show Abstract</button>` : ''}
-                            </div>
-                            ${paper.abstract ? `
-                                <div id="policy-abstract-${index}" class="abstract-content" style="display: none;">
-                                    <p>${paper.abstract}</p>
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                });
-                html += '</section>';
+            function renderSection(title, items, prefix) {
+                if (!items || items.length === 0) return '';
+                let out = `<section class="research-section"><h2 class="section-title">${title}</h2><ul class="pub-list">`;
+                items.forEach((item, i) => { out += renderItem(item, `${prefix}-abstract-${i}`); });
+                return out + '</ul></section>';
             }
-            
-            // Book Reviews
-            if (data.bookReviews && data.bookReviews.length > 0) {
-                html += '<section class="research-section"><h2 class="section-title">Book Review</h2>';
-                data.bookReviews.forEach(review => {
-                    html += `
-                        <div class="publication-card">
-                            <h3 class="pub-title">
-                                ${review.url ? `<a href="${review.url}" target="_blank">${review.title}</a>` : review.title}
-                            </h3>
-                            ${review.venue ? `<p class="pub-venue">${review.venue}</p>` : ''}
-                            ${review.date ? `<p class="pub-date">${formatDate(review.date)}</p>` : ''}
-                        </div>
-                    `;
-                });
-                html += '</section>';
-            }
-            
-            // Working Papers
-            if (data.workingPapers && data.workingPapers.length > 0) {
-                html += '<section class="research-section"><h2 class="section-title">Working Paper</h2>';
-                data.workingPapers.forEach((paper, index) => {
-                    html += `
-                        <div class="publication-card">
-                            <h3 class="pub-title">
-                                <a href="${paper.url}" target="_blank">${paper.title}</a>
-                            </h3>
-                            ${paper.authors ? `<p class="pub-authors">${paper.authors}</p>` : ''}
-                            ${paper.note ? `
-                                <p class="pub-note">
-                                    ${paper.note.link ? 
-                                        paper.note.text.replace(paper.note.link.text, `<a href="${paper.note.link.url}" target="_blank">${paper.note.link.text}</a>`) 
-                                        : paper.note.text}
-                                </p>
-                            ` : ''}
-                            ${paper.date ? `<p class="pub-date">${formatDate(paper.date)}</p>` : ''}
-                            ${paper.pdfUrl || paper.abstract ? `
-                                <div class="pub-actions">
-                                    ${paper.pdfUrl ? `<a href="${paper.pdfUrl}" target="_blank" class="pdf-link">PDF</a>` : ''}
-                                    ${paper.abstract ? `<button class="abstract-toggle" onclick="toggleAbstract('working-abstract-${index}')">Show Abstract</button>` : ''}
-                                </div>
-                            ` : ''}
-                            ${paper.abstract ? `
-                                <div id="working-abstract-${index}" class="abstract-content" style="display: none;">
-                                    <p>${paper.abstract}</p>
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                });
-                html += '</section>';
-            }
-            
-            // Works in Progress
-            if (data.worksInProgress && data.worksInProgress.length > 0) {
-                html += '<section class="research-section"><h2 class="section-title">Works in Progress</h2><div class="wip-list">';
-                data.worksInProgress.forEach(work => {
-                    html += `
-                        <div class="wip-item">
-                            <h3>${work.title}</h3>
-                            ${work.authors ? `<p class="pub-authors">${work.authors}</p>` : ''}
-                            ${work.note ? `<p class="pub-note">${work.note}</p>` : ''}
-                        </div>
-                    `;
-                });
-                html += '</div></section>';
-            }
-            
+
+            html += renderSection('Journal Articles', data.journalArticles, 'journal');
+            html += renderSection('Policy Paper', data.policyPapers, 'policy');
+            html += renderSection('Book Review', data.bookReviews, 'review');
+            html += renderSection('Working Paper', data.workingPapers, 'working');
+            html += renderSection('Works in Progress', data.worksInProgress, 'wip');
+
             // Conferences
             if (data.conferences && data.conferences.length > 0) {
                 // Show the floating tab now that we know there are conferences
@@ -351,23 +271,8 @@
                 }
             }
 
-            // Popular Articles
-            if (data.popularArticles && data.popularArticles.length > 0) {
-                html += '<section class="research-section"><h2 class="section-title">Popular Articles</h2><div class="articles-grid">';
-                data.popularArticles.forEach(article => {
-                    html += `
-                        <a href="${article.url}" target="_blank" class="article-card">
-                            <h3>${article.title}</h3>
-                            <p class="article-meta">
-                                ${article.authors ? article.authors + ' | ' : ''}
-                                ${article.venue}${article.date ? ' | ' + formatDate(article.date) : ''}
-                            </p>
-                        </a>
-                    `;
-                });
-                html += '</div></section>';
-            }
-            
+            html += renderSection('Popular Articles', data.popularArticles, 'popular');
+
             container.innerHTML = html;
         })
         .catch(error => {
@@ -391,16 +296,12 @@
         if (e.key === 'Escape') closeConferencesPanel();
     });
 
-    function toggleAbstract(id) {
+    function toggleAbstract(id, button) {
         const abstract = document.getElementById(id);
-        const button = event.target;
-        if (abstract.style.display === 'none') {
-            abstract.style.display = 'block';
-            button.textContent = 'Hide Abstract';
-        } else {
-            abstract.style.display = 'none';
-            button.textContent = 'Show Abstract';
-        }
+        const open = abstract.hidden;
+        abstract.hidden = !open;
+        button.setAttribute('aria-expanded', String(open));
+        button.querySelector('.caret').innerHTML = open ? '&#9662;' : '&#9656;';
     }
     </script>
 </body>
